@@ -13,7 +13,10 @@ Sistem ini mengintegrasikan pemrosesan citra tingkat lanjut (*Computer Vision*),
 
 ## 📸 Demo Tampilan Sistem
 
-*(Silakan tambahkan tangkapan layar atau GIF antarmuka aplikasi Anda di sini untuk meningkatkan daya tarik visual)*
+<div align="center">
+  <img src="foto_github.png" alt="Demo healthier" width="80%">
+</div>
+
 > **Catatan UX**: Antarmuka dirancang dengan tema **Sleek Dark Mode** menggunakan efek *glassmorphism*, indikator progres visual SVG, grafik analitik asupan 7 hari berbasis Chart.js, serta feedback real-time saat pengambilan foto.
 
 ---
