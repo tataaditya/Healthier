@@ -1,0 +1,27 @@
+description: Ultralytics YOLO11s-seg model trained on /kaggle/working/isipiringku_dataset/data.yaml
+author: Ultralytics
+date: '2026-05-30T12:12:12.973910'
+version: 8.4.56
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: segment
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: Makanan Pokok
+  1: Lauk Pauk
+  2: Sayuran
+  3: Buah-buahan
+  4: Lainnya
+args:
+  data: null
+  batch: 1
+  fraction: 1.0
+  half: true
+  int8: false
+  nms: false
+channels: 3
+end2end: false

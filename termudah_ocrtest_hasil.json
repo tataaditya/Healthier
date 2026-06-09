@@ -1,0 +1,762 @@
+{
+  "status": "low_confidence",
+  "data": {
+    "lemak_total": {
+      "per_sajian": 0.0,
+      "satuan": "g",
+      "akg_persen": 0.0
+    },
+    "lemak_trans": {
+      "per_sajian": 0.0,
+      "satuan": "g",
+      "akg_persen": 0.0
+    },
+    "karbohidrat": {
+      "per_sajian": 1.0,
+      "satuan": "g",
+      "akg_persen": null
+    },
+    "kalori": {
+      "per_sajian": 489.0,
+      "satuan": "kkal",
+      "akg_persen": null
+    }
+  },
+  "takaran_saji_g": null,
+  "flags": [
+    "fallback_kalori_dari_kkal",
+    "fallback_lemak_jenuh_dari_energi_koreksi",
+    "crossval_lemak_jenuh_19.5_gt_lemak_total_0.0"
+  ],
+  "durasi_detik": 15.01,
+  "raw_ocr": "INFORMASI NILAI GIZI/NUTRITION INFORMATION (conf:0.97)\n3Sajian per Kemasan/Servings per Pack: 3 (conf:0.92)\nPer 100g (conf:0.94)\nPer Sajian/Serving (conf:0.98)\nJUMLAH PER SAJIAN/AMOUNT PER SERVING (conf:0.95)\n489 kkal/kcal (conf:0.95)\n100 kkal/kcal (conf:0.97)\nEnergi Total/Total Energy (conf:0.97)\n178 kkal/kcal (conf:0.96)\n35 kkal/kcal (conf:0.96)\nEnergi dari Lemak/Energy from Fat (conf:0.97)\n%AKG/DV* (conf:0.96)\n20.0 g (conf:0.97)\n6% (conf:0.96)\n4g (conf:0.96)\nog (conf:0.77)\nLemak Total/Total Fat (conf:0.98)\n0g (conf:0.71)\n0 mg (conf:0.83)\n0% (conf:0.98)\nLemak Trans/Trans Fat (conf:0.96)\n0 mg (conf:0.86)\n7.8g (conf:0.87)\nKolesterol/Cholesterol (conf:0.99)\n1.5 g (conf:0.88)\n2.7g (conf:0.87)\nLemak Tidak Jenuh Tunggal/Monounsaturated Fat (conf:0.96)\n0.5 g (conf:0.86)\n9.4g (conf:0.92)\nLemak Tidak Jenuh Ganda/Polyunsaturated Fat (conf:0.97)\n10% (conf:0.89)\n2g (conf:0.83)\n4.7 g (conf:0.92)\n2% (conf:0.79)\nLemak Jenuh/Saturated Fat (conf:0.98)\n1g (conf:0.85)\n73.0 g (conf:0.95)\n5% (conf:1.00)\nProtein (conf:0.99)\n15g (conf:0.94)\n2.6g (conf:0.90)\n2% (conf:1.00)\nKarbohidrat Total/Total Carbohydrates (conf:0.98)\n19 (conf:0.78)\n39.0 g (conf:0.93)\nSerat Pangan/Dietary Fiber (conf:0.97)\n8g (conf:0.75)\n536 mg (conf:0.96)\n7% (conf:0.99)\nGula/Sugars (conf:1.00)\n110 mg (conf:0.93)\nGaram (Natrium)/Sodium (conf:0.96)\nENGANDUNG (conf:0.99)\non your calorie needs (conf:0.95)",
+  "nutrition_ocr": "INFORMASI NILAI GIZI/NUTRITION INFORMATION (conf:0.97)\n3Sajian per Kemasan/Servings per Pack: 3 (conf:0.92)\nPer 100g (conf:0.94)\nPer Sajian/Serving (conf:0.98)\nJUMLAH PER SAJIAN/AMOUNT PER SERVING (conf:0.95)\n489 kkal/kcal (conf:0.95)\n100 kkal/kcal (conf:0.97)\nEnergi Total/Total Energy (conf:0.97)\n178 kkal/kcal (conf:0.96)\n35 kkal/kcal (conf:0.96)\nEnergi dari Lemak/Energy from Fat (conf:0.97)\n%AKG/DV* (conf:0.96)\n20.0 g (conf:0.97)\n6% (conf:0.96)\n4g (conf:0.96)\nLemak Total/Total Fat (conf:0.98)\n0g (conf:0.71)\n0 mg (conf:0.83)\n0% (conf:0.98)\nLemak Trans/Trans Fat (conf:0.96)\n0 mg (conf:0.86)\n7.8g (conf:0.87)\nKolesterol/Cholesterol (conf:0.99)\n1.5 g (conf:0.88)\n2.7g (conf:0.87)\nLemak Tidak Jenuh Tunggal/Monounsaturated Fat (conf:0.96)\n0.5 g (conf:0.86)\n9.4g (conf:0.92)\nLemak Tidak Jenuh Ganda/Polyunsaturated Fat (conf:0.97)\n10% (conf:0.89)\n2g (conf:0.83)\n4.7 g (conf:0.92)\n2% (conf:0.79)\nLemak Jenuh/Saturated Fat (conf:0.98)\n1g (conf:0.85)\n73.0 g (conf:0.95)\n5% (conf:1.00)\nProtein (conf:0.99)\n15g (conf:0.94)\n2.6g (conf:0.90)\n2% (conf:1.00)\nKarbohidrat Total/Total Carbohydrates (conf:0.98)\n19 (conf:0.78)\n39.0 g (conf:0.93)\nSerat Pangan/Dietary Fiber (conf:0.97)\n8g (conf:0.75)\n536 mg (conf:0.96)\n7% (conf:0.99)\nGula/Sugars (conf:1.00)\n110 mg (conf:0.93)\nGaram (Natrium)/Sodium (conf:0.96)",
+  "quality": {
+    "quality_score": 0.802,
+    "usable": true,
+    "blur_laplacian": 134.97,
+    "brightness": 179.57,
+    "contrast": 54.16,
+    "glare_ratio": 0.0,
+    "dark_ratio": 0.0002,
+    "edge_ratio": 0.0466,
+    "warnings": [],
+    "image_size": {
+      "width": 2499,
+      "height": 1597
+    }
+  },
+  "roi": {
+    "detected": false,
+    "method": "full_image_fallback",
+    "original_size": {
+      "width": 2499,
+      "height": 1597
+    },
+    "roi_size": {
+      "width": 2499,
+      "height": 1597
+    }
+  },
+  "semantic_filter": {
+    "enabled": true,
+    "reason": "nutrition_semantic_filter",
+    "anchors": 19,
+    "kept": 51,
+    "removed": 3
+  },
+  "column_layout": {
+    "mode": "multi",
+    "detected": true,
+    "image_width": 2354.0,
+    "serving_x0": 867.39,
+    "serving_x1": 1439.625,
+    "dv_x0": 1439.625,
+    "dv_x1": 2354.0,
+    "per100_x0": 1439.625,
+    "per100_x1": 2354.0,
+    "headers": [
+      {
+        "kind": "per100",
+        "x": 2132.0,
+        "text": "Per 100g"
+      },
+      {
+        "kind": "serving",
+        "x": 1572.5,
+        "text": "Per Sajian/Serving"
+      },
+      {
+        "kind": "serving",
+        "x": 586.0,
+        "text": "JUMLAH PER SAJIAN/AMOUNT PER SERVING"
+      },
+      {
+        "kind": "dv",
+        "x": 1800.0,
+        "text": "%AKG/DV*"
+      }
+    ]
+  },
+  "evaluasi": {},
+  "ocr_detections": [
+    {
+      "bbox": [
+        435.0,
+        5.0,
+        1484.0,
+        62.0
+      ],
+      "text": "INFORMASI NILAI GIZI/NUTRITION INFORMATION",
+      "conf": 0.9693,
+      "center_x": 1177.0,
+      "center_y": 36.0
+    },
+    {
+      "bbox": [
+        9.0,
+        129.0,
+        992.0,
+        133.0
+      ],
+      "text": "3Sajian per Kemasan/Servings per Pack: 3",
+      "conf": 0.9249,
+      "center_x": 505.0,
+      "center_y": 195.5
+    },
+    {
+      "bbox": [
+        2033.0,
+        212.0,
+        198.0,
+        57.0
+      ],
+      "text": "Per 100g",
+      "conf": 0.9423,
+      "center_x": 2132.0,
+      "center_y": 240.5
+    },
+    {
+      "bbox": [
+        1359.0,
+        220.0,
+        427.0,
+        69.0
+      ],
+      "text": "Per Sajian/Serving",
+      "conf": 0.9824,
+      "center_x": 1572.5,
+      "center_y": 254.5
+    },
+    {
+      "bbox": [
+        30.0,
+        213.0,
+        1112.0,
+        144.0
+      ],
+      "text": "JUMLAH PER SAJIAN/AMOUNT PER SERVING",
+      "conf": 0.9512,
+      "center_x": 586.0,
+      "center_y": 285.0
+    },
+    {
+      "bbox": [
+        2030.0,
+        273.0,
+        324.0,
+        68.0
+      ],
+      "text": "489 kkal/kcal",
+      "conf": 0.9537,
+      "center_x": 2192.0,
+      "center_y": 307.0
+    },
+    {
+      "bbox": [
+        1361.0,
+        291.0,
+        350.0,
+        70.0
+      ],
+      "text": "100 kkal/kcal",
+      "conf": 0.9707,
+      "center_x": 1536.0,
+      "center_y": 326.0
+    },
+    {
+      "bbox": [
+        40.0,
+        318.0,
+        578.0,
+        108.0
+      ],
+      "text": "Energi Total/Total Energy",
+      "conf": 0.9666,
+      "center_x": 329.0,
+      "center_y": 372.0
+    },
+    {
+      "bbox": [
+        2032.0,
+        342.0,
+        306.0,
+        70.0
+      ],
+      "text": "178 kkal/kcal",
+      "conf": 0.9613,
+      "center_x": 2185.0,
+      "center_y": 377.0
+    },
+    {
+      "bbox": [
+        1358.0,
+        363.0,
+        306.0,
+        70.0
+      ],
+      "text": "35 kkal/kcal",
+      "conf": 0.9586,
+      "center_x": 1511.0,
+      "center_y": 398.0
+    },
+    {
+      "bbox": [
+        84.0,
+        377.0,
+        787.0,
+        118.0
+      ],
+      "text": "Energi dari Lemak/Energy from Fat",
+      "conf": 0.9733,
+      "center_x": 477.5,
+      "center_y": 436.0
+    },
+    {
+      "bbox": [
+        1665.0,
+        434.0,
+        270.0,
+        76.0
+      ],
+      "text": "%AKG/DV*",
+      "conf": 0.9552,
+      "center_x": 1800.0,
+      "center_y": 472.0
+    },
+    {
+      "bbox": [
+        2022.0,
+        498.0,
+        158.0,
+        81.0
+      ],
+      "text": "20.0 g",
+      "conf": 0.9682,
+      "center_x": 2101.0,
+      "center_y": 538.5
+    },
+    {
+      "bbox": [
+        1660.0,
+        511.0,
+        114.0,
+        81.0
+      ],
+      "text": "6%",
+      "conf": 0.9611,
+      "center_x": 1717.0,
+      "center_y": 551.5
+    },
+    {
+      "bbox": [
+        1357.0,
+        528.0,
+        103.0,
+        80.0
+      ],
+      "text": "4g",
+      "conf": 0.9602,
+      "center_x": 1408.5,
+      "center_y": 568.0
+    },
+    {
+      "bbox": [
+        2018.0,
+        568.0,
+        103.0,
+        76.0
+      ],
+      "text": "og",
+      "conf": 0.774,
+      "center_x": 2069.5,
+      "center_y": 606.0
+    },
+    {
+      "bbox": [
+        61.0,
+        566.0,
+        487.0,
+        98.0
+      ],
+      "text": "Lemak Total/Total Fat",
+      "conf": 0.9774,
+      "center_x": 304.5,
+      "center_y": 615.0
+    },
+    {
+      "bbox": [
+        1354.0,
+        594.0,
+        111.0,
+        83.0
+      ],
+      "text": "0g",
+      "conf": 0.7138,
+      "center_x": 1409.5,
+      "center_y": 635.5
+    },
+    {
+      "bbox": [
+        2023.0,
+        633.0,
+        124.0,
+        72.0
+      ],
+      "text": "0 mg",
+      "conf": 0.83,
+      "center_x": 2085.0,
+      "center_y": 669.0
+    },
+    {
+      "bbox": [
+        1659.0,
+        641.0,
+        118.0,
+        79.0
+      ],
+      "text": "0%",
+      "conf": 0.985,
+      "center_x": 1718.0,
+      "center_y": 680.5
+    },
+    {
+      "bbox": [
+        84.0,
+        636.0,
+        501.0,
+        94.0
+      ],
+      "text": "Lemak Trans/Trans Fat",
+      "conf": 0.9593,
+      "center_x": 334.5,
+      "center_y": 683.0
+    },
+    {
+      "bbox": [
+        1360.0,
+        661.0,
+        136.0,
+        77.0
+      ],
+      "text": "0 mg",
+      "conf": 0.8563,
+      "center_x": 1428.0,
+      "center_y": 699.5
+    },
+    {
+      "bbox": [
+        2021.0,
+        693.0,
+        125.0,
+        78.0
+      ],
+      "text": "7.8g",
+      "conf": 0.8737,
+      "center_x": 2083.5,
+      "center_y": 732.0
+    },
+    {
+      "bbox": [
+        98.0,
+        707.0,
+        460.0,
+        90.0
+      ],
+      "text": "Kolesterol/Cholesterol",
+      "conf": 0.9946,
+      "center_x": 328.0,
+      "center_y": 752.0
+    },
+    {
+      "bbox": [
+        1366.0,
+        725.0,
+        132.0,
+        77.0
+      ],
+      "text": "1.5 g",
+      "conf": 0.8753,
+      "center_x": 1432.0,
+      "center_y": 763.5
+    },
+    {
+      "bbox": [
+        2024.0,
+        757.0,
+        125.0,
+        78.0
+      ],
+      "text": "2.7g",
+      "conf": 0.8725,
+      "center_x": 2086.5,
+      "center_y": 796.0
+    },
+    {
+      "bbox": [
+        113.0,
+        743.0,
+        1096.0,
+        117.0
+      ],
+      "text": "Lemak Tidak Jenuh Tunggal/Monounsaturated Fat",
+      "conf": 0.9597,
+      "center_x": 661.0,
+      "center_y": 801.5
+    },
+    {
+      "bbox": [
+        1365.0,
+        789.0,
+        136.0,
+        80.0
+      ],
+      "text": "0.5 g",
+      "conf": 0.8636,
+      "center_x": 1433.0,
+      "center_y": 829.0
+    },
+    {
+      "bbox": [
+        2024.0,
+        820.0,
+        127.0,
+        74.0
+      ],
+      "text": "9.4g",
+      "conf": 0.9222,
+      "center_x": 2087.5,
+      "center_y": 857.0
+    },
+    {
+      "bbox": [
+        129.0,
+        815.0,
+        1028.0,
+        112.0
+      ],
+      "text": "Lemak Tidak Jenuh Ganda/Polyunsaturated Fat",
+      "conf": 0.9699,
+      "center_x": 643.0,
+      "center_y": 871.0
+    },
+    {
+      "bbox": [
+        1673.0,
+        835.0,
+        132.0,
+        77.0
+      ],
+      "text": "10%",
+      "conf": 0.8942,
+      "center_x": 1739.0,
+      "center_y": 873.5
+    },
+    {
+      "bbox": [
+        1370.0,
+        855.0,
+        105.0,
+        80.0
+      ],
+      "text": "2g",
+      "conf": 0.8315,
+      "center_x": 1422.5,
+      "center_y": 895.0
+    },
+    {
+      "bbox": [
+        2029.0,
+        884.0,
+        123.0,
+        71.0
+      ],
+      "text": "4.7 g",
+      "conf": 0.9199,
+      "center_x": 2090.5,
+      "center_y": 919.5
+    },
+    {
+      "bbox": [
+        1674.0,
+        905.0,
+        109.0,
+        69.0
+      ],
+      "text": "2%",
+      "conf": 0.7907,
+      "center_x": 1728.5,
+      "center_y": 939.5
+    },
+    {
+      "bbox": [
+        142.0,
+        905.0,
+        614.0,
+        83.0
+      ],
+      "text": "Lemak Jenuh/Saturated Fat",
+      "conf": 0.9757,
+      "center_x": 449.0,
+      "center_y": 946.5
+    },
+    {
+      "bbox": [
+        1379.0,
+        927.0,
+        93.0,
+        71.0
+      ],
+      "text": "1g",
+      "conf": 0.8475,
+      "center_x": 1425.5,
+      "center_y": 962.5
+    },
+    {
+      "bbox": [
+        2029.0,
+        945.0,
+        148.0,
+        74.0
+      ],
+      "text": "73.0 g",
+      "conf": 0.9531,
+      "center_x": 2103.0,
+      "center_y": 982.0
+    },
+    {
+      "bbox": [
+        1670.0,
+        966.0,
+        115.0,
+        76.0
+      ],
+      "text": "5%",
+      "conf": 0.9979,
+      "center_x": 1727.5,
+      "center_y": 1004.0
+    },
+    {
+      "bbox": [
+        122.0,
+        987.0,
+        162.0,
+        64.0
+      ],
+      "text": "Protein",
+      "conf": 0.9908,
+      "center_x": 203.0,
+      "center_y": 1019.0
+    },
+    {
+      "bbox": [
+        1383.0,
+        987.0,
+        123.0,
+        79.0
+      ],
+      "text": "15g",
+      "conf": 0.9405,
+      "center_x": 1444.5,
+      "center_y": 1026.5
+    },
+    {
+      "bbox": [
+        2030.0,
+        1013.0,
+        123.0,
+        66.0
+      ],
+      "text": "2.6g",
+      "conf": 0.8999,
+      "center_x": 2091.5,
+      "center_y": 1046.0
+    },
+    {
+      "bbox": [
+        1672.0,
+        1029.0,
+        115.0,
+        77.0
+      ],
+      "text": "2%",
+      "conf": 0.9966,
+      "center_x": 1729.5,
+      "center_y": 1067.5
+    },
+    {
+      "bbox": [
+        124.0,
+        1027.0,
+        866.0,
+        96.0
+      ],
+      "text": "Karbohidrat Total/Total Carbohydrates",
+      "conf": 0.9775,
+      "center_x": 557.0,
+      "center_y": 1075.0
+    },
+    {
+      "bbox": [
+        1385.0,
+        1057.0,
+        103.0,
+        76.0
+      ],
+      "text": "19",
+      "conf": 0.7779,
+      "center_x": 1436.5,
+      "center_y": 1095.0
+    },
+    {
+      "bbox": [
+        2032.0,
+        1068.0,
+        150.0,
+        74.0
+      ],
+      "text": "39.0 g",
+      "conf": 0.9338,
+      "center_x": 2107.0,
+      "center_y": 1105.0
+    },
+    {
+      "bbox": [
+        159.0,
+        1112.0,
+        549.0,
+        67.0
+      ],
+      "text": "Serat Pangan/Dietary Fiber",
+      "conf": 0.97,
+      "center_x": 433.5,
+      "center_y": 1145.5
+    },
+    {
+      "bbox": [
+        1388.0,
+        1119.0,
+        105.0,
+        80.0
+      ],
+      "text": "8g",
+      "conf": 0.7501,
+      "center_x": 1440.5,
+      "center_y": 1159.0
+    },
+    {
+      "bbox": [
+        2041.0,
+        1141.0,
+        166.0,
+        64.0
+      ],
+      "text": "536 mg",
+      "conf": 0.9579,
+      "center_x": 2124.0,
+      "center_y": 1173.0
+    },
+    {
+      "bbox": [
+        1687.0,
+        1161.0,
+        107.0,
+        74.0
+      ],
+      "text": "7%",
+      "conf": 0.9939,
+      "center_x": 1740.5,
+      "center_y": 1198.0
+    },
+    {
+      "bbox": [
+        164.0,
+        1189.0,
+        273.0,
+        54.0
+      ],
+      "text": "Gula/Sugars",
+      "conf": 0.9967,
+      "center_x": 300.5,
+      "center_y": 1216.0
+    },
+    {
+      "bbox": [
+        1402.0,
+        1186.0,
+        179.0,
+        73.0
+      ],
+      "text": "110 mg",
+      "conf": 0.9345,
+      "center_x": 1491.5,
+      "center_y": 1222.5
+    },
+    {
+      "bbox": [
+        138.0,
+        1243.0,
+        542.0,
+        72.0
+      ],
+      "text": "Garam (Natrium)/Sodium",
+      "conf": 0.9568,
+      "center_x": 409.0,
+      "center_y": 1279.0
+    },
+    {
+      "bbox": [
+        1873.0,
+        1464.0,
+        386.0,
+        90.0
+      ],
+      "text": "ENGANDUNG",
+      "conf": 0.9875,
+      "center_x": 2066.0,
+      "center_y": 1509.0
+    },
+    {
+      "bbox": [
+        169.0,
+        1481.0,
+        417.0,
+        67.0
+      ],
+      "text": "on your calorie needs",
+      "conf": 0.9459,
+      "center_x": 377.5,
+      "center_y": 1514.5
+    }
+  ],
+  "roi_offset": {
+    "x": 0,
+    "y": 42
+  },
+  "pass1_anchor_found": true,
+  "debug_artifacts": {
+    "preprocessed_crop": "debug_output\\01_preprocessed_crop.jpg",
+    "ocr_overlay": "debug_output\\02_ocr_overlay.jpg",
+    "detections_json": "debug_output\\03_ocr_detections.json"
+  }
+}

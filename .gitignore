@@ -1,0 +1,28 @@
+# Lingkungan Virtual Python
+nutrilabel_env/
+venv/
+env/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Dataset dan Gambar Besar
+Dataset/
+runs/
+debug_output/
+debug_arch_update_baso/
+debug_baso_final/
+
+# Model Weights (jika berukuran besar)
+best.pt
+best_float16.tflite
+1.tflite
+
+# File OS & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

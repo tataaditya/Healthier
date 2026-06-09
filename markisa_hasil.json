@@ -1,0 +1,1201 @@
+{
+  "status": "low_confidence",
+  "data": {
+    "kalori": {
+      "per_sajian": 50.0,
+      "satuan": "kkal",
+      "akg_persen": null
+    },
+    "vitamin_a": {
+      "per_sajian": 81.0,
+      "satuan": "g",
+      "akg_persen": 15.0
+    },
+    "vitamin_c": {
+      "per_sajian": 5.2,
+      "satuan": "mg",
+      "akg_persen": 100.0
+    },
+    "kalsium": {
+      "per_sajian": 50.0,
+      "satuan": "mg",
+      "akg_persen": 4.0
+    },
+    "gula": {
+      "per_sajian": 11.0,
+      "satuan": "g",
+      "akg_persen": null
+    }
+  },
+  "takaran_saji_g": 14.0,
+  "flags": [
+    "quality_glare_detected"
+  ],
+  "durasi_detik": 6.55,
+  "raw_ocr": "INFORMASI NILAI GIZI (conf:0.94)\nTakaran Saji (conf:0.97)\n14g (conf:0.98)\nJumlah Sajian per Kemasan (conf:0.95)\nNutriSari (conf:0.98)\nJUMLAH PER SAJIAN (conf:0.94)\nEnergi Total (conf:0.97)\n50 kkal (conf:0.93)\n%AKG\" (conf:0.87)\nLemak Total (conf:0.96)\nog (conf:0.82)\nProtein (conf:1.00)\nog (conf:0.86)\nKarbohidrat Total (conf:0.98)\n14g (conf:0.98)\nGula Total (conf:0.95)\n11g (conf:0.94)\nNatrium (conf:1.00)\n50 mg (conf:0.91)\n3% (conf:0.95)\nmarkisa (conf:0.94)\nVitaminA (conf:0.99)\n269IU (conf:0.92)\n15% (conf:0.99)\nVitamin 81 (conf:0.91)\n0.14 mg (conf:0.94)\n10% (conf:0.98)\nVitamin 83 (conf:0.93)\n3.2mg (conf:0.99)\nVitamin B6 (conf:0.93)\n0.56 mg (conf:0.96)\nAsam Folat (conf:0.96)\n459 (conf:0.91)\n63 mcg (conf:0.97)\nVitamin C (conf:0.94)\n90 mg (conf:0.94)\n100% (conf:0.95)\nVitaminE (conf:0.99)\n5.2 mg (conf:0.96)\n35% (conf:0.88)\nKalsium (conf:1.00)\n50mg (conf:1.00)\n4% (conf:0.97)\nTahukah Kamu? (conf:0.92)\nPersen AKG berdasarkan kebutuhan energi (conf:0.95)\n2150 kkal.Kebutuhan energi Anda mungkin (conf:0.97)\nlebih tinggi atau lebih rendah. (conf:0.95)\nGak cuma di Indonesia, kamu juga bisa (conf:0.94)\nKomposisi: (conf:0.99)\nmenemukan buah markisa di Amerika (conf:0.96)\nSukrosa, pengatur keasaman, maltodekstrin, (conf:0.95)\nSelatan Di sana, buah ini disebut granadilla (conf:0.94)\nperisa sintetik, antikempal, premiks vitamin (conf:0.96)\ndan berukuran lebih kecil dibanding buah (conf:0.96)\npemanis buatan (aspartam dan asesulfam-K), (conf:0.95)\npewarna makanan (beta-karoten Cl.No.40800 (conf:0.94)\nmarkisa pada umumnya. Yuk cobain (conf:0.95)\ndan. (conf:0.89)\nkaramelV). (conf:0.86)\npenstabil (conf:1.00)\nnabati (conf:1.00)\n(mengandung (conf:1.00)\nsegarnya nutriSari Markisa! (conf:0.95)\npewarna (conf:0.99)\nalami (conf:0.97)\ntitanium (conf:0.93)\ndioksida CI. No.77891) garam NaCl, serbuk (conf:0.90)\nmarkisa (0.07%). (conf:0.93)\nTanpa pengawet. (conf:0.99)\nPetunjuk Penyiapan: (conf:0.97)\nLarutkan 1 sachet NutriSari ke dalam 250 ml (conf:0.95)\nair dingin. Aduk hingga larut. NutriSari siap (conf:0.97)\nnutrifood (conf:0.99)\ndiminum.Rasakan kesegarannya! (conf:0.98)\nCUSTOMER RELATION (conf:0.98)\nSimpan di tempat sejuk dan kering (conf:0.98)\n021-460-7777 (conf:0.98)\n0800-1-818181 (Bebas Pulsa) (conf:0.94)\nngandung kedelat Mengandung fenilalanin (conf:0.96)\n08.30-17.00WIB (conf:0.97)\nSabtu08.30-13.00 wIB (conf:0.92)\ncustomer@nutrisari.co.id (conf:0.98)\nMengandung gula dan pemanis buatan (conf:0.98)\n4992101106 (conf:0.99)\nNS Markisa PLS 14 g (conf:0.93)\nMengandung pemanis buatan,disarankan (conf:0.97)\nKode Produksi (conf:0.97)\ntidak dikonsumsi oleh anak di bawah (conf:0.96)\n5 (lima) tahun, ibu hamil dan ibu menyusui (conf:0.90)\nBaik Digunakan Sebelum: (conf:0.96)\n42205-1300-600 (conf:0.96)",
+  "nutrition_ocr": "INFORMASI NILAI GIZI (conf:0.94)\nTakaran Saji (conf:0.97)\n14g (conf:0.98)\nJumlah Sajian per Kemasan (conf:0.95)\nJUMLAH PER SAJIAN (conf:0.94)\nEnergi Total (conf:0.97)\n50 kkal (conf:0.93)\n%AKG\" (conf:0.87)\nLemak Total (conf:0.96)\nProtein (conf:1.00)\nKarbohidrat Total (conf:0.98)\n14g (conf:0.98)\nGula Total (conf:0.95)\n11g (conf:0.94)\nNatrium (conf:1.00)\n50 mg (conf:0.91)\n3% (conf:0.95)\nVitaminA (conf:0.99)\n269IU (conf:0.92)\n15% (conf:0.99)\nVitamin 81 (conf:0.91)\n0.14 mg (conf:0.94)\n10% (conf:0.98)\nVitamin 83 (conf:0.93)\n3.2mg (conf:0.99)\nVitamin B6 (conf:0.93)\n0.56 mg (conf:0.96)\n459 (conf:0.91)\n63 mcg (conf:0.97)\nVitamin C (conf:0.94)\n90 mg (conf:0.94)\n100% (conf:0.95)\nVitaminE (conf:0.99)\n5.2 mg (conf:0.96)\n35% (conf:0.88)\nKalsium (conf:1.00)\n50mg (conf:1.00)\n4% (conf:0.97)\nPersen AKG berdasarkan kebutuhan energi (conf:0.95)\n2150 kkal.Kebutuhan energi Anda mungkin (conf:0.97)\npewarna makanan (beta-karoten Cl.No.40800 (conf:0.94)\ndioksida CI. No.77891) garam NaCl, serbuk (conf:0.90)\nmarkisa (0.07%). (conf:0.93)\nLarutkan 1 sachet NutriSari ke dalam 250 ml (conf:0.95)\n021-460-7777 (conf:0.98)\n0800-1-818181 (Bebas Pulsa) (conf:0.94)\n08.30-17.00WIB (conf:0.97)\nSabtu08.30-13.00 wIB (conf:0.92)\nMengandung gula dan pemanis buatan (conf:0.98)\n4992101106 (conf:0.99)\nNS Markisa PLS 14 g (conf:0.93)\n5 (lima) tahun, ibu hamil dan ibu menyusui (conf:0.90)\n42205-1300-600 (conf:0.96)",
+  "quality": {
+    "quality_score": 0.795,
+    "usable": true,
+    "blur_laplacian": 3223.19,
+    "brightness": 162.86,
+    "contrast": 69.75,
+    "glare_ratio": 0.1463,
+    "dark_ratio": 0.0191,
+    "edge_ratio": 0.1066,
+    "warnings": [
+      "glare_detected"
+    ],
+    "image_size": {
+      "width": 700,
+      "height": 822
+    }
+  },
+  "roi": {
+    "detected": false,
+    "method": "full_image_fallback",
+    "original_size": {
+      "width": 700,
+      "height": 822
+    },
+    "roi_size": {
+      "width": 700,
+      "height": 822
+    }
+  },
+  "semantic_filter": {
+    "enabled": true,
+    "reason": "nutrition_semantic_filter",
+    "anchors": 22,
+    "kept": 53,
+    "removed": 38
+  },
+  "column_layout": {
+    "mode": "multi",
+    "detected": true,
+    "image_width": 572.0,
+    "serving_x0": 102.02000000000001,
+    "serving_x1": 219.0,
+    "dv_x0": 219.0,
+    "dv_x1": 572.0,
+    "per100_x0": null,
+    "per100_x1": null,
+    "headers": [
+      {
+        "kind": "serving",
+        "x": 135.5,
+        "text": "JUMLAH PER SAJIAN"
+      },
+      {
+        "kind": "dv",
+        "x": 284.5,
+        "text": "%AKG\""
+      }
+    ]
+  },
+  "evaluasi": {},
+  "ocr_detections": [
+    {
+      "bbox": [
+        77.0,
+        3.0,
+        232.0,
+        29.0
+      ],
+      "text": "INFORMASI NILAI GIZI",
+      "conf": 0.9445,
+      "center_x": 193.0,
+      "center_y": 17.5
+    },
+    {
+      "bbox": [
+        74.0,
+        32.0,
+        68.0,
+        19.0
+      ],
+      "text": "Takaran Saji",
+      "conf": 0.9705,
+      "center_x": 108.0,
+      "center_y": 41.5
+    },
+    {
+      "bbox": [
+        282.0,
+        38.0,
+        30.0,
+        21.0
+      ],
+      "text": "14g",
+      "conf": 0.9833,
+      "center_x": 297.0,
+      "center_y": 48.5
+    },
+    {
+      "bbox": [
+        72.0,
+        45.0,
+        159.0,
+        21.0
+      ],
+      "text": "Jumlah Sajian per Kemasan",
+      "conf": 0.9549,
+      "center_x": 151.5,
+      "center_y": 55.5
+    },
+    {
+      "bbox": [
+        354.0,
+        22.0,
+        292.0,
+        106.0
+      ],
+      "text": "NutriSari",
+      "conf": 0.9839,
+      "center_x": 500.0,
+      "center_y": 75.0
+    },
+    {
+      "bbox": [
+        71.0,
+        66.0,
+        129.0,
+        23.0
+      ],
+      "text": "JUMLAH PER SAJIAN",
+      "conf": 0.9398,
+      "center_x": 135.5,
+      "center_y": 77.5
+    },
+    {
+      "bbox": [
+        71.0,
+        81.0,
+        76.0,
+        20.0
+      ],
+      "text": "Energi Total",
+      "conf": 0.968,
+      "center_x": 109.0,
+      "center_y": 91.0
+    },
+    {
+      "bbox": [
+        258.0,
+        84.0,
+        51.0,
+        21.0
+      ],
+      "text": "50 kkal",
+      "conf": 0.9287,
+      "center_x": 283.5,
+      "center_y": 94.5
+    },
+    {
+      "bbox": [
+        262.0,
+        107.0,
+        45.0,
+        15.0
+      ],
+      "text": "%AKG\"",
+      "conf": 0.8732,
+      "center_x": 284.5,
+      "center_y": 114.5
+    },
+    {
+      "bbox": [
+        70.0,
+        111.0,
+        75.0,
+        18.0
+      ],
+      "text": "Lemak Total",
+      "conf": 0.9582,
+      "center_x": 107.5,
+      "center_y": 120.0
+    },
+    {
+      "bbox": [
+        213.0,
+        116.0,
+        24.0,
+        19.0
+      ],
+      "text": "og",
+      "conf": 0.8221,
+      "center_x": 225.0,
+      "center_y": 125.5
+    },
+    {
+      "bbox": [
+        70.0,
+        124.0,
+        49.0,
+        17.0
+      ],
+      "text": "Protein",
+      "conf": 0.9981,
+      "center_x": 94.5,
+      "center_y": 132.5
+    },
+    {
+      "bbox": [
+        212.0,
+        128.0,
+        24.0,
+        20.0
+      ],
+      "text": "og",
+      "conf": 0.8631,
+      "center_x": 224.0,
+      "center_y": 138.0
+    },
+    {
+      "bbox": [
+        70.0,
+        136.0,
+        107.0,
+        17.0
+      ],
+      "text": "Karbohidrat Total",
+      "conf": 0.9811,
+      "center_x": 123.5,
+      "center_y": 144.5
+    },
+    {
+      "bbox": [
+        209.0,
+        142.0,
+        27.0,
+        16.0
+      ],
+      "text": "14g",
+      "conf": 0.9812,
+      "center_x": 222.5,
+      "center_y": 150.0
+    },
+    {
+      "bbox": [
+        82.0,
+        148.0,
+        62.0,
+        17.0
+      ],
+      "text": "Gula Total",
+      "conf": 0.9495,
+      "center_x": 113.0,
+      "center_y": 156.5
+    },
+    {
+      "bbox": [
+        209.0,
+        154.0,
+        28.0,
+        16.0
+      ],
+      "text": "11g",
+      "conf": 0.9393,
+      "center_x": 223.0,
+      "center_y": 162.0
+    },
+    {
+      "bbox": [
+        68.0,
+        159.0,
+        56.0,
+        17.0
+      ],
+      "text": "Natrium",
+      "conf": 0.9965,
+      "center_x": 96.0,
+      "center_y": 167.5
+    },
+    {
+      "bbox": [
+        206.0,
+        164.0,
+        41.0,
+        19.0
+      ],
+      "text": "50 mg",
+      "conf": 0.9138,
+      "center_x": 226.5,
+      "center_y": 173.5
+    },
+    {
+      "bbox": [
+        282.0,
+        166.0,
+        24.0,
+        20.0
+      ],
+      "text": "3%",
+      "conf": 0.9493,
+      "center_x": 294.0,
+      "center_y": 176.0
+    },
+    {
+      "bbox": [
+        381.0,
+        144.0,
+        238.0,
+        66.0
+      ],
+      "text": "markisa",
+      "conf": 0.94,
+      "center_x": 500.0,
+      "center_y": 177.0
+    },
+    {
+      "bbox": [
+        68.0,
+        178.0,
+        60.0,
+        19.0
+      ],
+      "text": "VitaminA",
+      "conf": 0.9917,
+      "center_x": 98.0,
+      "center_y": 187.5
+    },
+    {
+      "bbox": [
+        199.0,
+        182.0,
+        41.0,
+        19.0
+      ],
+      "text": "269IU",
+      "conf": 0.9183,
+      "center_x": 219.5,
+      "center_y": 191.5
+    },
+    {
+      "bbox": [
+        280.0,
+        186.0,
+        22.0,
+        16.0
+      ],
+      "text": "15%",
+      "conf": 0.9928,
+      "center_x": 291.0,
+      "center_y": 194.0
+    },
+    {
+      "bbox": [
+        67.0,
+        191.0,
+        63.0,
+        18.0
+      ],
+      "text": "Vitamin 81",
+      "conf": 0.9072,
+      "center_x": 98.5,
+      "center_y": 200.0
+    },
+    {
+      "bbox": [
+        195.0,
+        194.0,
+        50.0,
+        20.0
+      ],
+      "text": "0.14 mg",
+      "conf": 0.9434,
+      "center_x": 220.0,
+      "center_y": 204.0
+    },
+    {
+      "bbox": [
+        280.0,
+        198.0,
+        21.0,
+        17.0
+      ],
+      "text": "10%",
+      "conf": 0.9815,
+      "center_x": 290.5,
+      "center_y": 206.5
+    },
+    {
+      "bbox": [
+        67.0,
+        202.0,
+        65.0,
+        19.0
+      ],
+      "text": "Vitamin 83",
+      "conf": 0.9332,
+      "center_x": 99.5,
+      "center_y": 211.5
+    },
+    {
+      "bbox": [
+        199.0,
+        206.0,
+        45.0,
+        19.0
+      ],
+      "text": "3.2mg",
+      "conf": 0.9889,
+      "center_x": 221.5,
+      "center_y": 215.5
+    },
+    {
+      "bbox": [
+        67.0,
+        214.0,
+        65.0,
+        18.0
+      ],
+      "text": "Vitamin B6",
+      "conf": 0.9322,
+      "center_x": 99.5,
+      "center_y": 223.0
+    },
+    {
+      "bbox": [
+        194.0,
+        217.0,
+        50.0,
+        21.0
+      ],
+      "text": "0.56 mg",
+      "conf": 0.9643,
+      "center_x": 219.0,
+      "center_y": 227.5
+    },
+    {
+      "bbox": [
+        67.0,
+        227.0,
+        65.0,
+        17.0
+      ],
+      "text": "Asam Folat",
+      "conf": 0.9643,
+      "center_x": 99.5,
+      "center_y": 235.5
+    },
+    {
+      "bbox": [
+        274.0,
+        218.0,
+        27.0,
+        35.0
+      ],
+      "text": "459",
+      "conf": 0.9085,
+      "center_x": 287.5,
+      "center_y": 235.5
+    },
+    {
+      "bbox": [
+        203.0,
+        229.0,
+        46.0,
+        21.0
+      ],
+      "text": "63 mcg",
+      "conf": 0.9685,
+      "center_x": 226.0,
+      "center_y": 239.5
+    },
+    {
+      "bbox": [
+        66.0,
+        239.0,
+        58.0,
+        18.0
+      ],
+      "text": "Vitamin C",
+      "conf": 0.9382,
+      "center_x": 95.0,
+      "center_y": 248.0
+    },
+    {
+      "bbox": [
+        203.0,
+        241.0,
+        41.0,
+        21.0
+      ],
+      "text": "90 mg",
+      "conf": 0.9398,
+      "center_x": 223.5,
+      "center_y": 251.5
+    },
+    {
+      "bbox": [
+        272.0,
+        246.0,
+        26.0,
+        16.0
+      ],
+      "text": "100%",
+      "conf": 0.9539,
+      "center_x": 285.0,
+      "center_y": 254.0
+    },
+    {
+      "bbox": [
+        65.0,
+        251.0,
+        58.0,
+        16.0
+      ],
+      "text": "VitaminE",
+      "conf": 0.9859,
+      "center_x": 94.0,
+      "center_y": 259.0
+    },
+    {
+      "bbox": [
+        200.0,
+        253.0,
+        44.0,
+        21.0
+      ],
+      "text": "5.2 mg",
+      "conf": 0.9644,
+      "center_x": 222.0,
+      "center_y": 263.5
+    },
+    {
+      "bbox": [
+        275.0,
+        257.0,
+        23.0,
+        18.0
+      ],
+      "text": "35%",
+      "conf": 0.8831,
+      "center_x": 286.5,
+      "center_y": 266.0
+    },
+    {
+      "bbox": [
+        65.0,
+        262.0,
+        50.0,
+        19.0
+      ],
+      "text": "Kalsium",
+      "conf": 0.9972,
+      "center_x": 90.0,
+      "center_y": 271.5
+    },
+    {
+      "bbox": [
+        202.0,
+        266.0,
+        40.0,
+        19.0
+      ],
+      "text": "50mg",
+      "conf": 0.9974,
+      "center_x": 222.0,
+      "center_y": 275.5
+    },
+    {
+      "bbox": [
+        280.0,
+        271.0,
+        22.0,
+        16.0
+      ],
+      "text": "4%",
+      "conf": 0.9652,
+      "center_x": 291.0,
+      "center_y": 279.0
+    },
+    {
+      "bbox": [
+        350.0,
+        260.0,
+        294.0,
+        41.0
+      ],
+      "text": "Tahukah Kamu?",
+      "conf": 0.9211,
+      "center_x": 497.0,
+      "center_y": 280.5
+    },
+    {
+      "bbox": [
+        64.0,
+        283.0,
+        239.0,
+        27.0
+      ],
+      "text": "Persen AKG berdasarkan kebutuhan energi",
+      "conf": 0.9501,
+      "center_x": 183.5,
+      "center_y": 296.5
+    },
+    {
+      "bbox": [
+        64.0,
+        298.0,
+        238.0,
+        24.0
+      ],
+      "text": "2150 kkal.Kebutuhan energi Anda mungkin",
+      "conf": 0.9655,
+      "center_x": 183.0,
+      "center_y": 310.0
+    },
+    {
+      "bbox": [
+        62.0,
+        311.0,
+        166.0,
+        20.0
+      ],
+      "text": "lebih tinggi atau lebih rendah.",
+      "conf": 0.9508,
+      "center_x": 145.0,
+      "center_y": 321.0
+    },
+    {
+      "bbox": [
+        349.0,
+        318.0,
+        270.0,
+        28.0
+      ],
+      "text": "Gak cuma di Indonesia, kamu juga bisa",
+      "conf": 0.9356,
+      "center_x": 484.0,
+      "center_y": 332.0
+    },
+    {
+      "bbox": [
+        55.0,
+        342.0,
+        69.0,
+        16.0
+      ],
+      "text": "Komposisi:",
+      "conf": 0.9935,
+      "center_x": 89.5,
+      "center_y": 350.0
+    },
+    {
+      "bbox": [
+        348.0,
+        339.0,
+        264.0,
+        26.0
+      ],
+      "text": "menemukan buah markisa di Amerika",
+      "conf": 0.9638,
+      "center_x": 480.0,
+      "center_y": 352.0
+    },
+    {
+      "bbox": [
+        55.0,
+        355.0,
+        267.0,
+        23.0
+      ],
+      "text": "Sukrosa, pengatur keasaman, maltodekstrin,",
+      "conf": 0.9521,
+      "center_x": 188.5,
+      "center_y": 366.5
+    },
+    {
+      "bbox": [
+        348.0,
+        359.0,
+        298.0,
+        28.0
+      ],
+      "text": "Selatan Di sana, buah ini disebut granadilla",
+      "conf": 0.9402,
+      "center_x": 497.0,
+      "center_y": 373.0
+    },
+    {
+      "bbox": [
+        54.0,
+        368.0,
+        267.0,
+        24.0
+      ],
+      "text": "perisa sintetik, antikempal, premiks vitamin",
+      "conf": 0.9583,
+      "center_x": 187.5,
+      "center_y": 380.0
+    },
+    {
+      "bbox": [
+        347.0,
+        379.0,
+        286.0,
+        27.0
+      ],
+      "text": "dan berukuran lebih kecil dibanding buah",
+      "conf": 0.9566,
+      "center_x": 490.0,
+      "center_y": 392.5
+    },
+    {
+      "bbox": [
+        55.0,
+        382.0,
+        265.0,
+        23.0
+      ],
+      "text": "pemanis buatan (aspartam dan asesulfam-K),",
+      "conf": 0.9516,
+      "center_x": 187.5,
+      "center_y": 393.5
+    },
+    {
+      "bbox": [
+        54.0,
+        394.0,
+        267.0,
+        24.0
+      ],
+      "text": "pewarna makanan (beta-karoten Cl.No.40800",
+      "conf": 0.9449,
+      "center_x": 187.5,
+      "center_y": 406.0
+    },
+    {
+      "bbox": [
+        346.0,
+        399.0,
+        251.0,
+        26.0
+      ],
+      "text": "markisa pada umumnya. Yuk cobain",
+      "conf": 0.9469,
+      "center_x": 471.5,
+      "center_y": 412.0
+    },
+    {
+      "bbox": [
+        55.0,
+        411.0,
+        30.0,
+        11.0
+      ],
+      "text": "dan.",
+      "conf": 0.8872,
+      "center_x": 70.0,
+      "center_y": 416.5
+    },
+    {
+      "bbox": [
+        95.0,
+        409.0,
+        111.0,
+        20.0
+      ],
+      "text": "karamelV).",
+      "conf": 0.8574,
+      "center_x": 150.5,
+      "center_y": 419.0
+    },
+    {
+      "bbox": [
+        207.0,
+        417.0,
+        56.0,
+        11.0
+      ],
+      "text": "penstabil",
+      "conf": 0.9961,
+      "center_x": 235.0,
+      "center_y": 422.5
+    },
+    {
+      "bbox": [
+        282.0,
+        418.0,
+        39.0,
+        14.0
+      ],
+      "text": "nabati",
+      "conf": 0.9952,
+      "center_x": 301.5,
+      "center_y": 425.0
+    },
+    {
+      "bbox": [
+        53.0,
+        422.0,
+        86.0,
+        16.0
+      ],
+      "text": "(mengandung",
+      "conf": 0.996,
+      "center_x": 96.0,
+      "center_y": 430.0
+    },
+    {
+      "bbox": [
+        345.0,
+        420.0,
+        205.0,
+        24.0
+      ],
+      "text": "segarnya nutriSari Markisa!",
+      "conf": 0.9454,
+      "center_x": 447.5,
+      "center_y": 432.0
+    },
+    {
+      "bbox": [
+        150.0,
+        426.0,
+        72.0,
+        15.0
+      ],
+      "text": "pewarna",
+      "conf": 0.9863,
+      "center_x": 186.0,
+      "center_y": 433.5
+    },
+    {
+      "bbox": [
+        219.0,
+        430.0,
+        49.0,
+        11.0
+      ],
+      "text": "alami",
+      "conf": 0.9716,
+      "center_x": 243.5,
+      "center_y": 435.5
+    },
+    {
+      "bbox": [
+        266.0,
+        429.0,
+        54.0,
+        17.0
+      ],
+      "text": "titanium",
+      "conf": 0.934,
+      "center_x": 293.0,
+      "center_y": 437.5
+    },
+    {
+      "bbox": [
+        51.0,
+        433.0,
+        270.0,
+        28.0
+      ],
+      "text": "dioksida CI. No.77891) garam NaCl, serbuk",
+      "conf": 0.9038,
+      "center_x": 186.0,
+      "center_y": 447.0
+    },
+    {
+      "bbox": [
+        51.0,
+        448.0,
+        94.0,
+        17.0
+      ],
+      "text": "markisa (0.07%).",
+      "conf": 0.9339,
+      "center_x": 98.0,
+      "center_y": 456.5
+    },
+    {
+      "bbox": [
+        50.0,
+        468.0,
+        100.0,
+        20.0
+      ],
+      "text": "Tanpa pengawet.",
+      "conf": 0.986,
+      "center_x": 100.0,
+      "center_y": 478.0
+    },
+    {
+      "bbox": [
+        48.0,
+        492.0,
+        132.0,
+        24.0
+      ],
+      "text": "Petunjuk Penyiapan:",
+      "conf": 0.9674,
+      "center_x": 114.0,
+      "center_y": 504.0
+    },
+    {
+      "bbox": [
+        48.0,
+        505.0,
+        270.0,
+        26.0
+      ],
+      "text": "Larutkan 1 sachet NutriSari ke dalam 250 ml",
+      "conf": 0.9456,
+      "center_x": 183.0,
+      "center_y": 518.0
+    },
+    {
+      "bbox": [
+        49.0,
+        519.0,
+        267.0,
+        25.0
+      ],
+      "text": "air dingin. Aduk hingga larut. NutriSari siap",
+      "conf": 0.9671,
+      "center_x": 182.5,
+      "center_y": 531.5
+    },
+    {
+      "bbox": [
+        413.0,
+        523.0,
+        70.0,
+        17.0
+      ],
+      "text": "nutrifood",
+      "conf": 0.9943,
+      "center_x": 448.0,
+      "center_y": 531.5
+    },
+    {
+      "bbox": [
+        49.0,
+        533.0,
+        193.0,
+        21.0
+      ],
+      "text": "diminum.Rasakan kesegarannya!",
+      "conf": 0.9776,
+      "center_x": 145.5,
+      "center_y": 543.5
+    },
+    {
+      "bbox": [
+        379.0,
+        542.0,
+        133.0,
+        21.0
+      ],
+      "text": "CUSTOMER RELATION",
+      "conf": 0.9785,
+      "center_x": 445.5,
+      "center_y": 552.5
+    },
+    {
+      "bbox": [
+        47.0,
+        551.0,
+        214.0,
+        25.0
+      ],
+      "text": "Simpan di tempat sejuk dan kering",
+      "conf": 0.9779,
+      "center_x": 154.0,
+      "center_y": 563.5
+    },
+    {
+      "bbox": [
+        392.0,
+        558.0,
+        106.0,
+        17.0
+      ],
+      "text": "021-460-7777",
+      "conf": 0.9796,
+      "center_x": 445.0,
+      "center_y": 566.5
+    },
+    {
+      "bbox": [
+        355.0,
+        567.0,
+        178.0,
+        25.0
+      ],
+      "text": "0800-1-818181 (Bebas Pulsa)",
+      "conf": 0.942,
+      "center_x": 444.0,
+      "center_y": 579.5
+    },
+    {
+      "bbox": [
+        62.0,
+        578.0,
+        201.0,
+        21.0
+      ],
+      "text": "ngandung kedelat Mengandung fenilalanin",
+      "conf": 0.9608,
+      "center_x": 162.5,
+      "center_y": 588.5
+    },
+    {
+      "bbox": [
+        397.0,
+        585.0,
+        94.0,
+        17.0
+      ],
+      "text": "08.30-17.00WIB",
+      "conf": 0.9743,
+      "center_x": 444.0,
+      "center_y": 593.5
+    },
+    {
+      "bbox": [
+        376.0,
+        598.0,
+        135.0,
+        18.0
+      ],
+      "text": "Sabtu08.30-13.00 wIB",
+      "conf": 0.9217,
+      "center_x": 443.5,
+      "center_y": 607.0
+    },
+    {
+      "bbox": [
+        371.0,
+        613.0,
+        144.0,
+        18.0
+      ],
+      "text": "customer@nutrisari.co.id",
+      "conf": 0.9816,
+      "center_x": 443.0,
+      "center_y": 622.0
+    },
+    {
+      "bbox": [
+        392.0,
+        641.0,
+        180.0,
+        19.0
+      ],
+      "text": "Mengandung gula dan pemanis buatan",
+      "conf": 0.985,
+      "center_x": 482.0,
+      "center_y": 650.5
+    },
+    {
+      "bbox": [
+        84.0,
+        663.0,
+        159.0,
+        25.0
+      ],
+      "text": "4992101106",
+      "conf": 0.9879,
+      "center_x": 163.5,
+      "center_y": 675.5
+    },
+    {
+      "bbox": [
+        95.0,
+        679.0,
+        117.0,
+        22.0
+      ],
+      "text": "NS Markisa PLS 14 g",
+      "conf": 0.9286,
+      "center_x": 153.5,
+      "center_y": 690.0
+    },
+    {
+      "bbox": [
+        42.0,
+        698.0,
+        195.0,
+        22.0
+      ],
+      "text": "Mengandung pemanis buatan,disarankan",
+      "conf": 0.9666,
+      "center_x": 139.5,
+      "center_y": 709.0
+    },
+    {
+      "bbox": [
+        304.0,
+        704.0,
+        86.0,
+        18.0
+      ],
+      "text": "Kode Produksi",
+      "conf": 0.967,
+      "center_x": 347.0,
+      "center_y": 713.0
+    },
+    {
+      "bbox": [
+        43.0,
+        709.0,
+        171.0,
+        19.0
+      ],
+      "text": "tidak dikonsumsi oleh anak di bawah",
+      "conf": 0.9572,
+      "center_x": 128.5,
+      "center_y": 718.5
+    },
+    {
+      "bbox": [
+        42.0,
+        719.0,
+        198.0,
+        21.0
+      ],
+      "text": "5 (lima) tahun, ibu hamil dan ibu menyusui",
+      "conf": 0.9021,
+      "center_x": 141.0,
+      "center_y": 729.5
+    },
+    {
+      "bbox": [
+        301.0,
+        719.0,
+        150.0,
+        24.0
+      ],
+      "text": "Baik Digunakan Sebelum:",
+      "conf": 0.9562,
+      "center_x": 376.0,
+      "center_y": 731.0
+    },
+    {
+      "bbox": [
+        38.0,
+        747.0,
+        120.0,
+        20.0
+      ],
+      "text": "42205-1300-600",
+      "conf": 0.9575,
+      "center_x": 98.0,
+      "center_y": 757.0
+    }
+  ],
+  "roi_offset": {
+    "x": 0,
+    "y": 41
+  },
+  "pass1_anchor_found": true,
+  "debug_artifacts": {
+    "preprocessed_crop": "debug_output\\01_preprocessed_crop.jpg",
+    "ocr_overlay": "debug_output\\02_ocr_overlay.jpg",
+    "detections_json": "debug_output\\03_ocr_detections.json"
+  }
+}

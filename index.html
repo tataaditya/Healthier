@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#F8F5F1">
+    <title>healthier - Scan Gizi Harianmu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* Correction UI Styles */
+        .btn-koreksi-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+
+        .btn-koreksi-toggle:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-koreksi-toggle.active {
+            background: #48C78E;
+            color: white;
+            border-color: #48C78E;
+        }
+
+        .correction-toolbar {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 12px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .correction-toolbar.active {
+            display: flex;
+        }
+
+        .corr-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-corr-tool {
+            border: 2px solid transparent;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-corr-tool.active {
+            border: 2px solid #333;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-corr-tool[data-cat="makanan_pokok"] {
+            background: #FFC107;
+        }
+
+        .btn-corr-tool[data-cat="lauk_pauk"] {
+            background: #F44336;
+        }
+
+        .btn-corr-tool[data-cat="sayur"] {
+            background: #4CAF50;
+        }
+
+        .btn-corr-tool[data-cat="buah"] {
+            background: #9C27B0;
+        }
+
+        .btn-corr-tool[data-cat="eraser"] {
+            background: #fff;
+            font-size: 1.2rem;
+            border: 1px solid #ddd;
+        }
+
+        #correctionCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.6;
+            pointer-events: none;
+            transform-origin: 0 0;
+        }
+
+        #correctionCanvas.active {
+            pointer-events: auto;
+            touch-action: none;
+        }
+
+        .seg-canvas-wrapper {
+            position: relative;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .seg-canvas-wrapper.zoomed {
+            cursor: grab;
+        }
+
+        .seg-canvas-wrapper.zoomed:active {
+            cursor: grabbing;
+        }
+
+        .minimap-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 120px;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            display: none;
+            z-index: 10;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid red;
+            background: rgba(255, 0, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        #corrHint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 20;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header" id="mainHeader">
+            <div class="header-text">
+                <h1>healthier ✨</h1>
+                <p id="headerDate" style="margin-top: 2px;">Hari ini</p>
+            </div>
+            <img src="./Logo.png" alt="healthier Logo" style="height: 72px; width: auto; object-fit: contain;">
+        </header>
+
+        <!-- ONBOARDING VIEW -->
+        <main class="view" id="viewOnboarding">
+            <div style="text-align:center; padding: 40px 0 30px;">
+                <h1
+                    style="font-size:2.8rem; font-weight:800; color:var(--grade-A); margin-bottom:12px; letter-spacing:-1px;">
+                    healthier</h1>
+                <p style="color:var(--text-muted); font-weight:500; font-size:0.95rem;">Personalisasi profilmu agar app
+                    ini mengenali porsi kalori cemilan yang pas buat tubuhmu!</p>
+            </div>
+
+            <!-- Step Indicators -->
+            <div class="onboarding-steps" id="onboardingSteps">
+                <div class="step-dot active" data-step="1">1</div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="2">2</div>
+            </div>
+
+            <!-- STEP 1: Data Fisik -->
+            <div class="form-card glass-card" id="onboardStep1">
+                <h3 style="font-size:1rem; font-weight:700; margin-bottom:4px;">📋 Data Fisik</h3>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Langkah 1 dari 2</p>
+                <div class="input-float">
+                    <select id="userGender" class="glass-select" required>
+                        <option value="male">Laki-laki</option>
+                        <option value="female">Perempuan</option>
+                    </select>
+                    <label style="top:12px; font-size:0.75rem; color:var(--grade-A);">Jenis Kelamin</label>
+                </div>
+                <div class="input-float">
+                    <input type="number" id="userAge" placeholder=" " required>
+                    <label>Umur (tahun)</label>
+                </div>
+                <div class="input-float">
+                    <input type="number" id="userWeight" placeholder=" " required>
+                    <label>Berat Badan (kg)</label>
+                </div>
+                <div class="input-float">
+                    <input type="number" id="userHeight" placeholder=" " required>
+                    <label>Tinggi Badan (cm)</label>
+                </div>
+                <button class="btn-primary btn-large btn-glow mt-4" id="btnToStep2">
+                    Lanjut → Kondisi Kesehatan
+                </button>
+            </div>
+
+            <!-- STEP 2: Kondisi Kesehatan -->
+            <div class="form-card glass-card" id="onboardStep2" style="display:none;">
+                <h3 style="font-size:1rem; font-weight:700; margin-bottom:4px;">🩺 Kondisi Kesehatan</h3>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Langkah 2 dari 2 — Opsional
+                </p>
+                <div class="health-check-group">
+                    <label class="health-checkbox">
+                        <input type="checkbox" id="chkDiabetes">
+                        <span class="checkmark"></span>
+                        <span>Saya memiliki <strong>Diabetes Melitus Tipe 2</strong></span>
+                    </label>
+                    <div class="sub-checks" id="diabetesSubChecks" style="display:none;">
+                        <label class="health-checkbox sub">
+                            <input type="checkbox" id="chkNephropathy">
+                            <span class="checkmark"></span>
+                            <span>Gangguan fungsi ginjal (Nefropati Diabetik)</span>
+                        </label>
+                        <label class="health-checkbox sub">
+                            <input type="checkbox" id="chkDyslipidemia">
+                            <span class="checkmark"></span>
+                            <span>Kolesterol tinggi (Dislipidemia)</span>
+                        </label>
+                    </div>
+                    <label class="health-checkbox">
+                        <input type="checkbox" id="chkHypertension">
+                        <span class="checkmark"></span>
+                        <span>Saya memiliki <strong>Tekanan Darah Tinggi</strong> (Hipertensi)</span>
+                    </label>
+                </div>
+                <p
+                    style="font-size:0.72rem; color:var(--text-muted); margin-top:12px; line-height:1.5; padding:10px; background:rgba(0,0,0,0.02); border-radius:10px;">
+                    🔒 Informasi ini digunakan untuk menyesuaikan rekomendasi gizi. Data tersimpan lokal di perangkat
+                    Anda dan tidak dikirim ke server manapun.</p>
+                <div style="display:flex; gap:10px; margin-top:16px;">
+                    <button class="btn-back" id="btnBackStep1"
+                        style="flex:1; padding:14px; border-radius:12px; background:rgba(0,0,0,0.04); text-align:center;">←
+                        Kembali</button>
+                    <button class="btn-primary btn-large btn-glow" id="btnSaveProfile" style="flex:2;">Mulai Perjalanan
+                        Sehat ✨</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- DASHBOARD VIEW -->
+        <main class="view active" id="viewDashboard">
+
+            <!-- Clinical Badges -->
+            <div id="clinicalBadges" class="clinical-badges" style="display:none;"></div>
+
+            <div class="glass-card hero-card">
+                <div class="hero-header">
+                    <h3>Batas Gula Cemilan</h3>
+                    <span class="badge" id="bmiBadge">BMI</span>
+                </div>
+
+                <div class="progress-circle-container">
+                    <svg class="progress-circle" viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#8ED96C" />
+                                <stop offset="100%" stop-color="#48C78E" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="bg" cx="50" cy="50" r="40"></circle>
+                        <circle class="bar" cx="50" cy="50" r="40" id="sugarCircleVal"></circle>
+                    </svg>
+                    <div class="circle-content">
+                        <span class="circle-val" id="dashboardSugar">0</span>
+                        <span class="circle-unit" id="sugarUnitLabel">/ 50g</span>
+                    </div>
+                </div>
+
+                <p class="hero-subtitle" id="sugarMessage">Gula aman terkendali! 🎉</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="glass-card stat-item">
+                    <div class="stat-icon cal-icon">🔥</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Cal. Nyemil</p>
+                        <h4 id="dashboardCal">0 kkal</h4>
+                    </div>
+                </div>
+                <div class="glass-card stat-item">
+                    <div class="stat-icon fat-icon">🧀</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Lemak Jenuh</p>
+                        <h4 id="dashboardFat">0.0 g</h4>
+                    </div>
+                </div>
+                <div class="glass-card stat-item">
+                    <div class="stat-icon" style="background:rgba(142,68,173,0.12);">🧂</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Sodium</p>
+                        <h4 id="dashboardSodium">0 mg</h4>
+                    </div>
+                </div>
+                <div class="glass-card stat-item">
+                    <div class="stat-icon" style="background:rgba(52,152,219,0.12);">💪</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Protein</p>
+                        <h4 id="dashboardProtein">0.0 g</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gamification Streak -->
+            <div class="glass-card" style="margin-bottom:24px; display:flex; gap:16px; align-items:center;">
+                <div style="font-size:2.5rem; text-shadow: 0 4px 12px rgba(244, 196, 90, 0.4);" id="streakIcon"
+                    class="pulse">🔥</div>
+                <div>
+                    <h3 id="streakTitle">1 Hari Beruntun!</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted);" id="streakDesc">Gula aman terkendali.
+                        Lanjutkan!</p>
+                </div>
+            </div>
+
+            <!-- Weekly Sugar Chart -->
+            <div class="glass-card" style="margin-bottom:16px; padding:16px;">
+                <h3 style="margin-bottom:12px; font-size:0.95rem; font-weight:700; color:var(--text-muted);">STATISTIK
+                    GULA (7 HARI)</h3>
+                <div style="height: 120px; position: relative;">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Weekly Nutri-Score Distribution -->
+            <div class="glass-card" style="margin-bottom:24px; padding:16px;">
+                <h3 style="margin-bottom:12px; font-size:0.95rem; font-weight:700; color:var(--text-muted);">DISTRIBUSI
+                    NUTRI-SCORE (7 HARI)</h3>
+                <div style="height: 100px; position: relative;">
+                    <canvas id="weeklyNSChart"></canvas>
+                </div>
+            </div>
+
+            <div class="section-title-wrapper">
+                <h2>Riwayat Makan Hari Ini</h2>
+                <button id="btnSeeAll" class="btn-text">Lihat Semua</button>
+            </div>
+
+            <div class="history-list" id="dashboardHistory">
+            </div>
+        </main>
+
+        <!-- SCAN CHOICE VIEW -->
+        <main class="view" id="viewScanner">
+            <div class="scanner-header">
+                <h2>Pilih Jenis Makanan</h2>
+                <p>Apa yang ingin kamu analisis?</p>
+            </div>
+
+            <div class="scan-choice-grid">
+                <button class="scan-choice-card" id="btnChoicePackaged">
+                    <div class="choice-icon">📦</div>
+                    <h3>Makanan Kemasan</h3>
+                    <p>Scan label nutrisi pada kemasan dengan kamera atau upload foto</p>
+                </button>
+                <button class="scan-choice-card" id="btnChoicePlate">
+                    <div class="choice-icon">🍽️</div>
+                    <h3>Isi Piringku</h3>
+                    <p>Estimasi proporsi makanan di piringmu (real food)</p>
+                </button>
+            </div>
+        </main>
+
+        <!-- OCR SCANNER VIEW -->
+        <main class="view" id="viewOcrScanner">
+            <div class="scanner-header">
+                <h2>Scan Label Nutrisi</h2>
+                <p>Arahkan kamera ke bagian nilai gizi pada kemasan.</p>
+            </div>
+
+            <div class="scanner-box">
+                <video id="cameraFeed" autoplay playsinline></video>
+                <div class="scanner-overlay">
+                    <div class="scan-frame scan-frame--document">
+                        <div class="scan-grid" aria-hidden="true"></div>
+                        <div class="scan-grid scan-grid--fine" aria-hidden="true"></div>
+                        <div class="scan-doc-label">Tabel gizi — sejajarkan dengan kisi</div>
+                        <div class="corner t-l"></div>
+                        <div class="corner t-r"></div>
+                        <div class="corner b-l"></div>
+                        <div class="corner b-r"></div>
+                        <div class="laser" id="scanLaser" style="display:none;"></div>
+                    </div>
+                    <div class="scan-guide-pill" id="scanGuidePill">Arahkan ke tabel Informasi Nilai Gizi</div>
+                </div>
+                <canvas id="snapshotCanvas" style="display:none;"></canvas>
+            </div>
+
+            <div class="scan-feedback-card">
+                <div class="scan-feedback-row">
+                    <span id="cameraQualityDot" class="quality-dot pending"></span>
+                    <strong id="cameraQualityTitle">Siapkan kamera</strong>
+                </div>
+                <p id="cameraQualityHint">Sejajarkan tabel dengan kisi putih di bingkai, hindari blur dan pantulan
+                    cahaya. Setelah foto, pangkas hanya area tabel di layar berikutnya.</p>
+            </div>
+
+            <div style="display:flex; gap:12px; margin-top:20px;">
+                <button class="btn-primary btn-large btn-glow" id="btnCapture" style="flex:3;">
+                    <span class="icon">📸</span> Pindai Kamera
+                </button>
+                <button class="btn-primary btn-large" id="btnUpload"
+                    style="flex:1; background: rgba(255,255,255,0.8); color: var(--text-dark); border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
+                    onclick="document.getElementById('uploadImg').click()">
+                    <span class="icon" style="margin:0; font-size:1.6rem;">🖼️</span>
+                </button>
+                <input type="file" id="uploadImg" accept="image/*" style="display:none;">
+            </div>
+        </main>
+
+        <!-- ISI PIRINGKU VIEW -->
+        <main class="view" id="viewIsiPiringku">
+            <button class="btn-back" onclick="document.querySelector('[data-view=viewScanner]').click()">←
+                Kembali</button>
+            <h2 style="margin-top:12px;">🍽️ Isi Piringku</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Foto piringmu untuk analisis AI
+                otomatis, atau atur proporsi secara manual.</p>
+
+            <!-- ═══ AI PHOTO SECTION ═══ -->
+            <div class="glass-card seg-card" id="segCard" style="padding:20px; margin-bottom:16px;">
+                <div class="seg-header">
+                    <h3 style="font-size:1rem; font-weight:800;">📸 Analisis AI</h3>
+                    <span class="seg-status-badge" id="segModelStatus">⏳ Memuat...</span>
+                </div>
+
+                <!-- Upload Area -->
+                <div id="segPhotoInput" style="margin-top:16px;">
+                    <div class="seg-upload-area" id="segDropzone">
+                        <div style="font-size:3rem; margin-bottom:8px;">🍽️</div>
+                        <p style="font-weight:600; color:var(--text-dark); margin-bottom:4px;">Foto Piringmu</p>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Ambil foto dari atas
+                            untuk hasil terbaik</p>
+                        <div style="display:flex; gap:10px; justify-content:center;">
+                            <button class="btn-primary" id="btnPlateCamera"
+                                style="padding:12px 20px; font-size:0.85rem; border-radius:12px;">📸 Kamera</button>
+                            <button class="btn-primary" id="btnPlateUpload"
+                                style="padding:12px 20px; font-size:0.85rem; border-radius:12px; background:rgba(0,0,0,0.06); color:var(--text-dark);">🖼️
+                                Galeri</button>
+                        </div>
+                        <input type="file" id="plateImgUpload" accept="image/*" style="display:none;">
+                        <input type="file" id="plateCameraInput" accept="image/*" capture="environment"
+                            style="display:none;">
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="segLoading" style="display:none;" class="seg-loading">
+                    <div class="seg-loading-spinner">
+                        <div class="seg-spinner-ring"></div>
+                        <span style="font-size:2rem;">🔬</span>
+                    </div>
+                    <p id="segLoadingText" style="font-weight:600; margin-top:12px;">Menganalisis makanan di piring...
+                    </p>
+                    <p id="segLoadingSub" style="font-size:0.75rem; color:var(--text-muted);">Menggunakan DeepLab-V3 +
+                        MobileNet-V2</p>
+                </div>
+
+                <!-- Preview + Overlay -->
+                <div id="segPreviewContainer" style="display:none;">
+                    <div class="seg-canvas-wrapper" id="segCanvasWrapper">
+                        <canvas id="segCanvas" width="400" height="400"
+                            style="transform-origin: 0 0; transition: transform 0.2s ease-out;"></canvas>
+                        <canvas id="correctionCanvas" width="400" height="400"
+                            style="position: absolute; top: 0; left: 0; transition: transform 0.2s ease-out; z-index: 2; opacity: 0.6;"></canvas>
+                        <button class="btn-koreksi-toggle" id="btnToggleCorrection">✏️ Koreksi Manual</button>
+                        <div class="minimap-container" id="minimapContainer">
+                            <canvas id="minimapCanvas" width="120" height="90"
+                                style="width:100%; height:100%;"></canvas>
+                            <div class="minimap-viewport" id="minimapViewport"></div>
+                        </div>
+                        <div id="corrHint">👆 Sentuh foto untuk<br>memperbaiki deteksi AI</div>
+                    </div>
+
+                    <!-- Correction Toolbar -->
+                    <div class="correction-toolbar" id="correctionToolbar">
+                        <div style="font-size: 0.8rem; font-weight: 700; text-align: center; color: var(--text-dark);"
+                            id="corrModeLabel">Mode: Karbo (Kuning)</div>
+                        <div class="corr-row">
+                            <button class="btn-corr-tool active" data-cat="makanan_pokok"
+                                title="Warnai area Karbohidrat"></button>
+                            <button class="btn-corr-tool" data-cat="lauk_pauk" title="Warnai area Lauk Pauk"></button>
+                            <button class="btn-corr-tool" data-cat="sayur" title="Warnai area Sayuran"></button>
+                            <button class="btn-corr-tool" data-cat="buah" title="Warnai area Buah-buahan"></button>
+                            <button class="btn-corr-tool" data-cat="eraser" title="Hapus Koreksi">🔲</button>
+                        </div>
+                        <div class="corr-row" style="gap:16px;">
+                            <label
+                                style="font-size:0.75rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+                                Ukuran: <input type="range" id="corrBrushSize" min="10" max="80" value="30"
+                                    style="width:80px;">
+                            </label>
+                            <div style="display:flex; gap:4px;">
+                                <button class="btn-text" id="btnCorrZoomOut"
+                                    style="padding:4px 8px; font-weight:bold;">🔍-</button>
+                                <button class="btn-text" id="btnCorrZoomIn"
+                                    style="padding:4px 8px; font-weight:bold;">🔍+</button>
+                                <button class="btn-text" id="btnCorrZoomReset"
+                                    style="padding:4px 8px; font-weight:bold;">🔄</button>
+                            </div>
+                        </div>
+                        <div class="corr-row" style="margin-top: 4px;">
+                            <button class="btn-secondary" id="btnCorrUndo"
+                                style="padding:8px 14px; font-size:0.8rem; border-radius:20px;">↩ Undo</button>
+                            <button class="btn-primary" id="btnCorrRecalculate"
+                                style="padding:8px 16px; font-size:0.8rem; border-radius:20px;">✅ Hitung Ulang</button>
+                        </div>
+                        <div class="corr-row" style="margin-top: 4px;">
+                            <button class="btn-secondary" id="btnToggleAI"
+                                style="padding:8px 14px; font-size:0.8rem; border-radius:20px; width:100%;">👁
+                                Sembunyikan AI</button>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="seg-legend">
+                        <span class="seg-legend-item"><span class="seg-dot" style="background:#FFC107;"></span>
+                            Karbo</span>
+                        <span class="seg-legend-item"><span class="seg-dot" style="background:#F44336;"></span>
+                            Lauk</span>
+                        <span class="seg-legend-item"><span class="seg-dot" style="background:#4CAF50;"></span>
+                            Sayur</span>
+                        <span class="seg-legend-item"><span class="seg-dot" style="background:#9C27B0;"></span>
+                            Buah</span>
+                    </div>
+
+                    <!-- Quick Result -->
+                    <div class="seg-quick-result" id="segQuickResult"></div>
+
+                    <!-- YOLO Detections list -->
+                    <div id="yoloDetectionsContainer"
+                        style="display:none; margin-top:16px; padding:12px; border-radius:12px; background:rgba(255,255,255,0.4); border:1px solid var(--glass-border); text-align: left;">
+                        <h4
+                            style="font-size:0.85rem; font-weight:800; color:var(--text-dark); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>🎯 Detail Deteksi Makanan</span>
+                            <span class="seg-auto-badge"
+                                style="font-size:0.7rem; background:#48C78E; color:white; padding: 2px 6px; border-radius: 6px; font-weight: 700;">YOLOv11-Seg</span>
+                        </h4>
+                        <div id="yoloDetectionsList" style="display:flex; flex-direction:column; gap:6px;">
+                            <!-- Will be filled by JS -->
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:8px; margin-top:12px;">
+                        <button class="btn-primary" id="btnRetakePhoto"
+                            style="flex:1; padding:12px; font-size:0.85rem; border-radius:12px; background:rgba(0,0,0,0.06); color:var(--text-dark);">🔄
+                            Foto Ulang</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ PLATE VISUAL + SLIDERS ═══ -->
+            <div class="glass-card" style="padding:20px; margin-bottom:16px; text-align:center;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 style="font-size:0.95rem; font-weight:700;">Proporsi Piring</h3>
+                    <span id="sliderAutoLabel" class="seg-auto-badge" style="display:none;">🤖 Auto-detected</span>
+                </div>
+                <div class="plate-visual" id="plateVisual">
+                    <div class="plate-segment plate-carb" id="plateCarb" style="flex:33.33">🍚</div>
+                    <div class="plate-segment plate-veggie" id="plateVeggie" style="flex:33.33">🥬</div>
+                    <div class="plate-segment plate-protein" id="plateProtein" style="flex:16.66">🍗</div>
+                    <div class="plate-segment plate-fruit" id="plateFruit" style="flex:16.66">🍎</div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding:20px;">
+                <div class="slider-group">
+                    <label class="slider-label">🍚 Makanan Pokok <span id="valCarb">33%</span></label>
+                    <input type="range" id="sliderCarb" min="0" max="100" value="33" class="plate-slider slider-carb">
+                </div>
+                <div class="slider-group">
+                    <label class="slider-label">🥬 Sayur-sayuran <span id="valVeggie">33%</span></label>
+                    <input type="range" id="sliderVeggie" min="0" max="100" value="33"
+                        class="plate-slider slider-veggie">
+                </div>
+                <div class="slider-group">
+                    <label class="slider-label">🍗 Lauk Pauk <span id="valProtein">17%</span></label>
+                    <input type="range" id="sliderProtein" min="0" max="100" value="17"
+                        class="plate-slider slider-protein">
+                </div>
+                <div class="slider-group">
+                    <label class="slider-label">🍎 Buah-buahan <span id="valFruit">17%</span></label>
+                    <input type="range" id="sliderFruit" min="0" max="100" value="17" class="plate-slider slider-fruit">
+                </div>
+
+                <button class="btn-primary btn-large btn-glow mt-4" id="btnAnalyzePlate">
+                    ✨ Analisis Isi Piringku
+                </button>
+            </div>
+
+            <!-- Result area -->
+            <div id="piringkuResult" class="glass-card" style="display:none; margin-top:16px; padding:20px;">
+            </div>
+
+            <!-- Debug Panel -->
+            <details id="segDebugPanel" class="glass-card"
+                style="margin-top:12px; padding:14px; font-size:0.75rem; display:none;">
+                <summary style="font-weight:700; cursor:pointer;">🔧 Debug: Segmentation Data</summary>
+                <pre id="segDebugOutput"
+                    style="white-space:pre-wrap; word-break:break-all; margin-top:8px; padding:10px; background:rgba(0,0,0,0.03); border-radius:8px; max-height:300px; overflow-y:auto;"></pre>
+            </details>
+
+            <p style="font-size:0.7rem; color:var(--text-muted); margin-top:12px; text-align:center; line-height:1.5;">
+                ⚠️ Estimasi proporsi menggunakan AI Image Segmentation (YOLOv8-Seg / SeeFood V1).
+                Gunakan sebagai panduan, bukan diagnosis gizi. Ref: Ridhani et al. (2021)</p>
+        </main>
+
+        <!-- CROPPER VIEW -->
+        <main class="view" id="viewCrop">
+            <h2 style="margin-bottom:8px;">Pangkas Tabel Gizi</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom: 20px;">Potong gambar khusus pada area
+                tabel nilai gizi. Sistem OCR hanya membutuhkan area tabel, bukan seluruh kemasan.</p>
+
+            <div class="scan-feedback-card" id="cropQualityCard">
+                <div class="scan-feedback-row">
+                    <span class="quality-dot good"></span>
+                    <strong>Crop khusus tabel gizi</strong>
+                </div>
+                <p>Sesuaikan kotak crop agar hanya memuat tabel gizi. Hindari slogan, instruksi masak, dan dekorasi
+                    kemasan.</p>
+            </div>
+
+            <div class="crop-stage"
+                style="border-radius:16px; overflow:hidden; margin-bottom:20px; box-shadow:var(--glass-shadow); background:#000; height: 350px;">
+                <img id="imageToCrop" style="max-width: 100%; display: block;">
+                <div class="crop-align-grid" aria-hidden="true"></div>
+                <p class="crop-align-hint">Geser & zoom — kotak crop mengikuti kisi tabel</p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="scanLoading" class="glass-card loading-card" style="display:none; margin-bottom:16px;">
+                <div class="loader"></div>
+                <p>AI sedang merumuskan dan mengekstraksi data nutrisi...</p>
+            </div>
+
+            <div style="display:flex; gap:12px;" id="cropActionBtns">
+                <button class="btn-back"
+                    style="flex:1; background:rgba(0,0,0,0.05); border-radius:12px; padding:12px; margin:0; text-align:center;"
+                    onclick="document.querySelector('.fab-wrapper').click()">Batalkan</button>
+                <button class="btn-primary btn-glow" style="flex:2;" id="btnConfirmCrop">✨ Analisis AI</button>
+            </div>
+        </main>
+
+        <!-- CORRECTION VIEW -->
+        <main class="view" id="viewCorrection">
+            <button class="btn-back" onclick="document.querySelector('.fab-wrapper').click()">← Batal Scan</button>
+            <h2 style="margin-top:12px;">Hasil Ekstraksi</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom: 24px;">Tebakan OCR tidak selalu
+                sempurna. Harap koreksi nilai ini dengan jujur agar asupanmu akurat!</p>
+
+            <div class="scan-feedback-card" id="ocrQualityCard" style="display:none;">
+                <div class="scan-feedback-row">
+                    <span id="ocrQualityDot" class="quality-dot pending"></span>
+                    <strong id="ocrQualityTitle">Kualitas OCR</strong>
+                </div>
+                <p id="ocrQualityHint">Ringkasan kualitas foto dan filter nutrisi.</p>
+            </div>
+
+            <!-- OCR Bounding Box Overlay Card -->
+            <div class="glass-card" id="ocrDetectionCard" style="display:none; margin-bottom:16px; padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 style="font-size:0.95rem; font-weight:800; color:var(--text-dark);">📐 Deteksi OCR</h3>
+                    <button class="btn-text" id="btnToggleBbox"
+                        style="font-size:0.8rem; font-weight:700; padding:4px 12px; border-radius:16px; background:rgba(0,0,0,0.05);">👁
+                        Sembunyikan Kotak</button>
+                </div>
+                <div style="position:relative; border-radius:12px; overflow:hidden; background:#000;">
+                    <canvas id="ocrPreviewCanvas" style="width:100%; display:block;"></canvas>
+                    <canvas id="ocrBboxCanvas"
+                        style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></canvas>
+                </div>
+                <div
+                    style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; font-size:0.7rem; color:var(--text-muted);">
+                    <span>🟢 Label Nutrisi</span>
+                    <span>🟡 Nilai Angka</span>
+                    <span>🩷 Lainnya/Rendah</span>
+                </div>
+                <div id="ocrDetectionList"
+                    style="max-height:180px; overflow-y:auto; margin-top:10px; font-size:0.78rem; border-radius:8px; background:rgba(0,0,0,0.02); padding:8px;">
+                </div>
+                <p style="font-size:0.7rem; color:var(--text-muted); margin-top:8px; text-align:center;">
+                    Pass 1 anchor: <span id="ocrAnchorStatus">—</span> •
+                    Durasi: <span id="ocrDurasi">—</span>s
+                </p>
+            </div>
+
+            <div class="form-card">
+                <div class="input-float" style="margin-bottom: 8px;">
+                    <select id="inpIsBev"
+                        style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--glass-border); background: #fff; font-family: 'Outfit'; font-weight: 700;">
+                        <option value="false">🍚 Makanan Padat</option>
+                        <option value="true">🥤 Minuman</option>
+                    </select>
+                </div>
+                <div class="input-float">
+                    <input type="text" id="inpFoodName" placeholder=" " required autocomplete="off">
+                    <label>Menu Makanan (Mis: Susu Coklat)</label>
+                </div>
+                <div class="input-float">
+                    <input type="number" id="inpTakaran" placeholder=" " step="0.1" required>
+                    <label>Takaran Saji (g/ml)</label>
+                </div>
+
+                <div style="display:flex; gap:12px;">
+                    <div class="input-float" style="flex:1;">
+                        <input type="number" id="inpEnergi" placeholder=" " step="0.1" required>
+                        <label>Energi (kkal)</label>
+                    </div>
+                    <div class="input-float" style="flex:1;">
+                        <input type="number" id="inpGula" placeholder=" " step="0.1" required>
+                        <label>Gula (g)</label>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px;">
+                    <div class="input-float" style="flex:1;">
+                        <input type="number" id="inpLemak" placeholder=" " step="0.1" required>
+                        <label>Lm. Jenuh (g)</label>
+                    </div>
+                    <div class="input-float" style="flex:1;">
+                        <input type="number" id="inpSodium" placeholder=" " step="0.1" required>
+                        <label>Sodium (mg)</label>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px;">
+                    <div class="input-float" style="flex:1;">
+                        <input type="number" id="inpProtein" placeholder=" " step="0.1" required>
+                        <label>Protein (g)</label>
+                    </div>
+                    <div class="input-float" style="flex:1;">
+                        <input type="number" id="inpFiber" placeholder=" " step="0.1" required>
+                        <label>Serat (g)</label>
+                    </div>
+                </div>
+
+                <div class="input-float" style="margin-top: 8px;">
+                    <input type="number" id="inpFvn" placeholder=" " step="1" required value="0">
+                    <label>% Buah/Sayur/Kacang (0-100)</label>
+                </div>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; padding:0 4px;">
+                    % bahan buah/sayur/kacang utuh. Jus murni=100%, Keripik kentang=50%, Permen=0%.
+                </p>
+
+                <!-- NEW: FITUR 3 (Powder Mode) -->
+                <div style="margin-top: 16px; padding: 12px; border-radius: 12px; background: rgba(0,0,0,0.03);">
+                    <label
+                        style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:0.9rem; cursor:pointer;"
+                        onclick="document.getElementById('powderWaterWrap').style.display = this.querySelector('input').checked ? 'block' : 'none'">
+                        <input type="checkbox" id="inpIsPowder" style="width:18px; height:18px;">
+                        Minuman serbuk (akan dilarutkan dalam air)
+                    </label>
+                    <div id="powderWaterWrap" style="display:none; margin-top:12px;">
+                        <div class="input-float" style="margin-bottom:0;">
+                            <input type="number" id="inpWaterMl" placeholder=" " value="250">
+                            <label>Volume air (ml)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: FITUR 1 (Micronutrients) -->
+                <details style="margin-top: 16px; padding: 12px; border-radius: 12px; background: rgba(0,0,0,0.03);">
+                    <summary style="font-weight:600; font-size:0.9rem; cursor:pointer; color: var(--text-dark);">➕
+                        Tambah Vitamin/Mineral (Opsional)</summary>
+                    <div style="display:flex; gap:12px; margin-top:12px;">
+                        <div class="input-float" style="flex:1;">
+                            <input type="number" id="inpVitC" placeholder=" " step="0.1">
+                            <label>Vit C (mg)</label>
+                        </div>
+                        <div class="input-float" style="flex:1;">
+                            <input type="number" id="inpCalcium" placeholder=" " step="0.1">
+                            <label>Kalsium (mg)</label>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:12px; margin-top:8px;">
+                        <div class="input-float" style="flex:1;">
+                            <input type="number" id="inpIron" placeholder=" " step="0.1">
+                            <label>Zat Besi (mg)</label>
+                        </div>
+                        <div class="input-float" style="flex:1;">
+                            <input type="number" id="inpFolate" placeholder=" " step="0.1">
+                            <label>Folat (mcg)</label>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:12px; margin-top:8px;">
+                        <div class="input-float" style="flex:1;"><input type="number" id="inpVitB1" placeholder=" "
+                                step="0.1"><label>Vit B1 (mg)</label></div>
+                        <div class="input-float" style="flex:1;"><input type="number" id="inpVitB6" placeholder=" "
+                                step="0.1"><label>Vit B6 (mg)</label></div>
+                        <div class="input-float" style="flex:1;"><input type="number" id="inpVitB12" placeholder=" "
+                                step="0.1"><label>Vit B12 (mcg)</label></div>
+                    </div>
+                </details>
+
+                <!-- NEW: FITUR 2 (Porsi) -->
+                <div class="input-float" style="margin-top: 16px;">
+                    <select id="inpPorsiFraksi"
+                        style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--glass-border); background: #fff; font-family: 'Outfit'; font-weight: 700; color: var(--text-dark);">
+                        <option value="1">Makan seluruhnya (1x sajian)</option>
+                        <option value="0.75">3/4 porsi</option>
+                        <option value="0.5">Setengah porsi</option>
+                        <option value="0.33">1/3 porsi</option>
+                        <option value="0.25">1/4 porsi</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary btn-large btn-glow mt-4" id="btnCalculate">
+                    ✨ Kalkulasi Nutri-Score
+                </button>
+            </div>
+        </main>
+
+        <!-- HISTORY VIEW -->
+        <main class="view" id="viewHistory">
+        </main>
+
+        <!-- MODAL -->
+        <div class="modal" id="modalResult">
+            <div class="modal-content glass-card overlay-glass result-card">
+                <button class="modal-close" id="btnCloseModal">✕</button>
+
+                <div class="grade-showcase" id="gradeShowcase">
+                    <div class="grade-letter pulse" id="finalGradeBadge">A</div>
+                    <h2 class="grade-title" id="finalGradeTitle">Sangat Sehat! ✨</h2>
+                    <p style="font-size:0.85rem; color:var(--text-muted); font-weight:500; margin-top:4px;">Berdasarkan
+                        skor <span id="resScore" style="font-weight:800; color:var(--text-dark);">0</span> (Standar
+                        100g/ml)</p>
+                    <p id="porsiInfo"
+                        style="font-size:0.85rem; color:var(--text-dark); margin-top:6px; font-weight:700;"></p>
+                    <p id="powderInfo" style="font-size:0.8rem; color:var(--grade-C); margin-top:2px; font-weight:600;">
+                    </p>
+                </div>
+
+                <!-- AI Explanation (Rule-based) -->
+                <div class="expert-explanation">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                        <span style="font-size:1.4rem;">🤖</span>
+                        <h4 style="font-size:1.05rem; font-weight:800; color:var(--text-dark); letter-spacing:-0.5px;">
+                            Kenapa Grade Ini?</h4>
+                    </div>
+                    <div id="expertExplanationContent"
+                        style="font-size:0.95rem; line-height:1.6; color:var(--text-dark);">
+                        <!-- Dimasukkan lewat JS -->
+                    </div>
+                </div>
+
+                <!-- NEW: FITUR 4 (Smart Tips) -->
+                <div class="expert-explanation" id="smartTipsCard"
+                    style="display:none; margin-top: 16px; border-left: 4px solid var(--grade-B); background: rgba(142, 217, 108, 0.1);">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                        <span style="font-size:1.4rem;">💡</span>
+                        <h4 style="font-size:1.05rem; font-weight:800; color:var(--text-dark); letter-spacing:-0.5px;">
+                            Saran Konsumsi</h4>
+                    </div>
+                    <div id="smartTipsContent" style="font-size:0.95rem; line-height:1.6; color:var(--text-dark);">
+                    </div>
+                </div>
+
+                <!-- Nutrient Highlights -->
+                <div
+                    style="display:flex; align-items:center; justify-content:space-between; margin-top:28px; margin-bottom:16px;">
+                    <h4 style="font-size:1rem; font-weight:800; letter-spacing:-0.5px;">Gizi vs Batas Harian</h4>
+                    <span
+                        style="font-size:0.75rem; color:var(--text-muted); font-weight:600; background:rgba(0,0,0,0.05); padding:4px 8px; border-radius:12px;">*Asumsi
+                        2000 kkal</span>
+                </div>
+                <div class="nutrient-highlights">
+                    <div class="nh-card"><span class="nh-label">Energi</span><span class="nh-val"
+                            id="hlEnergi">0%</span></div>
+                    <div class="nh-card"><span class="nh-label">Lm.Jenuh</span><span class="nh-val"
+                            id="hlSatFat">0%</span></div>
+                    <div class="nh-card"><span class="nh-label">Gula</span><span class="nh-val" id="hlSugar">0%</span>
+                    </div>
+                    <div class="nh-card"><span class="nh-label">Sodium</span><span class="nh-val"
+                            id="hlSodium">0%</span></div>
+                </div>
+
+                <!-- Detail Breakdown Collapsible -->
+                <details class="detail-breakdown" style="margin-top:24px;">
+                    <summary>📊 Lihat Detail Perhitungan</summary>
+                    <div class="breakdown-grid">
+                        <div class="breakdown-col">
+                            <h5
+                                style="color:var(--grade-D); font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
+                                🛑 Poin Negatif</h5>
+                            <div class="bd-row"><span>Energi</span><strong id="ptsEnergi">0</strong></div>
+                            <div class="bd-row"><span>Lm.Jenuh</span><strong id="ptsSatFat">0</strong></div>
+                            <div class="bd-row"><span>Gula</span><strong id="ptsSugar">0</strong></div>
+                            <div class="bd-row"><span>Sodium</span><strong id="ptsSodium">0</strong></div>
+                            <div class="bd-sum"><span>Total N</span><span id="sumN">0</span></div>
+                        </div>
+                        <div class="breakdown-col">
+                            <h5
+                                style="color:var(--grade-A); font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">
+                                🥑 Poin Positif</h5>
+                            <div class="bd-row"><span>Serat</span><strong id="ptsFiber">0</strong></div>
+                            <div class="bd-row"><span>Protein</span><strong id="ptsProtein">0</strong></div>
+                            <div class="bd-row"><span>Sayur/Bh</span><strong id="ptsFvn">0</strong></div>
+                            <div class="bd-row" id="rowMicro" style="display:none; color:var(--grade-A);"><span>🧪
+                                    Mikronutrien Bonus</span><strong id="ptsMicro">0</strong></div>
+                            <div class="bd-sum"><span>Total P</span><span id="sumP">0</span></div>
+                        </div>
+                    </div>
+                    <div class="formula-box" id="formulaDetail">
+                        0 - 0 = 0
+                    </div>
+                </details>
+
+                <button class="btn-primary btn-large w-full mt-4" id="btnConfirmEat" style="font-size:1.05rem;">
+                    🍽️ Simpan & Makan Ini
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav" id="mainNav">
+        <button class="nav-item active" data-view="viewDashboard">
+            <div class="icon">🏠</div>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-item fab-wrapper" data-view="viewScanner">
+            <div class="fab">
+                <span class="icon">📷</span>
+            </div>
+        </button>
+        <button class="nav-item" data-view="viewHistory">
+            <div class="icon">📋</div>
+            <span>Riwayat</span>
+        </button>
+    </nav>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <!-- TensorFlow.js TFLite Runtime (WASM) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-cpu"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tflite/dist/tf-tflite.min.js"></script>
+    <script src="./nutri-score.js"></script>
+    <script src="./clinical-rules.js"></script>
+    <script src="./isi-piringku.js"></script>
+    <script src="./seefood-segmenter.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>
