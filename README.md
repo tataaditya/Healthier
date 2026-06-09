@@ -18,31 +18,33 @@ Sistem ini mengintegrasikan pemrosesan citra tingkat lanjut (*Computer Vision*),
 
 ---
 
-## 🛠️ Analisis Sistem: Kelebihan & Kekurangan
+## 🛠️ Analisis Sistem: Kelebihan & Kekurangan (Evaluasi Jujur & Objektif)
 
-Secara arsitektur dan fungsionalitas, berikut adalah analisis mendalam mengenai kekuatan dan batasan dari sistem **healthier**:
+Untuk memberikan gambaran yang transparan bagi akademisi dan mentor, berikut adalah analisis kelebihan teknis serta keterbatasan performa riil (ground truth vs real-world deployment) dari sistem **healthier**:
 
 ### 🌟 Kelebihan (Strengths)
 
 | Kategori | Kelebihan Teknis & Fungsional | Deskripsi & Implementasi Klinis |
 | :--- | :--- | :--- |
 | **Keandalan Offline** | **Dual-Mode Inference & Fallback** | Jika server lokal FastAPI mati, browser secara otomatis berpindah ke **Offline Fallback Mode** menggunakan model `@tensorflow/tfjs-tflite` (WASM) untuk segmentasi piring makan. |
+| **Desain Mitigasi** | **Human-in-the-Loop Architecture** | Menyediakan **Segmentation Editor** dan **Form Koreksi Nilai Gizi** sebagai solusi mitigasi utama. Desain ini memastikan ketidakakuratan deteksi AI (baik OCR maupun YOLO) dapat dikoreksi langsung oleh pengguna sebelum masuk ke Clinical Rules Engine. |
 | **Koreksi Presisi** | **Segmentation Editor & Canvas** | Pengguna dapat mengoreksi hasil segmentasi otomatis AI secara langsung lewat kuas warna (*brush paint*) bertransparansi 60% dan tools navigasi (Zoom, Pan, Minimap, Undo/Redo). |
 | **Logika Medis** | **Clinical Rules Engine Terpersonalisasi** | Menerapkan parameter batas harian berdasarkan profil fisik & riwayat penyakit pengguna sesuai **PERKENI 2024** (untuk Diabetes) dan **JNC 8** (untuk Hipertensi). |
 | **Skor Gizi Kaya** | **Extended Nutri-Score (FSA/Ofcom)** | Perluasan skor gizi tradisional dengan bonus mikronutrien (Vit C, Kalsium, Zat Besi, dll.), penyesuaian porsi riil (*Serving Fraction*), dan *Powder Reconstitution Mode*. |
-| **Robust OCR** | **Production-Grade Preprocessing** | Mampu menangani kemasan di dunia nyata berkat filter pra-pemrosesan lengkap seperti *Deskew* (Hough), *Deglare* (Inpainting), *Watermark Removal*, dan *CLAHE*. |
 | **Evaluasi Valid** | **Nutrient-Centric Batch Evaluator** | Mengabaikan metrik CER/WER tradisional yang kurang relevan secara klinis dan memprioritaskan *Field-Level Accuracy* untuk menjaga validitas angka gizi yang diekstrak. |
 
 ---
 
-### ⚠️ Kekurangan & Batasan (Limitations)
+### ⚠️ Kekurangan & Batasan Akurasi (Limitations)
 
-| Kategori | Batasan Sistem Saat Ini | Rencana Mitigasi & Pengembangan Mendatang |
+| Kategori | Batasan Sistem Saat Ini | Detail Teknis & Rencana Mitigasi Mendatang |
 | :--- | :--- | :--- |
+| **Akurasi Segmentasi** | **Bias Dataset YOLOv11-Seg (Isi Piringku)** | Meskipun dilatih menggunakan 3 folder dataset besar, dataset dasar `isipiringku_v2` masih didominasi oleh makanan bergaya Barat/luar negeri. Akibatnya, model **kurang optimal dan sering salah mengklasifikasikan makanan lokal khas Indonesia** (seperti nasi uduk, lauk bersaus/bumbu kacang, sayur berkuah, gorengan, dll.) karena perbedaan tekstur dan cara penyajian. |
+| **Akurasi Deteksi Teks** | **Keterbatasan Riil Engine PaddleOCR** | Pada kemasan dunia nyata, PaddleOCR tidak selalu menghasilkan deteksi teks yang sempurna. Meskipun telah diakomodasi oleh filter preprocessing (*deglare*, *deskew*), PaddleOCR masih **sering mengalami kegagalan deteksi (false negative) atau salah baca** pada kemasan yang melengkung (seperti botol/kaleng), memiliki kontras warna teks-latar yang rendah, atau menggunakan fon/huruf dekoratif (*stylized fonts*). |
 | **Beban Klien** | **WASM Model Loading Overhead** | Memuat pustaka TFJS-TFLite dan model `best_float16.tflite` secara lokal di browser membutuhkan memori RAM cukup tinggi pada perangkat seluler berspesifikasi rendah. |
 | **Dependensi Server** | **PaddleOCR Python Dependency** | Backend OCR membutuhkan instalasi modul Python yang cukup besar (seperti `paddlepaddle` dan `paddleocr`), membutuhkan waktu setup awal yang relatif lama di lokal. |
-| **Estimasi 2D** | **Perspektif 2D untuk Porsi** | Estimasi piring makan didasarkan pada perbandingan jumlah piksel segmentasi secara 2D, sehingga belum dapat mengukur ketebalan (volume 3D) makanan secara presisi. |
-| **Variasi Bahasa** | **Sensitivitas Struktur Kamus** | Rekonstruksi tabel spasial gizi masih sangat bergantung pada `KAMUS_NUTRISI` (Bahasa Indonesia & Inggris). Variasi bahasa lain dapat menurunkan akurasi deteksi kolom. |
+| **Estimasi Dimensi** | **Perspektif 2D untuk Porsi** | Estimasi porsi makan didasarkan pada perbandingan jumlah piksel segmentasi secara 2D pada canvas, sehingga belum mampu mengukur ketebalan (kedalaman volume 3D) makanan secara presisi. |
+| **Variasi Bahasa** | **Sensitivitas Struktur Kamus** | Rekonstruksi tabel gizi spasial masih sangat bergantung pada `KAMUS_NUTRISI` (Bahasa Indonesia & Inggris). Variasi struktur bahasa lain dapat menurunkan akurasi pemetaan kolom data gizi. |
 
 ---
 
