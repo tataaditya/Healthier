@@ -2,9 +2,9 @@
 
 
 """
-NutriLabel v3 - OCR Pipeline menggunakan PaddleOCR-VL
+Healthier v3 - OCR Pipeline menggunakan PaddleOCR-VL
 ======================================================
-Jalankan via: python nutrilabel_v3_ocr_pipeline.py --image foto_kemasan.jpg
+Jalankan via: python healthier_v3_ocr_pipeline.py --image foto_kemasan.jpg
 
 Hardware target: i5-12450H + RTX 3050 6GB + RAM 16GB
 Cara load: HuggingFace transformers (BUKAN PaddlePaddle native)
@@ -693,7 +693,7 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None) -> dict:
     Return dict hasil siap pakai oleh Clinical Rules Engine.
     """
     print("\n" + "="*60)
-    print("  NutriLabel v3 — OCR Pipeline")
+    print("  Healthier v3 — OCR Pipeline")
     print("="*60)
 
     # --- Pre-processing ---
@@ -791,7 +791,7 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="NutriLabel v3 — OCR Tabel Gizi via PaddleOCR-VL"
+        description="Healthier v3 — OCR Tabel Gizi via PaddleOCR-VL"
     )
     parser.add_argument(
         "--image", "-i",

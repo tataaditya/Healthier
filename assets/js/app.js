@@ -3,7 +3,7 @@
     const $$ = selector => document.querySelectorAll(selector);
     
     // --- State Management ---
-    const STATE_KEY = 'NutriLabel_State';
+    const STATE_KEY = 'Healthier_State';
     let state = {
         user: null,
         limitSugar: 50,
@@ -76,7 +76,7 @@
     }
     let clinicalEngine = null;
     const OCR_API_URL = 'http://127.0.0.1:8000/api/ocr';
-    const OCR_FETCH_TIMEOUT_MS = 90000;
+    const OCR_FETCH_TIMEOUT_MS = 300000;
     const CROPPER_OPTS = {
         viewMode: 1,
         autoCropArea: 0.88,
@@ -410,7 +410,7 @@
             if (!blob) throw new Error('Gagal membuat gambar hasil crop.');
 
             const formData = new FormData();
-            formData.append('file', blob, 'nutrilabel-crop.jpg');
+            formData.append('file', blob, 'healthier-crop.jpg');
 
             const response = await fetchOcrWithTimeout(OCR_API_URL, {
                 method: 'POST',

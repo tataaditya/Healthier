@@ -1,10 +1,10 @@
-# PANDUAN TEKNIS LENGKAP & ARSITEKTUR NUTRILABEL V3.5 (healthier)
-Dokumen ini dirancang sebagai panduan transfer pengetahuan (*knowledge transfer guide*) yang sangat rinci, komprehensif, dan matematis agar model AI eksternal seperti Claude dapat memahami arsitektur, tingkat kerumitan, metode ilmiah, serta detail implementasi per file dari project **NutriLabel v3.5 (healthier)**.
+# PANDUAN TEKNIS LENGKAP & ARSITEKTUR HEALTHIER V3.5 (healthier)
+Dokumen ini dirancang sebagai panduan transfer pengetahuan (*knowledge transfer guide*) yang sangat rinci, komprehensif, dan matematis agar model AI eksternal seperti Claude dapat memahami arsitektur, tingkat kerumitan, metode ilmiah, serta detail implementasi per file dari project **Healthier v3.5 (healthier)**.
 
 ---
 
 ## 1. PENGENALAN & TUJUAN UTAMA PROYEK
-**NutriLabel v3.5** (dipasarkan dengan nama aplikasi **healthier**) adalah sistem pemantauan gizi harian personal terintegrasi kecerdasan buatan (AI) yang bekerja secara *real-time* di lingkungan web browser dengan dukungan backend AI berbasis Python. Sistem ini dirancang untuk menyelesaikan dua tantangan utama dalam asupan nutrisi:
+**Healthier v3.5** (dipasarkan dengan nama aplikasi **healthier**) adalah sistem pemantauan gizi harian personal terintegrasi kecerdasan buatan (AI) yang bekerja secara *real-time* di lingkungan web browser dengan dukungan backend AI berbasis Python. Sistem ini dirancang untuk menyelesaikan dua tantangan utama dalam asupan nutrisi:
 1. **Ekstraksi Informasi Nilai Gizi Kemasan**: Mengekstrak data angka nutrisi kritis secara otomatis dari citra tabel gizi kemasan yang sering mengalami cacat (kemiringan, pantulan cahaya/glare, noise, watermark latar belakang).
 2. **Estimasi Porsi Isi Piringku**: Mengestimasi rasio porsi makanan riil (Makanan Pokok, Lauk-Pauk, Sayur, Buah) berdasarkan segmentasi piksel citra piring makan, dengan dukungan editor interaktif (*canvas painting*) untuk koreksi manual presisi tinggi.
 
@@ -121,7 +121,7 @@ P-Points dihitung dari akumulasi 3 komponen:
 Untuk mencegah produsen memanipulasi nilai Nutri-Score dengan menambahkan protein terisolasi ke produk yang sangat tinggi gula atau garam, diterapkan logika berikut:
 $$\text{Jika } \text{Total N} \ge 11 \text{ dan } FVN < 80\% \text{, maka } Pts(Pro) \text{ dipaksa menjadi } 0 \text{ dalam total P-Points.}$$
 
-#### 4. Ekstrak Fitur Khusus NutriLabel v3.5 (Extensions)
+#### 4. Ekstrak Fitur Khusus Healthier v3.5 (Extensions)
 Sistem ini memodifikasi algoritma standar dengan menyuntikkan 4 ekstensi kritis:
 1. **Bonus Mikronutrien ($P_{micro}$, Maksimal 3 Poin)**:
    * Vitamin C: $\ge 80\text{ mg} \to 1\text{ pt}, \ge 160\text{ mg} \to 2\text{ pts}$
@@ -219,7 +219,7 @@ Berikut adalah ringkasan teknis dan penjelasan fungsi untuk seluruh file dalam p
   * `renderOcrBboxOverlay(payload)`: Menggambar ulang boks deteksi OCR di atas canvas kemasan. Mewarnai boks secara real-time berdasarkan kategori (Hijau untuk kata kunci nutrisi, Kuning untuk nilai numerik gizi, Merah Muda untuk teks non-gizi/diabaikan).
   * `btnCalculate.addEventListener('click')`: Mengambil seluruh nilai dari formulir koreksi, menghitung porsi fraksi, melarutkan mode serbuk, memanggil library `NutriScore` dan `ClinicalHealthRules`, memperbarui UI modal hasil, dan menyimpan entri ke riwayat asupan harian.
 
-### 📄 [nutrilabel_v3_ppocr.py](file:///d:/Labolatorium%20Anti%20Gravity/NutrilLabel%20v3.5/nutrilabel_v3_ppocr.py)
+### 📄 [healthier_v3_ppocr.py](file:///d:/Labolatorium%20Anti%20Gravity/NutrilLabel%20v3.5/healthier_v3_ppocr.py)
 * **Peran**: Jantung pemrosesan backend AI. Menggabungkan pipeline OCR tabel kemasan (PaddleOCRv4), segmentasi piring (YOLOv11-Seg), dan framework API FastAPI.
 * **Tingkat Kerumitan & Algoritma Utama**:
   * **`PPOCREngine` (Singleton Class)**: Menjamin model PaddleOCR PP-OCRv4 dan model PP-Structure SLANet dimuat hanya sekali ke dalam RAM saat server dinyalakan demi menghemat resource komputasi GPU/CPU.
@@ -298,9 +298,9 @@ Berikut adalah metrik status fungsional dan tingkat kompleksitas dari masing-mas
 
 | Fitur / Subsistem | File Pendukung | Status Fungsional | Kompleksitas Teknis | Detail Implementasi & Konsep |
 | :--- | :--- | :--- | :--- | :--- |
-| **Pipeline Preprocessing OCR** | `nutrilabel_v3_ppocr.py` | 100% Selesai & Stabil | **Sangat Tinggi** | Algoritma deskewing (Hough Transform), deglaring (inpainting Navier-Stokes OpenCV), clahe, dan filtering watermark berbasis HSV. |
-| **OCR Table Reconstruction** | `nutrilabel_v3_ppocr.py` | 100% Selesai & Stabil | **Tinggi** | Pengelompokan spasial Y-Band, klasifikasi kolom berbasis sumbu koordinat horizontal boks header, regex pembersih teks, dan kalkulasi fallback lemak. |
-| **YOLOv11 FastAPI Backend** | `nutrilabel_v3_ppocr.py`, `best.pt` | 100% Selesai & Siap | **Tinggi** | API FastAPI, setup singleton untuk model YOLOv11-Seg, konversi koordinat poligon mask ke array piksel biner, dan penyaringan item non-makanan. |
+| **Pipeline Preprocessing OCR** | `healthier_v3_ppocr.py` | 100% Selesai & Stabil | **Sangat Tinggi** | Algoritma deskewing (Hough Transform), deglaring (inpainting Navier-Stokes OpenCV), clahe, dan filtering watermark berbasis HSV. |
+| **OCR Table Reconstruction** | `healthier_v3_ppocr.py` | 100% Selesai & Stabil | **Tinggi** | Pengelompokan spasial Y-Band, klasifikasi kolom berbasis sumbu koordinat horizontal boks header, regex pembersih teks, dan kalkulasi fallback lemak. |
+| **YOLOv11 FastAPI Backend** | `healthier_v3_ppocr.py`, `best.pt` | 100% Selesai & Siap | **Tinggi** | API FastAPI, setup singleton untuk model YOLOv11-Seg, konversi koordinat poligon mask ke array piksel biner, dan penyaringan item non-makanan. |
 | **Offline Segmenter Fallback** | `seefood-segmenter.js`, `best_float16.tflite` | 100% Selesai & Siap | **Tinggi** | Library TFJS-TFLite di browser, WASM runtime, pemetaan 27 kelas model Google ke 4 kelompok gizi klinis Isi Piringku. |
 | **Segmentation Editor Canvas** | `seefood-segmenter.js`, `index.html` | 100% Selesai & Siap | **Tinggi** | Canvas HTML5 interaktif, brush warna per kategori makanan, eraser, zoom & pan matrix transformation, minimap viewport, undo/redo stack. |
 | **Extended Nutri-Score Engine**| `nutri-score.js` | 100% Selesai & Terintegrasi | **Sedang** | Algoritma FSA/Ofcom diperluas dengan bonus poin mikronutrien, serving scaling, powder reconstitution, dan smart tips generator. |
@@ -319,7 +319,7 @@ Berikut adalah metrik status fungsional dan tingkat kompleksitas dari masing-mas
    *(Pastikan menginstal PyTorch dan PaddlePaddle GPU/CPU sesuai dengan hardware perangkat)*
 2. **Menjalankan Backend Server (FastAPI)**:
    ```bash
-   python nutrilabel_v3_ppocr.py
+   python healthier_v3_ppocr.py
    ```
    Server akan berjalan secara default di `http://127.0.0.1:8000`. Endpoint yang tersedia:
    * `GET /api/health` - Cek status kesiapan server, ketersediaan GPU, dan model YOLO.

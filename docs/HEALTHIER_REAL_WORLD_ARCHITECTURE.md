@@ -1,8 +1,8 @@
-# NutriLabel v3 - Real-World Nutrition Extraction & Plate Proportion Estimation System
+# Healthier v3 - Real-World Nutrition Extraction & Plate Proportion Estimation System
 
 ## Ringkasan Eksekutif
 
-NutriLabel v3 (atau dipasarkan dengan nama aplikasi **healthier**) dirancang sebagai sistem pemantauan gizi harian personal yang komprehensif berbasis kecerdasan buatan (AI). Berbeda dari sistem transkripsi dokumen tradisional, kegunaan klinis sistem ini diukur dari dua pilar utama:
+Healthier v3 (atau dipasarkan dengan nama aplikasi **healthier**) dirancang sebagai sistem pemantauan gizi harian personal yang komprehensif berbasis kecerdasan buatan (AI). Berbeda dari sistem transkripsi dokumen tradisional, kegunaan klinis sistem ini diukur dari dua pilar utama:
 1. **Subsistem OCR Label Nutrisi (Kemasan)**: Mengekstrak field gizi kritis seperti energi, lemak, lemak jenuh, protein, karbohidrat, gula, natrium, serat, serta takaran saji secara akurat dari foto kemasan makanan nyata.
 2. **Subsistem Estimasi Porsi Makan (Isi Piringku)**: Mendeteksi proporsi kelompok makanan (karbohidrat, lauk-pauk, sayur, buah) di piring dari foto makanan riil menggunakan segmentasi gambar dual-mode.
 
@@ -51,7 +51,7 @@ graph TD
 
 ## Subsistem 1: OCR Tabel Nutrisi Kemasan
 
-Untuk menangani variasi citra kemasan di lapangan (noise, glare, rotasi, watermark), subsistem OCR mengimplementasikan pipeline berikut di Python (`nutrilabel_v3_ppocr.py`):
+Untuk menangani variasi citra kemasan di lapangan (noise, glare, rotasi, watermark), subsistem OCR mengimplementasikan pipeline berikut di Python (`healthier_v3_ppocr.py`):
 
 ### 1. Preprocessing Tingkat Produksi
 * **Deskew**: Koreksi rotasi global menggunakan *Hough Transform* untuk menyejajarkan garis horizontal tabel.
@@ -179,8 +179,8 @@ Berdasarkan analisis file kode dalam repositori, berikut adalah peta kemajuan da
 
 | Komponen | Status Fungsional | File Terkait | Catatan Teknis / Detail Kemajuan |
 | :--- | :--- | :--- | :--- |
-| **Backend OCR** | **100% Selesai & Stabil** | `nutrilabel_v3_ppocr.py`, `test_ppstructure.py` | Implementasi PaddleOCR PP-OCRv4 + PP-Structure (SLANet). Memiliki alur preprocessing (deglare, deskew, CLAHE) dan rekonstruksi baris-kolom horizontal yang sangat komprehensif. |
-| **Backend YOLO** | **100% Selesai & Siap** | `nutrilabel_v3_ppocr.py`, `best.pt`, `test_detect.py` | Model YOLOv11 segmentation (`best.pt`) berhasil dibungkus dengan singleton, memiliki *warmup state*, dan berhasil di-deploy ke endpoint FastAPI `/api/isi-piringku` dengan filtering objek non-makanan. |
+| **Backend OCR** | **100% Selesai & Stabil** | `healthier_v3_ppocr.py`, `test_ppstructure.py` | Implementasi PaddleOCR PP-OCRv4 + PP-Structure (SLANet). Memiliki alur preprocessing (deglare, deskew, CLAHE) dan rekonstruksi baris-kolom horizontal yang sangat komprehensif. |
+| **Backend YOLO** | **100% Selesai & Siap** | `healthier_v3_ppocr.py`, `best.pt`, `test_detect.py` | Model YOLOv11 segmentation (`best.pt`) berhasil dibungkus dengan singleton, memiliki *warmup state*, dan berhasil di-deploy ke endpoint FastAPI `/api/isi-piringku` dengan filtering objek non-makanan. |
 | **Offline Segmenter** | **100% Selesai & Siap** | `seefood-segmenter.js`, `best_float16.tflite` | Integrasi tfjs-tflite (WASM) di browser berjalan dengan mulus sebagai fallback otomatis apabila API server FastAPI lokal mati. |
 | **Interactive Editor Canvas** | **100% Selesai & Siap** | `seefood-segmenter.js`, `index.html` | Fitur koreksi segmentasi manual (*SegmentationEditor*) lengkap dengan brush warna per kategori, eraser, zoom in/out, pan, reset zoom, undo stack, dan minimap viewport. |
 | **Extended Nutri-Score** | **100% Selesai & Terintegrasi** | `nutri-score.js`, `app.js` | Algoritma FSA/Ofcom diperluas dengan poin bonus mikronutrien, powder mode, porsi fraksi, dan auto-warning. |
@@ -190,4 +190,4 @@ Berdasarkan analisis file kode dalam repositori, berikut adalah peta kemajuan da
 | **Batch Evaluator** | **100% Selesai & Siap Pakai** | `evaluasi_batch.py` | Script pengujian batch berbasis file `*_gt.json` telah selesai dibuat untuk mendukung penghitungan metrik akurasi field nutrisi riset. |
 
 ### Kesimpulan Perkembangan:
-Proyek **NutriLabel v3 / healthier** telah berada pada **tahap produksi akhir (Production-Ready)**. Semua fitur utama maupun fitur opsional telah terimplementasi penuh dengan integrasi yang erat antara backend AI lokal (PaddleOCR & YOLOv11) dan frontend browser (TensorFlow.js TFLite fallback, interactive canvas, clinical rules, dan responsive visual dashboard). Sistem siap digunakan untuk demonstrasi, pengujian batch skala besar, maupun penulisan laporan akhir riset S1.
+Proyek **Healthier v3 / healthier** telah berada pada **tahap produksi akhir (Production-Ready)**. Semua fitur utama maupun fitur opsional telah terimplementasi penuh dengan integrasi yang erat antara backend AI lokal (PaddleOCR & YOLOv11) dan frontend browser (TensorFlow.js TFLite fallback, interactive canvas, clinical rules, dan responsive visual dashboard). Sistem siap digunakan untuk demonstrasi, pengujian batch skala besar, maupun penulisan laporan akhir riset S1.

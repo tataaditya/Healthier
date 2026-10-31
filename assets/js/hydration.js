@@ -12,7 +12,7 @@ window.HydrationEngine = (function () {
     'use strict';
 
     // ── Configuration ──────────────────────────────────────
-    const STORAGE_KEY = 'NutriLabel_Hydration_Logs';
+    const STORAGE_KEY = 'Healthier_Hydration_Logs';
     const GLASS_ML = 250; // Standard glass size
 
     // Activity modifiers (mL added to base)
