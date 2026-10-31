@@ -15,7 +15,7 @@ window.SeeFoodSegmenter = (function () {
     'use strict';
 
     // ── Configuration ──────────────────────────────────────
-    const MODEL_PATH = './best_float16.tflite';
+    const MODEL_PATH = './models/best_float16.tflite';
     const MODEL_INPUT_SIZE = 640;  // YOLOv8/v11 standard max
     const DEBUG = true;            // Set false for production
 

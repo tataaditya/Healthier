@@ -1,0 +1,3 @@
+# Dependensi backend utama.
+# Instalasi PyTorch/PaddlePaddle GPU dapat memerlukan wheel khusus perangkat.
+-r backend/requirements.txt

@@ -1,28 +1,53 @@
-# Lingkungan Virtual Python
-nutrilabel_env/
+# Python environments and local configuration
+.venv/
 venv/
 env/
+healthier_env/
+.env
+.env.*
+!.env.example
 
-# Cache Python
+# Python caches and test/type-check artifacts
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# Dataset dan Gambar Besar
-Dataset/
+# Frontend dependencies and build output
+node_modules/
+dist/
+build/
+
+# Datasets and generated training/evaluation output
+/dataset/
+/Dataset/
+/FINAL FOOD DATASET/
+/isipiringku_v3_export/
+/isipiringku_v3_hasil/
 runs/
 debug_output/
 debug_arch_update_baso/
 debug_baso_final/
+evaluasi_hasil.json
 
-# Model Weights (jika berukuran besar)
-best.pt
-best_float16.tflite
-1.tflite
+# Model artifacts are ignored by default; keep the two runtime models available.
+*.pt
+*.tflite
+!/models/best.pt
+!/models/best_float16.tflite
 
-# File OS & IDE
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Operating system and editor files
 .DS_Store
 Thumbs.db
+Desktop.ini
 .vscode/
 .idea/

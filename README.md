@@ -1,148 +1,117 @@
-# healthier (NutriLabel v3.5) 🥗
+# Healthier v3.5
 
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![Framework](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
-[![AI-Engine](https://img.shields.io/badge/AI%20Engine-PaddleOCR%20%7C%20YOLOv11-orange.svg)](https://github.com/PaddlePaddle/PaddleOCR)
+Aplikasi web untuk membantu pengguna mencatat asupan, membaca informasi nilai gizi pada kemasan, dan memperkirakan komposisi makanan. Aplikasi menggabungkan antarmuka JavaScript, backend FastAPI untuk OCR, serta model segmentasi makanan.
 
-**healthier (NutriLabel v3.5)** adalah sistem pemantauan gizi harian personal yang komprehensif berbasis Kecerdasan Buatan (AI) untuk mendeteksi kandungan nutrisi kemasan makanan dan mengestimasi porsi makan secara *real-world*. 
+> **Catatan:** hasil OCR, estimasi porsi, dan saran dalam aplikasi bersifat informatif. Hasilnya bukan diagnosis atau pengganti saran tenaga kesehatan.
 
-Sistem ini mengintegrasikan pemrosesan citra tingkat lanjut (*Computer Vision*), sistem aturan klinis terpersonalisasi (*Clinical Health Rules Engine*), dan perhitungan kualitas nutrisi tingkat lanjut (*Extended Nutri-Score*) untuk membantu pengguna memantau kesehatan harian mereka sesuai dengan standar medis nasional dan internasional.
+## Tampilan
 
----
+<p align="center">
+  <img src="assets/img/foto_github.png" alt="Tampilan aplikasi Healthier" width="85%">
+</p>
 
-## 📸 Demo Tampilan Sistem
+## Fitur
 
-<div align="center">
-  <img src="foto_github.png" alt="Demo healthier" width="80%">
-</div>
+- Pemindaian label nutrisi menggunakan PaddleOCR dengan backend FastAPI.
+- Pencarian makanan dari data nutrisi lokal `backend/nutrition.csv`.
+- Estimasi segmentasi makanan menggunakan YOLO pada backend dan TensorFlow Lite di browser.
+- Koreksi manual hasil deteksi sebelum digunakan dalam analisis.
+- Pencatatan hidrasi, riwayat makan, dan ringkasan nutrisi di browser.
+- Skor nutrisi dan aturan kesehatan yang dapat disesuaikan dengan profil pengguna.
 
-> **Catatan UX**: Antarmuka dirancang dengan tema **Sleek Dark Mode** menggunakan efek *glassmorphism*, indikator progres visual SVG, grafik analitik asupan 7 hari berbasis Chart.js, serta feedback real-time saat pengambilan foto.
+## Teknologi
 
----
+- **Frontend:** HTML, CSS, JavaScript, Chart.js, TensorFlow.js/TFLite.
+- **Backend:** Python, FastAPI, PaddleOCR, PyTorch, Ultralytics.
+- **Model runtime:** `models/best.pt` untuk segmentasi backend dan `models/best_float16.tflite` untuk segmentasi di browser.
 
-## 🛠️ Analisis Sistem: Kelebihan & Kekurangan (Evaluasi Jujur & Objektif)
+## Struktur Proyek
 
-Untuk memberikan gambaran yang transparan bagi akademisi dan mentor, berikut adalah analisis kelebihan teknis serta keterbatasan performa riil (ground truth vs real-world deployment) dari sistem **healthier**:
-
-### 🌟 Kelebihan (Strengths)
-
-| Kategori | Kelebihan Teknis & Fungsional | Deskripsi & Implementasi Klinis |
-| :--- | :--- | :--- |
-| **Keandalan Offline** | **Dual-Mode Inference & Fallback** | Jika server lokal FastAPI mati, browser secara otomatis berpindah ke **Offline Fallback Mode** menggunakan model `@tensorflow/tfjs-tflite` (WASM) untuk segmentasi piring makan. |
-| **Desain Mitigasi** | **Human-in-the-Loop Architecture** | Menyediakan **Segmentation Editor** dan **Form Koreksi Nilai Gizi** sebagai solusi mitigasi utama. Desain ini memastikan ketidakakuratan deteksi AI (baik OCR maupun YOLO) dapat dikoreksi langsung oleh pengguna sebelum masuk ke Clinical Rules Engine. |
-| **Koreksi Presisi** | **Segmentation Editor & Canvas** | Pengguna dapat mengoreksi hasil segmentasi otomatis AI secara langsung lewat kuas warna (*brush paint*) bertransparansi 60% dan tools navigasi (Zoom, Pan, Minimap, Undo/Redo). |
-| **Logika Medis** | **Clinical Rules Engine Terpersonalisasi** | Menerapkan parameter batas harian berdasarkan profil fisik & riwayat penyakit pengguna sesuai **PERKENI 2024** (untuk Diabetes) dan **JNC 8** (untuk Hipertensi). |
-| **Skor Gizi Kaya** | **Extended Nutri-Score (FSA/Ofcom)** | Perluasan skor gizi tradisional dengan bonus mikronutrien (Vit C, Kalsium, Zat Besi, dll.), penyesuaian porsi riil (*Serving Fraction*), dan *Powder Reconstitution Mode*. |
-| **Evaluasi Valid** | **Nutrient-Centric Batch Evaluator** | Mengabaikan metrik CER/WER tradisional yang kurang relevan secara klinis dan memprioritaskan *Field-Level Accuracy* untuk menjaga validitas angka gizi yang diekstrak. |
-
----
-
-### ⚠️ Kekurangan & Batasan Akurasi (Limitations)
-
-| Kategori | Batasan Sistem Saat Ini | Detail Teknis & Rencana Mitigasi Mendatang |
-| :--- | :--- | :--- |
-| **Akurasi Segmentasi** | **Bias Dataset YOLOv11-Seg (Isi Piringku)** | Meskipun dilatih menggunakan 3 folder dataset besar, dataset dasar `isipiringku_v2` masih didominasi oleh makanan bergaya Barat/luar negeri. Akibatnya, model **kurang optimal dan sering salah mengklasifikasikan makanan lokal khas Indonesia** (seperti nasi uduk, lauk bersaus/bumbu kacang, sayur berkuah, gorengan, dll.) karena perbedaan tekstur dan cara penyajian. |
-| **Akurasi Deteksi Teks** | **Keterbatasan Riil Engine PaddleOCR** | Pada kemasan dunia nyata, PaddleOCR tidak selalu menghasilkan deteksi teks yang sempurna. Meskipun telah diakomodasi oleh filter preprocessing (*deglare*, *deskew*), PaddleOCR masih **sering mengalami kegagalan deteksi (false negative) atau salah baca** pada kemasan yang melengkung (seperti botol/kaleng), memiliki kontras warna teks-latar yang rendah, atau menggunakan fon/huruf dekoratif (*stylized fonts*). |
-| **Beban Klien** | **WASM Model Loading Overhead** | Memuat pustaka TFJS-TFLite dan model `best_float16.tflite` secara lokal di browser membutuhkan memori RAM cukup tinggi pada perangkat seluler berspesifikasi rendah. |
-| **Dependensi Server** | **PaddleOCR Python Dependency** | Backend OCR membutuhkan instalasi modul Python yang cukup besar (seperti `paddlepaddle` dan `paddleocr`), membutuhkan waktu setup awal yang relatif lama di lokal. |
-| **Estimasi Dimensi** | **Perspektif 2D untuk Porsi** | Estimasi porsi makan didasarkan pada perbandingan jumlah piksel segmentasi secara 2D pada canvas, sehingga belum mampu mengukur ketebalan (kedalaman volume 3D) makanan secara presisi. |
-| **Variasi Bahasa** | **Sensitivitas Struktur Kamus** | Rekonstruksi tabel gizi spasial masih sangat bergantung pada `KAMUS_NUTRISI` (Bahasa Indonesia & Inggris). Variasi struktur bahasa lain dapat menurunkan akurasi pemetaan kolom data gizi. |
-
----
-
-## 📐 Arsitektur Alur Kerja Sistem
-
-```mermaid
-graph TD
-    A[Image Input] --> B{Pilih Alur Analisis}
-    
-    %% Alur Kemasan
-    B -->|Makanan Kemasan| C[Quality Check Kamera]
-    C --> D[Preprocessing & ROI Crop]
-    D --> E[PaddleOCR PP-OCRv4 Engine]
-    E --> F[Semantic OCR Filtering]
-    F --> G[Spatial Layout Reconstruction]
-    G --> H[Koreksi & Normalisasi Unit]
-    H --> I[Form Koreksi User]
-    
-    %% Alur Piring
-    B -->|Isi Piringku| J{Cek Koneksi Server}
-    J -->|Online| K[YOLOv11-Seg @ FastAPI]
-    J -->|Offline Fallback| L[tfjs-tflite browser: Mobile Food Segmenter V1]
-    K --> M[Estimasi Proporsi Piksel Makanan]
-    L --> M
-    M --> N[Interactive Paint Canvas / SegmentationEditor]
-    N --> I
-    
-    %% Mesin Analisis
-    I --> O[Extended Nutri-Score Engine]
-    I --> P[Clinical Health Rules Engine]
-    
-    O --> Q[Modal Hasil & Saran Smart Tips]
-    P --> Q
-    
-    Q -->|Simpan Makan| R[Dashboard & 7-Day Analytics]
-    R --> S[Local Storage State]
+```text
+.
+├── assets/
+│   ├── css/                 # Gaya aplikasi
+│   ├── img/                 # Logo, demo, dan gambar pendukung
+│   └── js/                  # Logika frontend
+├── backend/
+│   ├── healthier_v3_ppocr.py
+│   ├── nutrition.csv
+│   └── requirements.txt
+├── docs/                    # Panduan dan dokumentasi teknis
+├── models/
+│   ├── best.pt
+│   └── best_float16.tflite
+├── index.html
+├── requirements.txt         # Dependensi Python proyek
+└── CARA_JALANKAN.md
 ```
 
----
+Folder `FINAL FOOD DATASET/` yang sudah ada di GitHub tetap dipertahankan. Salinan lokal dataset tersebut tidak tersedia di workspace ini. Model runtime di atas disertakan karena dibutuhkan oleh fitur segmentasi aplikasi.
 
-## 🚀 Cara Menjalankan Aplikasi
+## Prasyarat
 
-### 1. Prasyarat Sistem
-* Python 3.9 atau lebih tinggi
-* Node.js (opsional, untuk Live Server) atau Extensi VS Code Live Server
-* Git
+- Windows 10/11 (perintah di bawah menggunakan PowerShell).
+- Python 3.12 direkomendasikan; instalasi PaddlePaddle dan PyTorch harus sesuai dengan versi Python dan perangkat.
+- Browser modern.
+- Koneksi internet untuk pustaka frontend yang dimuat dari CDN dan unduhan model OCR pertama kali.
 
-### 2. Konfigurasi Backend (FastAPI + PaddleOCR + YOLOv11)
-Buka terminal Anda di folder utama proyek dan jalankan perintah berikut:
+## Instalasi dan Menjalankan
+
+### 1. Siapkan backend
+
+Buka PowerShell di direktori proyek:
 
 ```powershell
-# 1. Masuk ke lingkungan virtual (contoh untuk Windows)
-.\nutrilabel_env\Scripts\activate
-
-# 2. Jalankan Server API backend
-python nutrilabel_v3_ppocr.py --serve --host 127.0.0.1 --port 8000
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
-> **Catatan**: Tunggu hingga muncul log `Uvicorn running on http://127.0.0.1:8000`. Request analisis pertama mungkin memerlukan waktu 15-30 detik untuk memuat model ke memori.
 
-### 3. Konfigurasi Frontend (Web Dashboard)
-1. Buka file `app.js` dan pastikan konfigurasi API mengarah ke alamat backend lokal Anda:
-   ```javascript
-   const API_BASE_URL = "http://127.0.0.1:8000";
-   ```
-2. Jalankan server lokal untuk frontend (misalnya menggunakan Live Server pada VS Code, atau via python):
-   ```bash
-   python -m http.server 5500
-   ```
-3. Akses aplikasi melalui browser di alamat `http://127.0.0.1:5500`.
+Jalankan server OCR:
 
----
-
-## 🧪 Evaluasi Model & Justifikasi Riset
-
-Akurasi ekstraksi tabel nutrisi diuji secara batch menggunakan script `evaluasi_batch.py`. 
-
-> [!IMPORTANT]
-> **Mengapa Kami Tidak Menggunakan CER/WER Sebagai Metrik Utama?**
-> Di dunia nyata, foto kemasan makanan mengandung banyak teks non-gizi (slogan promosi, tanggal kadaluwarsa, dll.) yang sengaja kami saring keluar menggunakan *Semantic Filter*. Membandingkan teks terfilter dengan transkrip asli akan merusak nilai CER/WER secara semu. Oleh karena itu, riset ini berfokus pada **Field-Level Accuracy** (seberapa akurat sistem mengekstrak angka kritis seperti gula, lemak, dan natrium) yang memiliki signifikansi klinis sesungguhnya.
-
-Untuk menjalankan pengujian evaluasi batch:
 ```powershell
-# Menguji hanya pada gambar yang memiliki data Ground Truth (*_gt.json)
-python evaluasi_batch.py -f Dataset -r --gt-only
+python backend\healthier_v3_ppocr.py --serve --host 127.0.0.1 --port 8000
 ```
-Hasil evaluasi komprehensif akan disimpan secara otomatis di file `evaluasi_hasil.json` dalam folder target.
 
----
+Biarkan terminal ini tetap berjalan. Model OCR dapat memerlukan waktu untuk diunduh dan dimuat saat pertama kali dipakai.
 
-## ⚕️ Dasaran Klinis (Clinical Health Rules)
-- **Diabetes Melitus Tipe 2**: Disesuaikan dengan konsensus nasional **PERKENI 2024**.
-- **Hipertensi**: Disesuaikan dengan rekomendasi global diet rendah garam **JNC 8** dan **DASH Diet**.
+### 2. Jalankan frontend
 
-Sistem secara otomatis memberikan status keamanan makanan (`SAFE`, `WARNING`, `DANGER`) yang adaptif sesuai profil riwayat penyakit pengguna.
+Buka terminal PowerShell kedua di direktori proyek:
 
----
+```powershell
+python -m http.server 5500 --bind 127.0.0.1
+```
 
-*Dikembangkan untuk keperluan Penelitian Riset AI dan Kesehatan Personal Terintegrasi.*
+Buka <http://127.0.0.1:5500> di browser. Frontend mengirim permintaan API ke `http://127.0.0.1:8000`.
+
+### Catatan instalasi AI
+
+`requirements.txt` memasang dependensi backend utama, termasuk PyTorch dan PaddlePaddle. Instalasi framework AI berukuran besar dan dukungan GPU bergantung pada OS, versi Python, serta CUDA. Jika instalasi GPU gagal, ikuti instruksi instalasi resmi PyTorch/PaddlePaddle untuk perangkat Anda; versi CPU dapat digunakan sebagai alternatif.
+
+## Model yang Dibutuhkan
+
+- `models/best.pt` digunakan untuk segmentasi makanan pada backend. Tanpa file ini, endpoint segmentasi backend tidak dapat memuat model.
+- `models/best_float16.tflite` digunakan oleh segmentasi browser. Pastikan file tersedia di jalur tersebut saat menjalankan aplikasi.
+
+Jangan pindahkan atau mengganti nama model tanpa memperbarui jalur model di kode terkait. Dataset latihan dan checkpoint eksperimen diabaikan oleh Git.
+
+## Dokumentasi Tambahan
+
+- [Panduan menjalankan aplikasi](CARA_JALANKAN.md)
+- [Panduan OCR](docs/CARA_JALANKAN_OCR.md)
+- [Panduan AI](docs/HEALTHIER_COMPLETE_AI_GUIDE.md)
+- [Arsitektur sistem](docs/HEALTHIER_REAL_WORLD_ARCHITECTURE.md)
+- [Analisis model Isi Piringku](docs/analisis_model_isipiringku.md)
+
+## Batasan
+
+- OCR dapat keliru pada foto buram, kemasan melengkung, atau teks berkontras rendah. Periksa dan koreksi hasil sebelum menggunakannya.
+- Segmentasi berbasis gambar 2D tidak mengukur volume atau berat makanan secara langsung.
+- Kualitas segmentasi dipengaruhi oleh jenis makanan dan cakupan data pelatihan.
+- Aturan klinis dan skor nutrisi merupakan alat bantu, bukan keputusan medis.
+
+## Kontribusi
+
+Sebelum mengirim perubahan, pastikan path aset dan model sesuai dengan struktur proyek. Jangan unggah kredensial, file `.env`, virtual environment, dataset privat, atau output eksperimen.

@@ -1,9 +1,10 @@
 paddleocr>=2.8.0
+paddlepaddle>=3.0.0
 Pillow>=10.0.0
 numpy>=1.24.0
 opencv-python>=4.8.0
 fastapi>=0.111.0
 uvicorn[standard]>=0.30.0
 python-multipart>=0.0.9
+torch>=2.0.0
 ultralytics>=8.2.0
-

@@ -1,7 +1,7 @@
 """
-NutriLabel v3 - OCR Pipeline menggunakan PP-OCRv4
+Healthier v3 - OCR Pipeline menggunakan PP-OCRv4
 ===================================================
-Jalankan via: python nutrilabel_v3_ppocr.py --image foto_kemasan.jpg
+Jalankan via: python healthier_v3_ppocr.py --image foto_kemasan.jpg
 
 Hardware target: i5-12450H + RTX 3050 6GB + RAM 16GB
 Engine: PaddleOCR (PP-OCRv4) â€” ringan, cepat, stabil
@@ -16,10 +16,14 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
 
 # Fix PaddlePaddle 3.x NotImplementedError (ConvertPirAttribute2RuntimeAttribute) dengan oneDNN
 os.environ["FLAGS_enable_pir_api"] = "0"
+# Disable oneDNN/MKL-DNN sepenuhnya — fix untuk Windows + Paddle 3.3.1 + PaddleX 3.7.2
+# Error: ConvertPirAttribute2RuntimeAttribute not support [pir::ArrayAttribute<pir::DoubleAttribute>]
+os.environ["FLAGS_use_mkldnn"] = "0"
+os.environ["PADDLE_DISABLE_MKLDNN"] = "1"
 
 
-import torch  # <-- Fix WinError 127 (Load torch DLLs before paddle)
 import numpy as np
+import torch  # <-- Fix WinError 127 (Load torch DLLs before paddle)
 import cv2
 from pathlib import Path
 from PIL import Image
@@ -61,10 +65,10 @@ from paddleocr import PaddleOCR
 # â”€â”€â”€ 2. KONFIGURASI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 CONF_MINIMUM = 0.3  # Confidence threshold untuk filter hasil OCR
-OCR_VERSION = os.getenv("NUTRILABEL_OCR_VERSION", "PP-OCRv4").strip() or None
+OCR_VERSION = os.getenv("HEALTHIER_OCR_VERSION", "PP-OCRv4").strip() or None
 OCR_DEVICE = "cpu"
 USE_TABLE_STRUCTURE = True
-REMOVE_WATERMARK = os.getenv("NUTRILABEL_REMOVE_WATERMARK", "0").strip() != "0"
+REMOVE_WATERMARK = os.getenv("HEALTHIER_REMOVE_WATERMARK", "0").strip() != "0"
 
 KAMUS_NUTRISI = {
     # Energi / Kalori â€” termasuk variasi bilingual kemasan Indonesia
@@ -193,6 +197,9 @@ class PPOCREngine:
             # 'use_gpu' dihapus di PaddleOCR 3.x — CPU adalah default jika tidak ada GPU
             "text_det_thresh": 0.3,
             "text_det_box_thresh": 0.5,
+            # Disable oneDNN/MKL-DNN — fix NotImplementedError ConvertPirAttribute2RuntimeAttribute
+            # pada Windows + Paddle 3.3.1 + PaddleX 3.7.2
+            "enable_mkldnn": False,
         }
         # ocr_version opsional (misal: "PP-OCRv4"). Kosongkan jika tidak perlu.
         if OCR_VERSION and OCR_VERSION.lower() not in ("pp-ocrv4", "default"):
@@ -211,7 +218,7 @@ class PPOCREngine:
                 self.table_engine = None
             
         else:
-            print("   [PP-Structure] Dinonaktifkan via NUTRILABEL_USE_TABLE_STRUCTURE=0")
+            print("   [PP-Structure] Dinonaktifkan via HEALTHIER_USE_TABLE_STRUCTURE=0")
             self.table_engine = None
         self._loaded = True
 
@@ -2060,7 +2067,7 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
       Pass 2 (Precision OCR): OCR full-res pada ROI yang ditemukan Pass 1.
     """
     print("\n" + "="*60)
-    print("  NutriLabel v3 — PP-OCR Pipeline (Two-Pass)")
+    print("  Healthier v3 — PP-OCR Pipeline (Two-Pass)")
     print("="*60)
 
     # --- Pre-processing → numpy array ---
@@ -2075,7 +2082,7 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
     # PASS 1 — Quick Anchor Scan (resized image)
     # ═══════════════════════════════════════════════════════════
     full_h, full_w = img_np.shape[:2]
-    max_side = 960
+    max_side = 640
     scale = 1.0
     if max(full_h, full_w) > max_side:
         scale = max_side / max(full_h, full_w)
@@ -2125,14 +2132,30 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
         print("   ⚠️ Anchor tidak ditemukan, gunakan full image")
 
     # ═══════════════════════════════════════════════════════════
-    # PASS 2 — Precision OCR (full resolution ROI)
+    # PASS 2 — Precision OCR (Compressed)
     # ═══════════════════════════════════════════════════════════
-    print(f"\n🤖 Pass 2 — Precision OCR ({roi_img.shape[1]}x{roi_img.shape[0]})...")
+    max_w2 = 960
+    scale2 = 1.0
+    if roi_img.shape[1] > max_w2:
+        scale2 = max_w2 / roi_img.shape[1]
+        roi_img_pass2 = cv2.resize(roi_img, (0, 0), fx=scale2, fy=scale2, interpolation=cv2.INTER_AREA)
+        print(f"   [Compress] ROI diperkecil ke {roi_img_pass2.shape[1]}x{roi_img_pass2.shape[0]} untuk Pass 2")
+    else:
+        roi_img_pass2 = roi_img
+
+    print(f"\n🤖 Pass 2 — Precision OCR ({roi_img_pass2.shape[1]}x{roi_img_pass2.shape[0]})...")
     t0 = time.time()
-    hasil_deteksi = engine.deteksi(roi_img)
+    hasil_deteksi = engine.deteksi(roi_img_pass2)
     deteksi_list = hasil_deteksi["deteksi_list"]
     html_tables = hasil_deteksi["html_tables"]
     durasi = time.time() - t0
+
+    if scale2 < 1.0:
+        for d in deteksi_list:
+            d["bbox"] = [v / scale2 for v in d["bbox"]]
+            d["center_x"] /= scale2
+            d["center_y"] /= scale2
+
     print(f"   ✅ {len(deteksi_list)} teks terdeteksi dalam {durasi:.2f} detik")
 
     deteksi_nutrisi, semantic_meta = semantic_filter_ocr(deteksi_list)
@@ -2262,6 +2285,9 @@ class YOLOIsiPiringku:
                 print("⚠️ YOLO berjalan di CPU")
                 cls._device = "cpu"
             model_path = Path(__file__).parent / "best.pt"
+            if not model_path.exists():
+                # Fallback: check models directory in root
+                model_path = Path(__file__).parent.parent / "models" / "best.pt"
             if not model_path.exists():
                 # Fallback: try relative path
                 model_path = Path("best.pt")
@@ -2449,7 +2475,7 @@ def buat_fastapi_app():
     if FastAPI is None:
         return None
 
-    api = FastAPI(title="NutriLabel v3 API")
+    api = FastAPI(title="Healthier v3 API")
     api.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -2837,7 +2863,7 @@ def _json_safe(obj):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="NutriLabel v3 â€” OCR Tabel Gizi via PP-OCRv4"
+        description="Healthier v3 â€” OCR Tabel Gizi via PP-OCRv4"
     )
     parser.add_argument("--image", "-i", required=False,
                         help="Path ke foto kemasan makanan (JPG/PNG)")
@@ -2864,7 +2890,7 @@ def main():
         except ImportError:
             print("uvicorn belum terinstal. Jalankan: pip install uvicorn")
             sys.exit(1)
-        uvicorn.run("nutrilabel_v3_ppocr:app", host=args.host, port=args.port, reload=False)
+        uvicorn.run("healthier_v3_ppocr:app", host=args.host, port=args.port, reload=False)
         return None
 
     if not args.image:
