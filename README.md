@@ -1,148 +1,183 @@
 # healthier (NutriLabel v3.5) 🥗
 
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![Framework](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
-[![AI-Engine](https://img.shields.io/badge/AI%20Engine-PaddleOCR%20%7C%20YOLOv11-orange.svg)](https://github.com/PaddlePaddle/PaddleOCR)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Backend](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
+[![AI Engine](https://img.shields.io/badge/AI%20Engine-PaddleOCR%20%7C%20YOLO11--Seg-orange.svg)](https://github.com/PaddlePaddle/PaddleOCR)
 
-**healthier (NutriLabel v3.5)** adalah sistem pemantauan gizi harian personal yang komprehensif berbasis Kecerdasan Buatan (AI) untuk mendeteksi kandungan nutrisi kemasan makanan dan mengestimasi porsi makan secara *real-world*. 
+**healthier (NutriLabel v3.5)** adalah sistem pemantauan gizi harian personal berbasis
+AI untuk mengekstraksi kandungan nutrisi dari label kemasan dan mengestimasi porsi
+makanan (*Isi Piringku*) dari foto.
 
-Sistem ini mengintegrasikan pemrosesan citra tingkat lanjut (*Computer Vision*), sistem aturan klinis terpersonalisasi (*Clinical Health Rules Engine*), dan perhitungan kualitas nutrisi tingkat lanjut (*Extended Nutri-Score*) untuk membantu pengguna memantau kesehatan harian mereka sesuai dengan standar medis nasional dan internasional.
+Sistem menggabungkan Computer Vision (PaddleOCR + YOLO11-Seg), *Clinical Health Rules
+Engine* (PERKENI 2024 untuk diabetes, JNC 8 + DASH untuk hipertensi), dan
+*Extended Nutri-Score* (FSA/Ofcom) untuk memberikan status keamanan pangan dan saran
+yang dipersonalisasi.
 
 ---
 
-## 📸 Demo Tampilan Sistem
+## 📸 Demo
 
 <div align="center">
-  <img src="foto_github.png" alt="Demo healthier" width="80%">
+  <img src="frontend/assets/demo.png" alt="Demo healthier" width="80%">
 </div>
 
-> **Catatan UX**: Antarmuka dirancang dengan tema **Sleek Dark Mode** menggunakan efek *glassmorphism*, indikator progres visual SVG, grafik analitik asupan 7 hari berbasis Chart.js, serta feedback real-time saat pengambilan foto.
+> Antarmuka memakai tema *glassmorphism*, progres SVG, grafik 7 hari (Chart.js), dan
+> feedback kualitas foto secara real-time.
 
 ---
 
-## 🛠️ Analisis Sistem: Kelebihan & Kekurangan (Evaluasi Jujur & Objektif)
+## ✨ Fitur Utama
 
-Untuk memberikan gambaran yang transparan bagi akademisi dan mentor, berikut adalah analisis kelebihan teknis serta keterbatasan performa riil (ground truth vs real-world deployment) dari sistem **healthier**:
-
-### 🌟 Kelebihan (Strengths)
-
-| Kategori | Kelebihan Teknis & Fungsional | Deskripsi & Implementasi Klinis |
-| :--- | :--- | :--- |
-| **Keandalan Offline** | **Dual-Mode Inference & Fallback** | Jika server lokal FastAPI mati, browser secara otomatis berpindah ke **Offline Fallback Mode** menggunakan model `@tensorflow/tfjs-tflite` (WASM) untuk segmentasi piring makan. |
-| **Desain Mitigasi** | **Human-in-the-Loop Architecture** | Menyediakan **Segmentation Editor** dan **Form Koreksi Nilai Gizi** sebagai solusi mitigasi utama. Desain ini memastikan ketidakakuratan deteksi AI (baik OCR maupun YOLO) dapat dikoreksi langsung oleh pengguna sebelum masuk ke Clinical Rules Engine. |
-| **Koreksi Presisi** | **Segmentation Editor & Canvas** | Pengguna dapat mengoreksi hasil segmentasi otomatis AI secara langsung lewat kuas warna (*brush paint*) bertransparansi 60% dan tools navigasi (Zoom, Pan, Minimap, Undo/Redo). |
-| **Logika Medis** | **Clinical Rules Engine Terpersonalisasi** | Menerapkan parameter batas harian berdasarkan profil fisik & riwayat penyakit pengguna sesuai **PERKENI 2024** (untuk Diabetes) dan **JNC 8** (untuk Hipertensi). |
-| **Skor Gizi Kaya** | **Extended Nutri-Score (FSA/Ofcom)** | Perluasan skor gizi tradisional dengan bonus mikronutrien (Vit C, Kalsium, Zat Besi, dll.), penyesuaian porsi riil (*Serving Fraction*), dan *Powder Reconstitution Mode*. |
-| **Evaluasi Valid** | **Nutrient-Centric Batch Evaluator** | Mengabaikan metrik CER/WER tradisional yang kurang relevan secara klinis dan memprioritaskan *Field-Level Accuracy* untuk menjaga validitas angka gizi yang diekstrak. |
+| Area | Kemampuan |
+| :--- | :--- |
+| **OCR Label** | Preprocessing (deskew, deglare, CLAHE, watermark removal), filter semantik, rekonstruksi tabel spasial, dan normalisasi satuan. |
+| **Segmentasi Piring** | YOLO11-Seg di backend + fallback TFLite/WASM di browser saat server offline. |
+| **Koreksi Manual** | Editor canvas (brush per kategori, eraser, zoom/pan, minimap, undo). |
+| **Logika Klinis** | Batas harian adaptif berdasarkan profil fisik dan riwayat penyakit. |
+| **Nutri-Score** | Skor FSA/Ofcom diperluas dengan mikronutrien, fraksi porsi, dan mode bubuk. |
+| **Evaluasi Riset** | Metrik *field-level accuracy* untuk angka gizi, bukan sekadar CER/WER. |
 
 ---
 
-### ⚠️ Kekurangan & Batasan Akurasi (Limitations)
+## 🗂️ Struktur Repositori
 
-| Kategori | Batasan Sistem Saat Ini | Detail Teknis & Rencana Mitigasi Mendatang |
-| :--- | :--- | :--- |
-| **Akurasi Segmentasi** | **Bias Dataset YOLOv11-Seg (Isi Piringku)** | Meskipun dilatih menggunakan 3 folder dataset besar, dataset dasar `isipiringku_v2` masih didominasi oleh makanan bergaya Barat/luar negeri. Akibatnya, model **kurang optimal dan sering salah mengklasifikasikan makanan lokal khas Indonesia** (seperti nasi uduk, lauk bersaus/bumbu kacang, sayur berkuah, gorengan, dll.) karena perbedaan tekstur dan cara penyajian. |
-| **Akurasi Deteksi Teks** | **Keterbatasan Riil Engine PaddleOCR** | Pada kemasan dunia nyata, PaddleOCR tidak selalu menghasilkan deteksi teks yang sempurna. Meskipun telah diakomodasi oleh filter preprocessing (*deglare*, *deskew*), PaddleOCR masih **sering mengalami kegagalan deteksi (false negative) atau salah baca** pada kemasan yang melengkung (seperti botol/kaleng), memiliki kontras warna teks-latar yang rendah, atau menggunakan fon/huruf dekoratif (*stylized fonts*). |
-| **Beban Klien** | **WASM Model Loading Overhead** | Memuat pustaka TFJS-TFLite dan model `best_float16.tflite` secara lokal di browser membutuhkan memori RAM cukup tinggi pada perangkat seluler berspesifikasi rendah. |
-| **Dependensi Server** | **PaddleOCR Python Dependency** | Backend OCR membutuhkan instalasi modul Python yang cukup besar (seperti `paddlepaddle` dan `paddleocr`), membutuhkan waktu setup awal yang relatif lama di lokal. |
-| **Estimasi Dimensi** | **Perspektif 2D untuk Porsi** | Estimasi porsi makan didasarkan pada perbandingan jumlah piksel segmentasi secara 2D pada canvas, sehingga belum mampu mengukur ketebalan (kedalaman volume 3D) makanan secara presisi. |
-| **Variasi Bahasa** | **Sensitivitas Struktur Kamus** | Rekonstruksi tabel gizi spasial masih sangat bergantung pada `KAMUS_NUTRISI` (Bahasa Indonesia & Inggris). Variasi struktur bahasa lain dapat menurunkan akurasi pemetaan kolom data gizi. |
-
----
-
-## 📐 Arsitektur Alur Kerja Sistem
-
-```mermaid
-graph TD
-    A[Image Input] --> B{Pilih Alur Analisis}
-    
-    %% Alur Kemasan
-    B -->|Makanan Kemasan| C[Quality Check Kamera]
-    C --> D[Preprocessing & ROI Crop]
-    D --> E[PaddleOCR PP-OCRv4 Engine]
-    E --> F[Semantic OCR Filtering]
-    F --> G[Spatial Layout Reconstruction]
-    G --> H[Koreksi & Normalisasi Unit]
-    H --> I[Form Koreksi User]
-    
-    %% Alur Piring
-    B -->|Isi Piringku| J{Cek Koneksi Server}
-    J -->|Online| K[YOLOv11-Seg @ FastAPI]
-    J -->|Offline Fallback| L[tfjs-tflite browser: Mobile Food Segmenter V1]
-    K --> M[Estimasi Proporsi Piksel Makanan]
-    L --> M
-    M --> N[Interactive Paint Canvas / SegmentationEditor]
-    N --> I
-    
-    %% Mesin Analisis
-    I --> O[Extended Nutri-Score Engine]
-    I --> P[Clinical Health Rules Engine]
-    
-    O --> Q[Modal Hasil & Saran Smart Tips]
-    P --> Q
-    
-    Q -->|Simpan Makan| R[Dashboard & 7-Day Analytics]
-    R --> S[Local Storage State]
+```text
+Healthier/
+├── backend/                 # FastAPI + pipeline OCR/YOLO
+│   └── app.py
+├── frontend/                # Aplikasi web statis
+│   ├── index.html
+│   ├── assets/              # logo, screenshot, model TFLite
+│   ├── css/
+│   └── js/                  # config, domain engines, UI
+├── models/isipiringku_v2/   # artefak training & bobot YOLO
+├── scripts/                 # evaluasi, benchmark, diagnostik
+├── data/samples/            # contoh gambar & hasil OCR
+├── docs/                    # arsitektur, evaluasi, panduan
+├── requirements.txt
+├── .env.example
+└── README.md
 ```
 
+> Dataset tidak disertakan. Letakkan dataset Anda di `dataset/` (sudah di-*ignore*
+> oleh Git) dalam format `foto.jpg` + `foto_gt.json`.
+
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+## 🚀 Menjalankan Aplikasi
 
-### 1. Prasyarat Sistem
-* Python 3.9 atau lebih tinggi
-* Node.js (opsional, untuk Live Server) atau Extensi VS Code Live Server
-* Git
+### 1. Prasyarat
 
-### 2. Konfigurasi Backend (FastAPI + PaddleOCR + YOLOv11)
-Buka terminal Anda di folder utama proyek dan jalankan perintah berikut:
+- Python **3.10+**
+- PaddlePaddle (CPU/GPU sesuai mesin)
+- Browser modern (Chrome/Edge/Firefox)
+
+### 2. Backend (FastAPI + PaddleOCR + YOLO)
 
 ```powershell
-# 1. Masuk ke lingkungan virtual (contoh untuk Windows)
-.\nutrilabel_env\Scripts\activate
+# Opsional: buat virtual environment
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 
-# 2. Jalankan Server API backend
-python nutrilabel_v3_ppocr.py --serve --host 127.0.0.1 --port 8000
+# Instal PaddlePaddle sesuai mesin Anda, lalu:
+pip install -r requirements.txt
+
+# Jalankan API
+python -m backend.app --serve --host 127.0.0.1 --port 8000
 ```
-> **Catatan**: Tunggu hingga muncul log `Uvicorn running on http://127.0.0.1:8000`. Request analisis pertama mungkin memerlukan waktu 15-30 detik untuk memuat model ke memori.
 
-### 3. Konfigurasi Frontend (Web Dashboard)
-1. Buka file `app.js` dan pastikan konfigurasi API mengarah ke alamat backend lokal Anda:
-   ```javascript
-   const API_BASE_URL = "http://127.0.0.1:8000";
-   ```
-2. Jalankan server lokal untuk frontend (misalnya menggunakan Live Server pada VS Code, atau via python):
-   ```bash
-   python -m http.server 5500
-   ```
-3. Akses aplikasi melalui browser di alamat `http://127.0.0.1:5500`.
+Tunggu hingga muncul `Uvicorn running on http://127.0.0.1:8000`.
+Request pertama bisa 15–30 detik karena model dimuat ke memori.
 
----
+### 3. Frontend
 
-## 🧪 Evaluasi Model & Justifikasi Riset
-
-Akurasi ekstraksi tabel nutrisi diuji secara batch menggunakan script `evaluasi_batch.py`. 
-
-> [!IMPORTANT]
-> **Mengapa Kami Tidak Menggunakan CER/WER Sebagai Metrik Utama?**
-> Di dunia nyata, foto kemasan makanan mengandung banyak teks non-gizi (slogan promosi, tanggal kadaluwarsa, dll.) yang sengaja kami saring keluar menggunakan *Semantic Filter*. Membandingkan teks terfilter dengan transkrip asli akan merusak nilai CER/WER secara semu. Oleh karena itu, riset ini berfokus pada **Field-Level Accuracy** (seberapa akurat sistem mengekstrak angka kritis seperti gula, lemak, dan natrium) yang memiliki signifikansi klinis sesungguhnya.
-
-Untuk menjalankan pengujian evaluasi batch:
 ```powershell
-# Menguji hanya pada gambar yang memiliki data Ground Truth (*_gt.json)
-python evaluasi_batch.py -f Dataset -r --gt-only
+python -m http.server 5500 --directory frontend
 ```
-Hasil evaluasi komprehensif akan disimpan secara otomatis di file `evaluasi_hasil.json` dalam folder target.
+
+Buka `http://127.0.0.1:5500`.
+
+### 4. Mengarahkan Frontend ke API Lain
+
+Default API: `http://127.0.0.1:8000`. Override tanpa mengubah kode:
+
+1. Query string: `http://127.0.0.1:5500/?api=http://192.168.1.10:8000`
+2. `localStorage.setItem('healthier:apiBase', 'http://192.168.1.10:8000')`
+3. `window.HEALTHIER_API_BASE` sebelum `frontend/js/config.js`
 
 ---
 
-## ⚕️ Dasaran Klinis (Clinical Health Rules)
-- **Diabetes Melitus Tipe 2**: Disesuaikan dengan konsensus nasional **PERKENI 2024**.
-- **Hipertensi**: Disesuaikan dengan rekomendasi global diet rendah garam **JNC 8** dan **DASH Diet**.
+## 🧠 Model & Bobot
 
-Sistem secara otomatis memberikan status keamanan makanan (`SAFE`, `WARNING`, `DANGER`) yang adaptif sesuai profil riwayat penyakit pengguna.
+Backend mencari bobot YOLO secara otomatis dengan urutan:
+
+1. `HEALTHIER_YOLO_MODEL` (env, path absolut/relatif)
+2. `models/isipiringku_v2/weights/best.pt` *(disarankan)*
+3. `models/isipiringku_v2/weights/last.pt`
+4. `models/isipiringku_v2/weights/best.onnx`
+
+Fallback browser memakai `frontend/assets/models/best_float32.tflite`.
+
+Detail performa, kurva, dan perbandingan iterasi model ada di
+[docs/model-analysis.md](docs/model-analysis.md) dan
+[docs/evaluation.md](docs/evaluation.md).
 
 ---
 
-*Dikembangkan untuk keperluan Penelitian Riset AI dan Kesehatan Personal Terintegrasi.*
+## 🧪 Evaluasi & Benchmark
+
+```powershell
+# Field-level accuracy pada dataset ber-GT
+python scripts/evaluate.py -f dataset -r --gt-only
+
+# Validasi YOLO (butuh data.yaml)
+python scripts/benchmark.py val --data dataset/data.yaml
+
+# Latensi inferensi lokal
+python scripts/benchmark.py latency --images data/samples --limit 5
+
+# Latensi endpoint API
+python scripts/benchmark.py api-latency --image data/samples/label-sample.jpg
+
+# Statistik dataset
+python scripts/benchmark.py dataset-stats --folder dataset
+```
+
+> **Mengapa bukan CER/WER?** Foto kemasan nyata mengandung banyak teks non-gizi
+> (slogan, tanggal kedaluwarsa, dll.) yang sengaja difilter. Karena itu metrik utama
+> riset ini adalah **Field-Level Accuracy** untuk angka gizi yang relevan secara klinis.
+
+---
+
+## ⚕️ Dasar Klinis
+
+- **Diabetes Melitus Tipe 2**: konsensus **PERKENI 2024**.
+- **Hipertensi**: **JNC 8** dan **DASH Diet**.
+
+Makanan diberi status `SAFE`, `WARNING`, atau `DANGER` sesuai profil pengguna.
+
+---
+
+## ⚠️ Batasan (Evaluasi Jujur)
+
+| Kategori | Batasan | Mitigasi |
+| :--- | :--- | :--- |
+| Segmentasi | Dataset didominasi makanan Barat; makanan lokal bersaus/berkuah sering salah kelas. | Editor koreksi manual + fallback TFLite. |
+| OCR | Kemasan melengkung, kontras rendah, dan fon dekoratif masih rawan *false negative*. | Preprocessing + form koreksi nilai. |
+| Porsi | Estimasi 2D belum mengukur volume/ketebalan. | Tampilkan proporsi sebagai estimasi. |
+| Klien | Model TFLite ±39 MB membebani perangkat RAM kecil. | Backend sebagai mode utama. |
+
+---
+
+## 📚 Dokumentasi
+
+- [Arsitektur sistem](docs/architecture.md)
+- [Panduan teknis lengkap](docs/ai-guide.md)
+- [Data & metrik evaluasi](docs/evaluation.md)
+- [Analisis model Isi Piringku](docs/model-analysis.md)
+- [Menjalankan OCR](docs/ocr-setup.md)
+
+---
+
+*Dikembangkan untuk keperluan penelitian AI dan kesehatan personal terintegrasi.*

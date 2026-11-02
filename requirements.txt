@@ -1,0 +1,31 @@
+# healthier / NutriLabel v3.5 — dependensi Python (Python >= 3.10)
+#
+# PENTING: instal PaddlePaddle sesuai mesin Anda SEBELUM requirements ini.
+#   CPU : pip install paddlepaddle==3.2.2
+#   GPU : pip install paddlepaddle-gpu==3.2.2 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
+# PaddleOCR akan memakai build PaddlePaddle yang sudah terpasang.
+
+# --- API server ---
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+# --- OCR label gizi ---
+paddleocr>=2.8.0
+
+# --- Computer vision & segmentasi ---
+numpy>=1.24.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+torch>=2.2.0
+ultralytics>=8.2.0
+
+# --- Dukungan bobot ONNX ---
+onnx>=1.16.0
+onnxruntime>=1.17.0
+
+# --- Utilitas evaluasi/benchmark ---
+requests>=2.31.0
+
+# --- Opsional ---
+# paddlex>=3.0.0   # aktifkan PP-Structure (table recognition)

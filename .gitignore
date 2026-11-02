@@ -1,28 +1,47 @@
-# Lingkungan Virtual Python
-nutrilabel_env/
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual environment
+.venv/
 venv/
 env/
+nutrilabel_env/
 
-# Cache Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Dataset dan Gambar Besar
+# ── Dataset & hasil training ─────────────────────────────────────────────────
 Dataset/
+dataset/
 runs/
+*.cache
+
+# ── Artefak runtime / hasil evaluasi ─────────────────────────────────────────
+*_hasil.json
 debug_output/
 debug_arch_update_baso/
 debug_baso_final/
+data/debug/
+evaluation_results/
+evaluate_results/
 
-# Model Weights (jika berukuran besar)
-best.pt
-best_float16.tflite
-1.tflite
+# ── Environment & secrets ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
 
-# File OS & IDE
-.DS_Store
-Thumbs.db
+# ── Log ──────────────────────────────────────────────────────────────────────
+*.log
+
+# ── Editor & OS ──────────────────────────────────────────────────────────────
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Node (jika menambah tooling frontend) ────────────────────────────────────
+node_modules/
+dist/
