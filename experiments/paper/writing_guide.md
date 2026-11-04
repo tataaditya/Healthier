@@ -37,7 +37,7 @@ menulis Methods dan Results segmentasi**. Bagian OCR adalah blocker utama.
 
 | Di draft lama | Ganti menjadi | Alasan |
 | :--- | :--- | :--- |
-| “trained on 19,087 images” | “trained on **11,684** images; validated on **2,017**; tested on **5,013** external images” | 19.087 adalah kandidat corpus; 373 duplikat dibuang; 18.714 unik |
+| “trained on 19,087 images” | “trained on **11,684** images; validated on **2,017**; tested on **5,013** external images” | 19.087 adalah kandidat corpus; 373 duplikat (dHash) dibuang → 18.714 unik *(angka 373 perlu diregenerasi dari `dataset_summary.json` yang gitignored)* |
 | “3,529 validation images” | **2,017** validation images | Split baru 85:15, bukan 80:20 |
 | “80:20 split” | **85:15 split** | `training_config.json`: `val_frac = 0.15` |
 | "50 epochs" | **max 100 epochs, early stop at 67, best epoch 48** | `experiments/runs/seg_main/results.csv` |
@@ -48,7 +48,7 @@ menulis Methods dan Results segmentasi**. Bagian OCR adalah blocker utama.
 | Box mAP50 / mAP50-95 (jika ada) | **72.37 / 60.11** | checkpoint baru |
 | “168 ms per image” | **ukur ulang** (jangan pakai angka lama) | belum ada benchmark model baru |
 | OCR 83.8% [78.6; 87.9] | **pilot n=6: baseline 21.74% → grid parser 47.83% [29.17; 66.67] (GT terkoreksi)** | `experiments/results/ocr_full{,_grid}`; klaim lama tidak tereproduksi |
-| “PP-OCRv5” | **PP-OCRv4** (atau verifikasi v5) | `backend/app.py` default `PP-OCRv4` |
+| “PP-OCRv5” | **PP-OCRv4** | `backend/app.py:75` default `PP-OCRv4`; `paddleocr==3.7.0` adalah versi **library**, dan v4 termasuk `_SUPPORTED_OCR_VERSIONS` di `paddleocr/_pipelines/ocr.py:58` |
 | Sodium **2,000 mg** | **1,500 mg/hari (hipertensi); 2,300 mg/hari (umum)** | `frontend/js/clinical-rules.js` |
 | TDEE contoh **2,069 kcal** | **2,008.5 kcal** | BMR 1,673.75 × activity factor 1.2 |
 | “best_float16.tflite” | **best_float32.tflite** (atau ekspor ulang FP16) | artefak yang ada FP32 |
@@ -137,18 +137,27 @@ Tulis persis:
 - Augmentasi: `hsv_h=0.01`, `hsv_s=0.3`, `hsv_v=0.2`, `degrees=10`,
   `translate=0.1`, `scale=0.5`, `fliplr=0.5`, `mosaic=0.5`, `erasing=0.4`,
   `close_mosaic=10`.
-- Split: **85:15** stratified, seed 42, dedup 373 duplikat, tidak ada overlap.
-- Jangan menyebut “weighted loss” jika yang dipakai oversampling. Cek
-  `notebook-audit.md`; jika oversampling, tulis “oversampling” dan laporkan
-  **unique vs effective** count. Jika ingin tetap “weighted loss”, implementasikan
-  dan latih ulang.
+- Split: **85:15** stratified, seed 42, tidak ada overlap.
+- Dedup: **dHash perceptual 8×8** (grayscale → resize 9×8 → bit
+  `img[:,1:] > img[:,:-1]`) di `prepare_yolo_seg.py:234-243`, diterapkan di
+  `:458-466`. Jadi duplikat yang di-resize/dikompres pun tertangkap. **Bukan**
+  exact byte-hash.
+- Training baru (`train_seg.py`) memakai `model.train(...)` Ultralytics polos:
+  **TIDAK ada oversampling dan TIDAK ada weighted loss**. Jangan tulis klaim
+  "weighted loss" atau "oversampling" sama sekali. (Oversampling 4.840 → 12.082
+  adalah run **lama** di `notebook-audit.md`, bukan run ini.)
+- ⚠️ Angka "373 duplikat dibuang" berasal dari
+  `experiments/dataset/dataset_summary.json` yang **tidak ada** sekarang
+  (gitignored). Jalankan ulang `prepare_yolo_seg.py` untuk meregenerasi summary
+  sebelum memakai angka 373 di naskah.
 
 ### 4.3 Dataset (Table 1)
 
 Gunakan [`tables/table_dataset.md`](tables/table_dataset.md) apa adanya. Poin
 yang harus muncul di teks:
 
-- Kandidat 19.087; 373 duplikat dibuang; **18.714 unik**.
+- Kandidat 19.087; 373 duplikat dHash dibuang; **18.714 unik** *(verifikasi ulang
+  angka 373 via `prepare_yolo_seg.py`; summary gitignored)*.
 - Train **11.684** (UEC 7.478 + FoodSeg 4.206).
 - Val **2.017** (UEC 1.285 + FoodSeg 732).
 - External test **5.013** (UEC 948; FoodSeg 2.096; FruitSeg 1.969).
@@ -160,9 +169,15 @@ yang harus muncul di teks:
 
 ### 4.4 OCR Extraction Pipeline
 
-- Pastikan versi: `backend/app.py` memakai **PP-OCRv4**. Jika manuscript ingin
-  **PP-OCRv5**, jalankan `eval_ocr.py --ocr-version PP-OCRv5` dan pastikan
-  PaddleOCR 3.x terpasang. Jangan klaim v5 jika kode default v4.
+- Pastikan versi: `backend/app.py:75` memakai **PP-OCRv4** (`NUTRILABEL_OCR_VERSION`,
+  default `PP-OCRv4`), diteruskan ke `ocr_version` di `:225-226`. `paddleocr==3.7.0`
+  adalah versi **library**, bukan model; `PP-OCRv4` termasuk
+  `_SUPPORTED_OCR_VERSIONS` di `paddleocr/_pipelines/ocr.py:58`. Jadi naskah,
+  README, dan kode aman menulis **PP-OCRv4** — bukan kontradiksi.
+  Catatan: label log `[Config] OCR version=...` (`:213`) adalah versi yang
+  **diminta**, bukan bukti versi model yang benar-benar dimuat. Untuk bukti akhir,
+  cek field `status.model` (`:2458`,`:2745`) setelah satu run nyata. Jangan klaim
+  v5 (atau v4) sebelum itu diverifikasi dari log init PaddleOCR.
 - Tulis 4 tahap preprocessing: deskew (Hough), deglare (Telea inpainting),
   CLAHE, ROI crop. Tambahkan filter semantik + fuzzy matching.
 - Persamaan Levenshtein dan similarity sudah ada; pertahankan.
@@ -178,13 +193,30 @@ yang harus muncul di teks:
 ### 4.5 Clinical Rules Engine
 
 - Ganti sodium: **1.500 mg/hari untuk hipertensi**, **2.300 mg/hari untuk
-  umum**; sebut DASH/JNC 8 dengan benar. Jangan tulis 2.000 mg sebagai angka
-  tunggal.
+  umum** (`clinical-rules.js:39,74`); sebut DASH/JNC 8 dengan benar. Jangan tulis
+  2.000 mg sebagai angka tunggal.
+  ⚠️ **Verifikasi halaman guideline sumber** (JNC 8/DASH) langsung dari dokumen
+  asli sebelum mengutip nomor halaman — dokumen tidak ada di repo ini.
 - Ganti contoh TDEE: BMR laki-laki 70 kg/175 cm/25 tahun =
   `10(70)+6.25(175)-5(25)+5 = 1.673,75`; TDEE = `1.673,75 × 1.2 = 2.008,5 kcal`.
   Sebut activity factor 1.2 (sedentary).
-- Gula diabetes: 5% TDEE (PERKENI 2024) → `0.05 × TDEE / 4` gram.
-- Risiko: SAFE, WARNING (≥75% threshold), DANGER (≥100% atau kontraindikasi).
+- Gula: **diabetes 5% TDEE** (`clinical-rules.js:52` → `0.05 × TDEE / 4` gram);
+  **non-diabetes 10% TDEE** (`:38` → `0.10 × TDEE / 4`). Jadi "5%" itu **khusus
+  diabetes** — jangan ditulis sebagai batas universal. Sumber PERKENI 2024 tidak
+  ada di repo; **verifikasi 5% dari dokumen asli** sebelum mengutip.
+- **Ambang risiko harus sama persis dengan kode** (`clinical-rules.js`), bukan 75%:
+
+  | Pemicu WARNING | Ambang di kode |
+  | :--- | :--- |
+  | Gula (diabetes & umum) | > **50%** batas harian (`:129`,`:168`) |
+  | Lemak jenuh (dislipidemia/diabetes) | > **50%** (`:157`) |
+  | Natrium aktual (hipertensi) | > **40%** batas harian (`:149`) |
+  | Natrium per 100 g (hipertensi) | > **600 mg** (`:75`); umum > **800 mg** (`:46`) |
+  | Protein (nefropati) | > **30%** (`:137`) |
+  | **DANGER** | **hanya** saat gula **> 100%** batas harian (`:126`,`:165`) |
+
+  Sodium dan lemak jenuh mentok di WARNING; hanya gula yang bisa DANGER. Jangan
+  tulis "WARNING ≥75%".
 - Sebut ini **rule verification**, bukan “clinical validation”, kecuali ada
   reviewer ahli gizi. Buat tabel 10–20 skenario profil × makanan dengan expected
   status dan bandingkan manual.
@@ -201,10 +233,12 @@ yang harus muncul di teks:
 
 - HITL: deskripsikan Segmentation Editor + form koreksi. Jangan klaim “validated
   by Nielsen” kecuali usability benar-benar dilakukan dan ada severity rating.
-- Nielsen: jika data evaluator nyata, laporkan **severity 0–4 per temuan** dan
-  setujui/disagree. Ganti “no design flaws” dengan “no severity-4 issues; the
-  remaining issues were severity 2–3”. Jika data tidak ada, hapus klaim dan
-  tulis sebagai future work.
+- Nielsen: **tidak ada data temuan (jumlah per severity, jumlah evaluator, skor)
+  di repo ini** — semua hanya referensi. Semua angka Nielsen **harus dari catatan
+  usability milikmu sendiri**. Jika data evaluator nyata ada, laporkan **severity
+  0–4 per temuan** dan setujui/disagree; ganti “no design flaws” dengan
+  “no severity-4 issues; the remaining issues were severity 2–3”. Jika **tidak
+  ada**, hapus klaim dan tulis sebagai future work. Jangan mengarang severity.
 - Sebutkan jumlah evaluator dan bahwa E4 dikecualikan dari severity (jika itu
   yang dilakukan). Sample 2 evaluator untuk severity kecil; sebut sebagai
   limitation.

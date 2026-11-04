@@ -124,8 +124,8 @@ pengujian generalisasi….”
 | Validation images | 3,529 | ... | original notebook used 960 |
 | Epochs | 50 | ... | original: max 100, early stop 80 |
 | Training hardware | RTX 3050 6 GB | ... | notebook ran on Kaggle Tesla T4 15.6 GB |
-| Class imbalance method | “weighted loss” | ... | notebook used oversampling |
-| OCR version | PP-OCRv5 | ... | code default was PP-OCRv4 |
+| Class imbalance method | “weighted loss” | not used | notebook used oversampling; the new run (`train_seg.py`) uses plain Ultralytics training with neither oversampling nor weighted loss |
+| OCR version | PP-OCRv5 | PP-OCRv4 | `paddleocr==3.7.0` is the library version; `ocr_version="PP-OCRv4"` is pinned in `backend/app.py:75` and is a valid supported model |
 | OCR test images | 30 | ... | expanded test set |
 | Field accuracy | 83.8% | ... | rerun with expanded test set |
 | 95% CI | [78.6; 87.9] | ... | cluster bootstrap by image |

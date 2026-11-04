@@ -148,16 +148,18 @@ lama mencampur beberapa run yang berbeda**, bukan satu run yang konsisten.
 | Results | validation 3.529 | **2.017** (split 85:15) |
 | Methods | 50 epoch | **max 100, early stop 67, best 48** |
 | Methods | training RTX 3050 6 GB / 8 GB RAM | **Kaggle Tesla T4 15.6 GB**; RTX 3050 = deployment |
-| Methods | "weighted loss" | Notebook memakai **oversampling** (atau implementasi weighted loss) |
-| Methods/Abstract | PP-OCRv5 | `backend/app.py` default **PP-OCRv4** |
+| Methods | "weighted loss" | **Run ini TIDAK memakai weighted loss maupun oversampling** (`train_seg.py`: `model.train(...)` polos). Oversampling/loss hanya ada di **run notebook lama** — jangan dipakai |
+| Methods/Abstract | PP-OCRv5 | `backend/app.py:75` default **PP-OCRv4** (`paddleocr==3.7.0` = versi library, bukan model; v4 valid) |
 | Results | field accuracy 83.8% | **Tidak tereproduksi** → pilot: 21.74% → 47.83% |
 | Results | CI [78.6; 87.9] | CI **cluster bootstrap per gambar** (jauh lebih lebar) |
 | Results | FP16 TFLite | Artefak **best_float32.tflite** (FP16 export gagal) |
 | Results | mask mAP50 67.06 / 95 52.84 | **71.66 / 56.91** (checkpoint baru) |
 | Results | P/R 72.07/60.46 | Itu **pixel-level**; instance mask P/R = **72.95/65.50** |
-| Clinical | sodium 2.000 mg | **1.500 mg/hari (hipertensi), 2.300 mg/hari (umum)** |
+| Clinical | sodium 2.000 mg | **1.500 mg/hari (hipertensi), 2.300 mg/hari (umum)** (`clinical-rules.js:39,74`); verifikasi halaman sumber JNC 8/DASH dari dokumen asli |
 | Clinical | TDEE 2.069 kcal | **2.008,5 kcal** (BMR 1.673,75 × 1.2) |
-| Usability | "no design flaws" | Ganti: "no severity-4; sisanya severity 2–3" |
+| Clinical | gula 5% universal | **5% TDEE hanya diabetes** (`:52`); non-diabetes **10%** (`:38`); sumber PERKENI 2024 perlu verifikasi dokumen asli |
+| Clinical | WARNING ≥75% | **Bukan 75%** — lihat tabel ambang §3.4 |
+| Usability | "no design flaws" | Ganti: "no severity-4; sisanya severity 2–3" **hanya jika data Nielsen milikmu ada**; jika tidak, hapus klaim |
 | Results | Fruits 81.44 / Others 53.37 | Itu **internal**; external Fruits jatuh ke **17.06** |
 | Baseline | perbandingan arsitektur | Notebook hanya 5-epoch subset → label **screening/pilot** |
 
@@ -167,6 +169,30 @@ lama mencampur beberapa run yang berbeda**, bukan satu run yang konsisten.
   draft tidak bisa diverifikasi dari artefak lama.
 - Export FP16 di notebook **gagal** (`quantize=16 not supported`).
 - `experiments/results/ocr_*` **tidak ada** di draft → angka OCR 83.8% tanpa bukti.
+- `experiments/dataset/dataset_summary.json` **tidak ada** (gitignored) → angka
+  **373 duplikat** belum bisa direproduksi; regenerasi via `prepare_yolo_seg.py`.
+- Data usability/Nielsen (jumlah temuan per severity, jumlah evaluator, skor)
+  **tidak ada di repo** → wajib dari catatan milik user.
+
+### 3.4 Clinical rules — source of truth (`frontend/js/clinical-rules.js`)
+
+Ambang harus sama **persis** dengan kode. **Kode tidak memakai 75%.**
+
+| Pemicu WARNING | Ambang di kode | Baris |
+| :--- | :--- | :--- |
+| Gula (diabetes & umum) | > **50%** batas harian | `:129`, `:168` |
+| Lemak jenuh (dislipidemia/diabetes) | > **50%** | `:157` |
+| Natrium aktual (hipertensi) | > **40%** batas harian | `:149` |
+| Natrium per 100 g | HTN > **600 mg** (`:75`); umum > **800 mg** (`:46`) | `:145` |
+| Protein (nefropati) | > **30%** | `:137` |
+| **DANGER** | **hanya** saat gula **> 100%** batas harian | `:126`, `:165` |
+
+Limit harian: gula diabetes `0.05×TDEE/4` (`:52`), non-diabetes `0.10×TDEE/4`
+(`:38`); natrium umum **2.300 mg** (`:39`) / HTN **1.500 mg** (`:74`); lemak
+jenuh `0.10×TDEE/9` (`:41`) / dislipidemia `0.07×TDEE/9` (`:58`); kolesterol
+**200 mg** (`:59`); protein nefropati `weight_kg × 0.8` (`:65`).
+
+Sodium dan lemak jenuh **mentok di WARNING**; hanya gula yang bisa DANGER.
 
 ---
 
@@ -200,7 +226,9 @@ Menjadikan VLM jalur produksi menabrak klaim itu. Karena itu:
 
 ### 5.1 Segmentasi (`tables/table_dataset.md`)
 
-- Kandidat corpus **19.087** citra; **373 duplikat dibuang** → **18.714 unik**.
+- Kandidat corpus **19.087** citra; **373 duplikat (dHash perceptual 8×8) dibuang**
+  → **18.714 unik**. *(Angka 373 perlu diregenerasi; `dataset_summary.json`
+  gitignored.)*
 - Train **11.684** (UEC 7.478 + FoodSeg 4.206).
 - Validation **2.017** (UEC 1.285 + FoodSeg 732) = 15% dari train pool.
 - External test **5.013** (UEC test 948; FoodSeg103 val 2.096; FruitSeg30 1.969).
