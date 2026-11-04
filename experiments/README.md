@@ -5,6 +5,9 @@ split, training, evaluasi, ablation, dan tabel paper. Semua angka di manuscript
 harus berasal dari file di `experiments/results/`.
 
 > **Baca dulu:**
+> - [`paper/analysis_handoff.md`](paper/analysis_handoff.md) — **handoff lengkap**:
+>   seluruh analisis (segmentasi + OCR + GT audit + VLM), angka, arsitektur, dan
+>   langkah berikutnya dalam satu dokumen.
 > - [`paper/notebook-audit.md`](paper/notebook-audit.md) — angka notebook vs manuscript.
 > - [`paper/experimental-design.md`](paper/experimental-design.md) — desain split,
 >   screening vs final comparison, independent test, dan protokol anotasi.
