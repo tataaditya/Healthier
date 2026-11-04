@@ -360,6 +360,33 @@ Catatan teknis:
 > **n=6 terlalu kecil.** Laporkan sebagai pilot/eksploratif; jangan mengutip
 > angka 83,8% dari draft. Target untuk klaim utama tetap >=100 citra.
 
+### 5.4 Analisis pembanding VLM (future work, bukan inti)
+
+Alat bantu pertimbangan ke depan; **bukan** bagian pipeline yang dipublikasikan.
+Harness: `experiments/scripts/eval_vlm.py`. Dokumen lengkap:
+`experiments/paper/vlm_analysis.md`.
+
+Hasil pilot n=6 (metrik identik dengan `eval_ocr.py`):
+
+| Pipeline | Field accuracy | 95% CI | Missing | Wrong |
+| :--- | ---: | :--- | ---: | ---: |
+| Edge baseline | 14,89% | [4,65; 22,92] | 68,09% | 17,02% |
+| Edge grid (revisi) | 44,68% | [24,49; 66,67] | 36,17% | 19,15% |
+| VLM `gemma4:cloud` | **68,09%** | [44,90; 91,11] | **6,38%** | 25,53% |
+
+Temuan: VLM nyaris menghapus mode gagal "missing", tetapi errornya bergeser ke
+"salah tapi yakin" (berisiko di konteks klinis). Arah future work: **hybrid**
+(VLM untuk struktur/kolom, OCR deterministik untuk digit) + lapisan verifikasi.
+Model cloud lain (`minimax-m3`, `deepseek-v4.1-flash`) menolak dengan HTTP 402.
+
+```powershell
+python experiments/scripts/eval_vlm.py `
+  --data experiments/ocr_data/makanan_ringan `
+  --model gemma4:cloud `
+  --out experiments/results/ocr_vlm/gemma4_cloud `
+  --label "Makanan Ringan pilot (VLM gemma4:cloud)" --bootstrap 2000
+```
+
 ---
 
 ## 6. Ablation preprocessing OCR

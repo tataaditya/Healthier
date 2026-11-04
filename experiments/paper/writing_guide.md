@@ -310,6 +310,13 @@ Ganti isi dengan angka baru:
   - usability sample kecil.
 - Future work: enrich dataset lokal, INT8 quantization, SLM offline, estimasi
   volume multi-angle, integrasi Google Fit/Apple Health.
+  - **VLM**: analisis pilot n=6 menunjukkan VLM cloud (gemma4) menaikkan field
+    accuracy 44,7% → **68,1%**, terutama menghapus mode gagal "missing"
+    (36% → 6%), tetapi menggeser error ke "salah tapi yakin" (risiko klinis).
+    Arah yang disarankan: **hybrid** (VLM untuk struktur/kolom, OCR
+    deterministik untuk digit) + lapisan verifikasi. Catat sebagai future work,
+    JANGAN ubah klaim C1/C2 menjadi VLM. Detail:
+    `experiments/paper/vlm_analysis.md`.
 
 ---
 
