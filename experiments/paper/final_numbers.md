@@ -46,8 +46,8 @@
 
 **OCR field-level accuracy (pilot, n=6)**
 
-- baseline parser: **14.89%** (95% CI [4.65%, 22.92%], n=6, fields=47)
-- grid parser (revised): **44.68%** (95% CI [24.49%, 66.67%], n=6, fields=47)
+- baseline parser: **21.74%** (95% CI [16.67%, 25.58%], n=6, fields=46)
+- grid parser (revised): **47.83%** (95% CI [29.17%, 66.67%], n=6, fields=46)
 - Exploratory pilot only (see `table_ocr.md`); rerun on >=100 images before citing a headline OCR number.
 
 ## Manuscript-ready tables

@@ -47,7 +47,7 @@ menulis Methods dan Results segmentasi**. Bagian OCR adalah blocker utama.
 | Mask P/R **72.07 / 60.46** | **72.95 / 65.50** | checkpoint baru |
 | Box mAP50 / mAP50-95 (jika ada) | **72.37 / 60.11** | checkpoint baru |
 | “168 ms per image” | **ukur ulang** (jangan pakai angka lama) | belum ada benchmark model baru |
-| OCR 83.8% [78.6; 87.9] | **pilot n=6: baseline 14.89% → grid parser 44.68% [24.49; 66.67]** | `experiments/results/ocr_full{,_grid}`; klaim lama tidak tereproduksi |
+| OCR 83.8% [78.6; 87.9] | **pilot n=6: baseline 21.74% → grid parser 47.83% [29.17; 66.67] (GT terkoreksi)** | `experiments/results/ocr_full{,_grid}`; klaim lama tidak tereproduksi |
 | “PP-OCRv5” | **PP-OCRv4** (atau verifikasi v5) | `backend/app.py` default `PP-OCRv4` |
 | Sodium **2,000 mg** | **1,500 mg/hari (hipertensi); 2,300 mg/hari (umum)** | `frontend/js/clinical-rules.js` |
 | TDEE contoh **2,069 kcal** | **2,008.5 kcal** | BMR 1,673.75 × activity factor 1.2 |
@@ -254,8 +254,9 @@ Untuk internal, angka 81.44/53.37 dari draft lama **jangan dipakai**; ekspor
 Blocker. Sudah dijalankan pada pilot n=6 (`experiments/results/ocr_full` =
 parser lama, `ocr_full_grid` = parser revisi):
 
-- Field-level accuracy: baseline **14,89%**, parser grid **44,68%**
-  (95% CI [24,49; 66,67]).
+- Field-level accuracy: baseline **21,74%**, parser grid **47,83%**
+  (95% CI [29,17; 66,67]). GT pilot sudah dikoreksi lewat audit visual
+  (`gt_audit.md`) — dua dari enam GT salah transkripsi.
 - Laporkan CI cluster bootstrap per gambar dan exact/close/wrong/missing
   (`table_ocr.md`).
 - Perbaikan parser: grid baris-label x kolom-nilai + pemecahan bbox angka yang

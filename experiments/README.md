@@ -329,12 +329,16 @@ python experiments/scripts/eval_ocr.py `
   --bootstrap 2000 --save-raw --label "Makanan Ringan pilot (grid parser)"
 ```
 
-Hasil pilot (n=6, 47 field):
+Hasil pilot (n=6, 46 field, GT sudah dikoreksi — lihat `paper/gt_audit.md`):
 
 | Parser | Field accuracy | 95% CI | Exact | Wrong | Missing |
 | :--- | ---: | :--- | ---: | ---: | ---: |
-| Baseline (`ocr_full`) | 14,89% | [4,65; 22,92] | 14,89% | 17,02% | 68,09% |
-| Grid revisi (`ocr_full_grid`) | **44,68%** | [24,49; 66,67] | 44,68% | 19,15% | 36,17% |
+| Baseline (`ocr_full`, grid off) | 21,74% | [16,67; 25,58] | 21,74% | 13,04% | 65,22% |
+| Grid revisi (`ocr_full_grid`) | **47,83%** | [29,17; 66,67] | 47,83% | 17,39% | 34,78% |
+
+> Kedua baris dijalankan dengan kode terkini dan `HEALTHIER_OCR_TABLE_STRUCTURE=0`;
+> hanya `HEALTHIER_OCR_TABLE_GRID` yang berbeda (0 vs 1). GPU:
+> `NUTRILABEL_OCR_DEVICE=gpu:0`.
 
 Perbaikan parser tabel (`backend/app.py`):
 - `rekonstruksi_tabel_grid`: baris dari label nutrisi (fuzzy match), bukan
@@ -366,27 +370,29 @@ Alat bantu pertimbangan ke depan; **bukan** bagian pipeline yang dipublikasikan.
 Harness: `experiments/scripts/eval_vlm.py`. Dokumen lengkap:
 `experiments/paper/vlm_analysis.md`.
 
-Hasil pilot n=6 (metrik identik dengan `eval_ocr.py`):
+Hasil pilot n=6 (46 field, GT sudah dikoreksi; metrik identik dengan `eval_ocr.py`):
 
 | Pipeline | Field accuracy | 95% CI | Missing | Wrong |
 | :--- | ---: | :--- | ---: | ---: |
-| Edge baseline | 14,89% | [4,65; 22,92] | 68,09% | 17,02% |
-| Edge grid (revisi) | 44,68% | [24,49; 66,67] | 36,17% | 19,15% |
-| VLM `gemma4:cloud` (Ollama) | 68,09% | [44,90; 91,11] | 6,38% | 25,53% |
-| VLM `deepseek-v4.1-flash` (Helipod) | **89,36%** | [71,74; 100] | 2,13% | 8,51% |
-| VLM `kimi-k3` (Helipod) | **89,36%** | [71,74; 100] | 2,13% | 8,51% |
-| VLM `minimax-m3` (Helipod) | 87,23% | [69,57; 98,04] | 2,13% | 10,64% |
-| VLM `glm-5.3-flash` (Helipod) | 85,11% | [67,39; 97,96] | 2,13% | 12,77% |
+| Edge baseline | 21,74% | [16,67; 25,58] | 65,22% | 13,04% |
+| Edge grid (revisi) | 47,83% | [29,17; 66,67] | 34,78% | 17,39% |
+| VLM `gemma4:cloud` (Ollama) | 78,26% | [64,44; 92,86] | 4,35% | 17,39% |
+| VLM `deepseek-v4.1-flash` (Helipod) | **100%** | [100; 100] | 0% | 0% |
+| VLM `kimi-k3` (Helipod) | **100%** | [100; 100] | 0% | 0% |
+| VLM `minimax-m3` (Helipod) | 97,83% | [93,02; 100] | 0% | 2,17% |
+| VLM `glm-5.3-flash` (Helipod) | 95,65% | [86,05; 100] | 0% | 4,35% |
 
-Temuan: VLM nyaris menghapus mode gagal "missing", dan model frontier Helipod
-(85–89%) juga menekan "wrong" ke 9–13%. Model cloud gratis lain di Ollama tidak
-ada (hanya `gemma4` yang vision gratis); perbandingan multi-model memakai gateway
-Helipod. Arah future work: **hybrid** (VLM untuk struktur/kolom, OCR deterministik
-untuk digit) + lapisan verifikasi.
+Temuan: VLM nyaris menghapus mode gagal "missing" (35% → 0–4%). Model frontier
+Helipod (95–100%) juga menekan "wrong"; `gemma4` justru menukar missing dengan
+"wrong" (halusinasi digit). Skor ~100% **jangan** diklaim sebagai generalisasi
+(n kecil + GT baru dikoreksi). Arah future work: **hybrid** (VLM untuk
+struktur/kolom, OCR deterministik untuk digit) + lapisan verifikasi.
+Model cloud gratis lain di Ollama tidak ada (hanya `gemma4` yang vision gratis);
+perbandingan multi-model memakai gateway Helipod.
 
-> **Audit GT:** 2 dari 6 GT ternyata salah transkripsi (label asli `Natrium 60`,
-> `Karbohidrat 17`, `Lemak Total 2`, `Gula 10`). Sebagian "wrong" VLM adalah
-> kesalahan GT. Detail + bukti crop: `experiments/paper/gt_audit.md`.
+> **Audit GT (sudah diterapkan):** 2 dari 6 GT salah transkripsi (label asli
+> `Natrium 60`, `Karbohidrat 17`, `Lemak Total 2`, `Gula 10`). Sebelumnya
+> sebagian besar "wrong" VLM adalah kesalahan GT. Detail: `paper/gt_audit.md`.
 
 ```powershell
 # gemma4 via Ollama

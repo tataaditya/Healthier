@@ -232,6 +232,17 @@ def chat_content(args, api_key: str | None, image_b64: str) -> str:
     return strip_think(content)
 
 
+def cached_elapsed(raw_dir: Path, stem: str):
+    """Ambil durasi model dari cache mentah, bila ada (untuk mode --rescore)."""
+    cache = raw_dir / f"{stem}.json"
+    if not cache.is_file():
+        return ""
+    try:
+        return json.loads(cache.read_text(encoding="utf-8")).get("elapsed_s", "")
+    except (json.JSONDecodeError, OSError):
+        return ""
+
+
 def pred_from_vlm(parsed: dict) -> dict:
     """Ubah JSON VLM menjadi bentuk prediksi yang dipahami hitung_field_accuracy."""
     pred: dict = {}
@@ -264,12 +275,14 @@ def main() -> None:
     parser.add_argument("--tolerance", type=float, default=0.05)
     parser.add_argument("--label", default="")
     parser.add_argument("--force", action="store_true", help="abaikan cache respons mentah")
+    parser.add_argument("--rescore", action="store_true",
+                        help="skor ulang predictions.jsonl yang ada tanpa memanggil model")
     args = parser.parse_args()
 
     if not args.data.is_dir():
         raise SystemExit(f"Folder data tidak ditemukan: {args.data}")
     api_key = load_api_key(args.api_key) if args.provider == "openai" else None
-    if args.provider == "openai" and not api_key:
+    if args.provider == "openai" and not api_key and not args.rescore:
         raise SystemExit("Provider openai butuh API key (--api-key atau .env API_KEY).")
     from backend.app import hitung_field_accuracy  # noqa: E402
 
@@ -286,6 +299,16 @@ def main() -> None:
     raw_dir = out_dir / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
 
+    saved_predictions: dict[str, dict] = {}
+    if args.rescore:
+        pred_path = out_dir / "predictions.jsonl"
+        if not pred_path.is_file():
+            raise SystemExit(f"Mode --rescore butuh predictions.jsonl di: {pred_path}")
+        for line in pred_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                record = json.loads(line)
+                saved_predictions[record["file"]] = record
+
     per_image_rows: list[dict] = []
     error_rows: list[dict] = []
     field_counts: dict[str, Counter] = defaultdict(Counter)
@@ -293,7 +316,7 @@ def main() -> None:
     field_rel_error: dict[str, list[float]] = defaultdict(list)
     bootstrap_rows: list[tuple[float, int]] = []
     missing_gt: list[str] = []
-    predictions_fh = (out_dir / "predictions.jsonl").open("w", encoding="utf-8")
+    predictions_fh = None if args.rescore else (out_dir / "predictions.jsonl").open("w", encoding="utf-8")
 
     try:
         for index, image_path in enumerate(images, 1):
@@ -310,34 +333,47 @@ def main() -> None:
                 missing_gt.append(image_path.name)
                 continue
 
-            cache = raw_dir / f"{image_path.stem}.json"
-            raw = None
-            if cache.is_file() and not args.force:
-                cached = json.loads(cache.read_text(encoding="utf-8"))
-                # Ulangi respons kosong (model lokal kadang mengembalikan "").
-                if cached.get("content") or cached.get("error"):
-                    raw = cached
-            if raw is None:
-                b64 = encode_image(image_path, args.max_side)
-                raw = {"content": "", "error": None, "model": args.model}
-                for attempt in range(1, args.retries + 1):
-                    try:
-                        t0 = time.time()
-                        content = chat_content(args, api_key, b64)
-                        raw = {
-                            "content": content,
-                            "elapsed_s": round(time.time() - t0, 2),
-                            "model": args.model,
-                            "attempts": attempt,
-                        }
-                    except Exception as exc:  # pragma: no cover - depends on service
-                        raw = {"content": "", "error": str(exc), "model": args.model}
-                    if raw.get("content"):
-                        break
-                cache.write_text(json.dumps(raw, ensure_ascii=False, indent=2), encoding="utf-8")
+            if args.rescore:
+                record = saved_predictions.get(image_path.name)
+                if record is None:
+                    missing_gt.append(image_path.name)
+                    continue
+                parsed = record.get("parsed") or {}
+                pred = record.get("data") or pred_from_vlm(parsed)
+                raw = {
+                    "content": record.get("raw_vlm", ""),
+                    "elapsed_s": cached_elapsed(raw_dir, image_path.stem),
+                    "error": record.get("error"),
+                }
+            else:
+                cache = raw_dir / f"{image_path.stem}.json"
+                raw = None
+                if cache.is_file() and not args.force:
+                    cached = json.loads(cache.read_text(encoding="utf-8"))
+                    # Ulangi respons kosong (model lokal kadang mengembalikan "").
+                    if cached.get("content") or cached.get("error"):
+                        raw = cached
+                if raw is None:
+                    b64 = encode_image(image_path, args.max_side)
+                    raw = {"content": "", "error": None, "model": args.model}
+                    for attempt in range(1, args.retries + 1):
+                        try:
+                            t0 = time.time()
+                            content = chat_content(args, api_key, b64)
+                            raw = {
+                                "content": content,
+                                "elapsed_s": round(time.time() - t0, 2),
+                                "model": args.model,
+                                "attempts": attempt,
+                            }
+                        except Exception as exc:  # pragma: no cover - depends on service
+                            raw = {"content": "", "error": str(exc), "model": args.model}
+                        if raw.get("content"):
+                            break
+                    cache.write_text(json.dumps(raw, ensure_ascii=False, indent=2), encoding="utf-8")
 
-            parsed = extract_json(raw.get("content", "")) or {}
-            pred = pred_from_vlm(parsed)
+                parsed = extract_json(raw.get("content", "")) or {}
+                pred = pred_from_vlm(parsed)
             evaluation = hitung_field_accuracy(gt_nutrition, pred, toleransi_pct=args.tolerance)
             per_field = evaluation["per_field"]
             correct = 0.0
@@ -379,19 +415,21 @@ def main() -> None:
                 "duration_s": raw.get("elapsed_s", ""),
                 "gt": json.dumps(gt_nutrition, ensure_ascii=False),
             })
-            predictions_fh.write(json.dumps({
-                "file": image_path.name,
-                "model": args.model,
-                "parsed": parsed,
-                "data": pred,
-                "raw_vlm": raw.get("content", ""),
-                "error": raw.get("error"),
-            }, ensure_ascii=False) + "\n")
+            if predictions_fh:
+                predictions_fh.write(json.dumps({
+                    "file": image_path.name,
+                    "model": args.model,
+                    "parsed": parsed,
+                    "data": pred,
+                    "raw_vlm": raw.get("content", ""),
+                    "error": raw.get("error"),
+                }, ensure_ascii=False) + "\n")
 
             print(f"  [{index}/{len(images)}] {image_path.name}: {correct:.0f}/{total} "
                   f"({raw.get('elapsed_s', '?')}s)")
     finally:
-        predictions_fh.close()
+        if predictions_fh:
+            predictions_fh.close()
 
     if not per_image_rows:
         raise SystemExit("Tidak ada gambar dengan ground truth yang valid.")
@@ -413,6 +451,7 @@ def main() -> None:
         "label": args.label,
         "provider": args.provider,
         "model": args.model,
+        "rescore": bool(args.rescore),
         "endpoint": args.base_url if args.provider == "openai" else args.host,
         "data": str(args.data),
         "max_side": args.max_side,

@@ -4,8 +4,8 @@ Indonesian snack-label photos with hand-transcribed ground truth. Field accuracy
 
 | Pipeline | Images | Fields | Field accuracy | 95% CI | Exact | Wrong | Missing |
 | :--- | ---: | ---: | ---: | :--- | ---: | ---: | ---: |
-| Baseline parser | 6 | 47 | 14.89% | [4.65%, 22.92%] | 14.89% | 17.02% | 68.09% |
-| Grid parser (revised) | 6 | 47 | 44.68% | [24.49%, 66.67%] | 44.68% | 19.15% | 36.17% |
+| Baseline parser | 6 | 46 | 21.74% | [16.67%, 25.58%] | 21.74% | 13.04% | 65.22% |
+| Grid parser (revised) | 6 | 46 | 47.83% | [29.17%, 66.67%] | 47.83% | 17.39% | 34.78% |
 
 The revised parser adds a row-label x value-column grid and splits tall numeric boxes that PP-OCR merges across adjacent rows (e.g. `1725` = 1, 7, 2, 5), which separates the Per Sajian and %AKG columns. Standalone unit tokens (`mg`, `g`) are kept through the semantic filter.
 
