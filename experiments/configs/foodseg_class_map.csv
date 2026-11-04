@@ -1,0 +1,105 @@
+source,class_name,group
+foodseg,background,lainnya
+foodseg,candy,lainnya
+foodseg,chocolate,lainnya
+foodseg,french fries,makanan_pokok
+foodseg,cream,lainnya
+foodseg,biscuit,lainnya
+foodseg,jam,lainnya
+foodseg,honey,lainnya
+foodseg,sugar,lainnya
+foodseg,vinegar,lainnya
+foodseg,oil,lainnya
+foodseg,condiment,lainnya
+foodseg,cooked rice,makanan_pokok
+foodseg,soy sauce,lainnya
+foodseg,sake,lainnya
+foodseg,mirin,lainnya
+foodseg,sweet bean paste,lainnya
+foodseg,dashi,lainnya
+foodseg,pickled ginger,lainnya
+foodseg,wasabi,lainnya
+foodseg,mayonnaise,lainnya
+foodseg,ketchup,lainnya
+foodseg,salad dressing,lainnya
+foodseg,peanut butter,lainnya
+foodseg,egg,lauk_pauk
+foodseg,apple,buah
+foodseg,date,buah
+foodseg,apricot,buah
+foodseg,avocado,buah
+foodseg,banana,buah
+foodseg,strawberry,buah
+foodseg,cherry,buah
+foodseg,blueberry,buah
+foodseg,raspberry,buah
+foodseg,mango,buah
+foodseg,olives,buah
+foodseg,peach,buah
+foodseg,lemon,buah
+foodseg,pear,buah
+foodseg,fig,buah
+foodseg,pineapple,buah
+foodseg,grape,buah
+foodseg,kiwi,buah
+foodseg,melon,buah
+foodseg,orange,buah
+foodseg,watermelon,buah
+foodseg,steak,lauk_pauk
+foodseg,pork,lauk_pauk
+foodseg,chicken duck,lauk_pauk
+foodseg,sausage,lauk_pauk
+foodseg,fried meat,lauk_pauk
+foodseg,lamb,lauk_pauk
+foodseg,other seafood,lainnya
+foodseg,crab,lauk_pauk
+foodseg,fish,lauk_pauk
+foodseg,shellfish,lauk_pauk
+foodseg,shrimp,lauk_pauk
+foodseg,sauce,lainnya
+foodseg,bread,makanan_pokok
+foodseg,corn,makanan_pokok
+foodseg,hamburg,makanan_pokok
+foodseg,pizza,makanan_pokok
+foodseg,hanamaki baozi,makanan_pokok
+foodseg,wonton dumplings,makanan_pokok
+foodseg,pasta,makanan_pokok
+foodseg,noodles,makanan_pokok
+foodseg,rice,makanan_pokok
+foodseg,pie,makanan_pokok
+foodseg,tofu,lauk_pauk
+foodseg,eggplant,sayur
+foodseg,potato,sayur
+foodseg,garlic,sayur
+foodseg,cauliflower,sayur
+foodseg,tomato,sayur
+foodseg,kelp,sayur
+foodseg,seaweed,sayur
+foodseg,spring onion,sayur
+foodseg,rape,sayur
+foodseg,ginger,sayur
+foodseg,okra,sayur
+foodseg,lettuce,sayur
+foodseg,pumpkin,sayur
+foodseg,cucumber,sayur
+foodseg,white radish,sayur
+foodseg,carrot,sayur
+foodseg,asparagus,sayur
+foodseg,bamboo shoots,sayur
+foodseg,broccoli,sayur
+foodseg,celery,sayur
+foodseg,cilantro mint,sayur
+foodseg,snow peas,sayur
+foodseg,cabbage,sayur
+foodseg,bean sprouts,sayur
+foodseg,onion,sayur
+foodseg,pepper,sayur
+foodseg,green beans,sayur
+foodseg,french beans,sayur
+foodseg,king oyster mushroom,sayur
+foodseg,shiitake,sayur
+foodseg,enoki mushroom,sayur
+foodseg,oyster mushroom,sayur
+foodseg,white button mushroom,sayur
+foodseg,salad,sayur
+foodseg,coconut,lainnya

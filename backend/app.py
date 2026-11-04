@@ -74,8 +74,19 @@ def cek_dependencies(require_api: bool = False):
 CONF_MINIMUM = 0.3  # Confidence threshold untuk filter hasil OCR
 OCR_VERSION = os.getenv("NUTRILABEL_OCR_VERSION", "PP-OCRv4").strip() or None
 OCR_DEVICE = os.getenv("NUTRILABEL_OCR_DEVICE", "cpu").strip().lower()
-USE_TABLE_STRUCTURE = os.getenv("NUTRILABEL_USE_TABLE_STRUCTURE", "1").strip() != "0"
 REMOVE_WATERMARK = os.getenv("NUTRILABEL_REMOVE_WATERMARK", "0").strip() != "0"
+
+
+def _env_flag(name: str, default: bool = True) -> bool:
+    """Baca flag boolean dari environment.
+
+    Dipakai juga oleh harness ablation OCR agar setiap tahap preprocessing bisa
+    dinyalakan/dimatikan tanpa mengubah kode.
+    """
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() not in {"0", "false", "no", "off", ""}
 
 KAMUS_NUTRISI = {
     # Energi / Kalori — termasuk variasi bilingual kemasan Indonesia
@@ -205,19 +216,26 @@ class PPOCREngine:
         ocr_kwargs = {
             "use_textline_orientation": True,
             "lang": "en",
-            "use_gpu": OCR_DEVICE not in ("", "cpu"),
+            "device": "cpu" if OCR_DEVICE in ("", "cpu") else OCR_DEVICE,
             "text_det_thresh": 0.3,
             "text_det_box_thresh": 0.5,
         }
-        # PaddleOCR 3.5 uses these parameter names. OCR_VERSION remains optional
-        # so v4/v5 can be switched from the environment without touching code.
+        # PaddleOCR >=3.x uses ``device``; 2.x used ``use_gpu``. Keep a fallback
+        # so the same code runs on both installed versions.
         if OCR_VERSION:
             ocr_kwargs["ocr_version"] = OCR_VERSION
-        self.ocr = PaddleOCR(**ocr_kwargs)
+        try:
+            self.ocr = PaddleOCR(**ocr_kwargs)
+        except (TypeError, ValueError) as exc:
+            if "device" not in str(exc):
+                raise
+            ocr_kwargs.pop("device", None)
+            ocr_kwargs["use_gpu"] = OCR_DEVICE not in ("", "cpu")
+            self.ocr = PaddleOCR(**ocr_kwargs)
         print(f"   ✅ Engine OCR siap dalam {time.time()-t0:.1f} detik")
         
         print("📦 Memuat PP-Structure (SLANet)...")
-        if USE_TABLE_STRUCTURE:
+        if _env_flag("NUTRILABEL_USE_TABLE_STRUCTURE", True):
             try:
                 from paddlex import create_pipeline
                 self.table_engine = create_pipeline(pipeline="table_recognition")
@@ -247,8 +265,12 @@ class PPOCREngine:
             except Exception as e:
                 print(f"   ⚠️ Error PP-Structure: {e}")
 
-        # PaddleOCR 2.8.1 menggunakan ocr() (predict() hanya untuk versi 3.x/PaddleX)
-        results = self.ocr.ocr(img_input, cls=True)
+        # PaddleOCR 3.x returns OCRResult dicts (rec_texts/rec_scores/rec_polys);
+        # 2.x returns [ [ [poly, (text, conf)], ... ] ] and needs ``cls=True``.
+        try:
+            results = self.ocr.ocr(img_input, cls=True)
+        except TypeError:
+            results = self.ocr.ocr(img_input)
 
         if not results or not results[0]:
             return {"deteksi_list": [], "html_tables": html_tables}
@@ -256,13 +278,17 @@ class PPOCREngine:
         res = results[0]
         deteksi_list = []
 
-        for line in res:
-            if not line or len(line) < 2:
-                continue
-            bbox_points = line[0]  
-            teks = line[1][0]
-            conf = line[1][1]
+        if isinstance(res, dict) or hasattr(res, "get"):
+            texts = res.get("rec_texts") or []
+            scores = res.get("rec_scores") or []
+            polys = res.get("rec_polys")
+            if polys is None:
+                polys = res.get("dt_polys") or []
+            entries = zip(polys, texts, scores)
+        else:
+            entries = ((line[0], line[1][0], line[1][1]) for line in res if line and len(line) >= 2)
 
+        for bbox_points, teks, conf in entries:
             if conf < CONF_MINIMUM:
                 continue
 
@@ -711,6 +737,179 @@ def _score_value_bbox(det: dict, prefer_kkal_min: bool = False) -> float:
     return score
 
 
+# ─── Rekonstruksi berbasis grid baris-label x kolom-nilai ───────────────────
+_UNIT_TOKEN_RE = re.compile(r"^(?:mg|g|gram|gr|kkal|kcal|kal|mcg|ug|ml)$", re.IGNORECASE)
+_UNIT_APPEND = {"g", "mg", "gram", "kkal", "kcal", "mcg", "ug", "ml"}
+
+
+def _baris_label_nutrisi(deteksi_list: list[dict]) -> list[dict]:
+    """Kumpulkan baris label nutrisi (key dikenali, bukan bbox nilai murni angka)."""
+    rows = []
+    for det in deteksi_list:
+        teks = det.get("text", "")
+        if _is_value_bbox(teks) and not re.search(r"[A-Za-z]", teks):
+            continue
+        key = ParseOCR.fuzzy_match_nutrisi(teks)
+        if key is None:
+            continue
+        x, _y, w, h = (float(v) for v in det["bbox"])
+        rows.append({
+            "cy": float(det["center_y"]),
+            "key": key,
+            "x0": x,
+            "x1": x + w,
+            "h": h,
+            "text": teks,
+        })
+    rows.sort(key=lambda r: (r["cy"], r["x0"]))
+    dedup: list[dict] = []
+    for r in rows:
+        if dedup and r["key"] == dedup[-1]["key"] and abs(r["cy"] - dedup[-1]["cy"]) < 25:
+            if len(r["text"]) > len(dedup[-1]["text"]):
+                dedup[-1] = r
+            continue
+        dedup.append(r)
+    return dedup
+
+
+def _pecah_teks_antar_baris(teks: str, n: int) -> list[str] | None:
+    """Bagi string angka yang tergabung menjadi n bagian (satu nilai per baris)."""
+    s = re.sub(r"[^0-9.]", "", teks)
+    if n < 2 or len(s) < n or len(s) > 2 * n:
+        return None
+    if len(s) == n:
+        return list(s)
+    base, rem = divmod(len(s), n)
+    parts, i = [], 0
+    for k in range(n):
+        size = base + (1 if k < rem else 0)
+        parts.append(s[i:i + size])
+        i += size
+    return parts
+
+
+def _pisah_bbox_bergabung(
+    deteksi_list: list[dict], label_rows: list[dict], median_h: float
+) -> list[dict]:
+    """Pecah bbox nilai yang bergabung vertikal menjadi satu nilai per baris label.
+
+    Detektor PP-OCR sering menggabungkan angka pada baris berdekatan menjadi satu
+    bbox tinggi (mis. ``1725`` sebenarnya 1, 7, 2, 5 pada empat baris). Bbox itu
+    dibagi kembali dengan mengandalkan grid baris label nutrisi, sehingga kolom
+    Per Sajian dan kolom %AKG tidak lagi saling tumpang tindih.
+    """
+    hasil = []
+    for det in deteksi_list:
+        teks = det.get("text", "")
+        x, y, w, h = (float(v) for v in det["bbox"])
+        if not _is_value_bbox(teks) or h <= max(1.7 * median_h, 45):
+            hasil.append(det)
+            continue
+        span = [r for r in label_rows if (y - 0.05 * h) <= r["cy"] <= (y + h + 0.05 * h)]
+        if len(span) < 2:
+            hasil.append(det)
+            continue
+        parts = _pecah_teks_antar_baris(teks, len(span))
+        if not parts:
+            hasil.append(det)
+            continue
+        sub_h = min(h / len(span), median_h * 1.15)
+        for r, part in zip(span, parts):
+            if not part or part == ".":
+                continue
+            hasil.append({
+                "bbox": [x, r["cy"] - sub_h / 2.0, w, sub_h],
+                "text": part,
+                "conf": det.get("conf", 0.5),
+                "center_x": x + w / 2.0,
+                "center_y": r["cy"],
+                "_split": True,
+            })
+    return hasil
+
+
+def rekonstruksi_tabel_grid(deteksi_list: list[dict]) -> dict:
+    """Rekonstruksi tabel gizi berbasis grid baris-label x kolom-nilai.
+
+    Lebih tahan terhadap foto label miring/watermark dibanding kedekatan bbox
+    mentah: baris ditentukan dari label nutrisi (fuzzy match), bbox angka yang
+    tergabung vertikal dipecah per baris, lalu nilai diambil dari token numerik
+    paling kiri di kanan label pada baris yang sama. Satuan terdekat digabung,
+    token ``%`` disimpan sebagai %AKG.
+    """
+    if not _env_flag("HEALTHIER_OCR_TABLE_GRID", True) or not deteksi_list:
+        return {}
+
+    bbox_heights = [max(1.0, float(d["bbox"][3])) for d in deteksi_list if d.get("bbox")]
+    if not bbox_heights:
+        return {}
+    median_h = float(np.median(bbox_heights))
+
+    label_rows = _baris_label_nutrisi(deteksi_list)
+    if len(label_rows) < 2:
+        return {}
+
+    tokens = _pisah_bbox_bergabung(deteksi_list, label_rows, median_h)
+    numeric = [t for t in tokens if _is_value_bbox(t.get("text", ""))]
+    units = [
+        t for t in tokens
+        if _UNIT_TOKEN_RE.match((t.get("text") or "").strip())
+        and (t.get("text") or "").strip().lower() in _UNIT_APPEND
+    ]
+
+    per_key: dict[str, tuple[float, dict]] = {}
+    for r in label_rows:
+        tol = max(median_h * 0.75, r["h"] * 0.7, 22.0)
+        cand = [
+            t for t in numeric
+            if abs(float(t["center_y"]) - r["cy"]) <= tol
+            and float(t["center_x"]) >= r["x1"] - median_h * 0.6
+        ]
+        non_pct = [t for t in cand if "%" not in (t.get("text") or "")]
+        if not non_pct:
+            continue
+        dys = [abs(float(t["center_y"]) - r["cy"]) for t in non_pct]
+        win = min(dys) + median_h * 0.35
+        near = [t for t in non_pct if abs(float(t["center_y"]) - r["cy"]) <= win]
+        val_tok = min(near, key=lambda t: float(t["center_x"]))
+        vx = float(val_tok["center_x"])
+
+        nilai = _normalisasi_digit_ocr(val_tok["text"])
+        unit_c = [
+            u for u in units
+            if abs(float(u["center_y"]) - r["cy"]) <= tol
+            and vx - median_h * 0.3 <= float(u["center_x"]) <= vx + median_h * 2.2
+        ]
+        if unit_c:
+            unit_c.sort(key=lambda u: abs(float(u["center_x"]) - vx))
+            ut = unit_c[0]["text"].strip().lower()
+            if ut and ut not in nilai.lower():
+                nilai = f"{nilai} {ut}"
+
+        key, info = ParseOCR._parse_baris_nutrisi(r["text"], nilai)
+        if not (key and info):
+            key, info = ParseOCR._parse_baris_nutrisi(
+                r["text"], _normalisasi_digit_ocr(val_tok["text"])
+            )
+        if not (key and info):
+            continue
+        if info.get("akg_persen") is None:
+            pct = [t for t in cand if "%" in (t.get("text") or "")]
+            if pct:
+                pct.sort(key=lambda t: abs(float(t["center_y"]) - r["cy"]))
+                akg = ParseOCR.ekstrak_persen_akg(pct[0]["text"])
+                if akg is not None:
+                    info["akg_persen"] = akg
+        # Tabel bilingual: utamakan nilai paling kiri (tabel Per Sajian).
+        if key not in per_key or vx < per_key[key][0]:
+            per_key[key] = (vx, info)
+
+    hasil = {k: v[1] for k, v in per_key.items()}
+    for k, v in hasil.items():
+        print(f"     [Grid] {k}: {v['per_sajian']} {v['satuan']}")
+    return hasil
+
+
 def rekonstruksi_tabel_kolom(deteksi_list: list[dict], layout: dict) -> dict:
     """Rekonstruksi per baris: ambil nilai per sajian = bbox nilai paling kiri sebelum kolom Per 100g."""
     if not layout.get("detected"):
@@ -922,6 +1121,13 @@ def rekonstruksi_tabel_dari_bbox(deteksi_list: list[dict], html_tables: list[str
     hasil_akhir = {}
     hasil_source = {}
 
+    # 0a. Grid baris-label x kolom-nilai + pemecahan bbox angka yang bergabung
+    if _env_flag("HEALTHIER_OCR_TABLE_GRID", True):
+        hasil_grid = rekonstruksi_tabel_grid(deteksi_list)
+        for k, v in hasil_grid.items():
+            hasil_akhir[k] = v
+            hasil_source[k] = "grid"
+
     # 0. Kolom Per Sajian (prioritas untuk tabel bilingual multi-kolom)
     layout = deteksi_layout_kolom(deteksi_list)
     use_serving_band = layout.get("detected") and layout.get("mode") in ("multi", "multi_heuristic")
@@ -929,8 +1135,9 @@ def rekonstruksi_tabel_dari_bbox(deteksi_list: list[dict], html_tables: list[str
         print(f"   [Kolom] mode={layout['mode']}, serving X: {layout['serving_x0']:.0f}-{layout['serving_x1']:.0f}")
         hasil_kolom = rekonstruksi_tabel_kolom(deteksi_list, layout)
         for k, v in hasil_kolom.items():
-            hasil_akhir[k] = v
-            hasil_source[k] = "column_serving"
+            if k not in hasil_akhir:
+                hasil_akhir[k] = v
+                hasil_source[k] = "column_serving"
         if len(hasil_akhir) >= 4:
             return hasil_akhir
     
@@ -1091,8 +1298,8 @@ def rekonstruksi_tabel_dari_bbox(deteksi_list: list[dict], html_tables: list[str
         if key and info:
             if info["akg_persen"] is None and akg_raw:
                 info["akg_persen"] = ParseOCR.ekstrak_persen_akg(akg_raw)
-            # Jangan timpa hasil kolom serving / row yang sudah valid
-            if key not in hasil_akhir or hasil_source.get(key) not in ("column_serving",):
+            # Jangan timpa hasil grid / kolom serving / row yang sudah valid
+            if key not in hasil_akhir or hasil_source.get(key) not in ("column_serving", "grid"):
                 hasil_akhir[key] = info
                 hasil_source[key] = "proximity"
                 # Tandai value sudah dipakai
@@ -1501,19 +1708,38 @@ class Preprocessor:
         """Jalankan seluruh pipeline pre-processing. Return numpy BGR."""
         print(f"\n🖼️  Pre-processing: {Path(path_gambar).name}")
 
-        img = cv2.imread(path_gambar)
+        try:
+            from PIL import Image, ImageOps
+
+            with Image.open(path_gambar) as pil_img:
+                if _env_flag("HEALTHIER_OCR_EXIF_ORIENT", True):
+                    pil_img = ImageOps.exif_transpose(pil_img)
+                img = cv2.cvtColor(np.array(pil_img.convert("RGB")), cv2.COLOR_RGB2BGR)
+        except Exception:
+            img = cv2.imread(path_gambar)
         if img is None:
             raise FileNotFoundError(f"Gambar tidak ditemukan: {path_gambar}")
 
         self.last_quality = ImageQualityChecker.analyze(img)
         print(f"   [Quality] score={self.last_quality['quality_score']:.2f}, warnings={self.last_quality['warnings']}")
 
-        img = self.deskew(img)
-        img = self.deglare(img)
-        if REMOVE_WATERMARK:
+        if _env_flag("HEALTHIER_OCR_DESKEW", True):
+            img = self.deskew(img)
+        if _env_flag("HEALTHIER_OCR_DEGLARE", True):
+            img = self.deglare(img)
+        if REMOVE_WATERMARK and _env_flag("HEALTHIER_OCR_WATERMARK", True):
             img = self.remove_overlay_watermark(img)
-        img = self.normalisasi_cahaya(img)
-        img, self.last_roi = self.crop_area_gizi_with_metadata(img)
+        if _env_flag("HEALTHIER_OCR_CLAHE", True):
+            img = self.normalisasi_cahaya(img)
+        if _env_flag("HEALTHIER_OCR_ROI", True):
+            img, self.last_roi = self.crop_area_gizi_with_metadata(img)
+        else:
+            self.last_roi = {
+                "detected": False,
+                "method": "disabled_by_ablation",
+                "original_size": {"width": int(img.shape[1]), "height": int(img.shape[0])},
+                "roi_size": {"width": int(img.shape[1]), "height": int(img.shape[0])},
+            }
 
         print(f"   [ROI] method={self.last_roi['method']}, detected={self.last_roi['detected']}")
         print(f"   [Final] Ukuran: {img.shape[1]}x{img.shape[0]}")
@@ -1560,6 +1786,9 @@ class ParseOCR:
 
         if teks in KAMUS_NUTRISI:
             return KAMUS_NUTRISI[teks]
+
+        if not _env_flag("HEALTHIER_OCR_FUZZY", True):
+            return None
 
         skor_terbaik = 0.0
         match_terbaik = None
@@ -1963,6 +2192,7 @@ def semantic_filter_ocr(deteksi_list: list[dict]) -> tuple[list[dict], dict]:
         norm = ParseOCR.bersihkan_teks(text)
         has_number = bool(re.search(r"\d", norm))
         has_unit = bool(re.search(r"\d+[\.,]?\d*\s*(g|mg|kkal|kcal|%|gram)", norm))
+        standalone_unit = bool(_UNIT_TOKEN_RE.match(norm)) or norm in {"%", "akg", "%akg"}
         is_anchor = _is_nutrition_anchor_text(text)
         near_anchor = any(abs(det["center_y"] - ay) <= max(34, median_h * 2.2) for ay in anchor_ys)
         in_roi_band = min_y <= det["center_y"] <= max_y
@@ -1970,7 +2200,7 @@ def semantic_filter_ocr(deteksi_list: list[dict]) -> tuple[list[dict], dict]:
 
         if reject_marketing:
             continue
-        if is_anchor or has_unit or (has_number and near_anchor) or (has_number and in_roi_band):
+        if is_anchor or has_unit or standalone_unit or (has_number and near_anchor) or (has_number and in_roi_band):
             kept.append(det)
 
     if len(kept) < max(6, len(anchors)):
@@ -2097,7 +2327,7 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
     roi_y1 = 0
     roi_img = img_np  # default: full image
 
-    if pass1_anchor_found:
+    if pass1_anchor_found and _env_flag("HEALTHIER_OCR_ROI", True):
         # Scale koordinat kembali ke resolusi asli
         anchor_y_orig = anchor_bbox["center_y"] / scale
         margin_top = full_h * 0.02
@@ -2105,6 +2335,8 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
         roi_img = img_np[roi_y1:, :]  # dari anchor ke bawah
         print(f"   ✂️ Anchor ditemukan: \"{anchor_text}\" di Y≈{int(anchor_y_orig)}")
         print(f"   ✂️ ROI crop: y={roi_y1}..{full_h} ({roi_img.shape[1]}x{roi_img.shape[0]})")
+    elif pass1_anchor_found:
+        print("   [ROI] Dinonaktifkan oleh ablation — memakai full image")
     else:
         print("   ⚠️ Anchor tidak ditemukan, gunakan full image")
 
@@ -2119,7 +2351,16 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
     durasi = time.time() - t0
     print(f"   ✅ {len(deteksi_list)} teks terdeteksi dalam {durasi:.2f} detik")
 
-    deteksi_nutrisi, semantic_meta = semantic_filter_ocr(deteksi_list)
+    if _env_flag("HEALTHIER_OCR_SEMANTIC_FILTER", True):
+        deteksi_nutrisi, semantic_meta = semantic_filter_ocr(deteksi_list)
+    else:
+        deteksi_nutrisi = list(deteksi_list)
+        semantic_meta = {
+            "enabled": False,
+            "kept": len(deteksi_nutrisi),
+            "removed": 0,
+            "ablation": "semantic_filter_off",
+        }
     print(
         f"   [SemanticFilter] enabled={semantic_meta.get('enabled')} "
         f"kept={semantic_meta.get('kept')} removed={semantic_meta.get('removed')}"
@@ -2149,12 +2390,18 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
     data_nutrisi = rekonstruksi_tabel_dari_bbox(deteksi_nutrisi, html_tables)
 
     # --- Fallback domain label gizi ---
-    print("\n🧮 Fallback energi lemak...")
-    data_nutrisi, fallback_flags = terapkan_fallback_energi_lemak(data_nutrisi, deteksi_nutrisi)
+    if _env_flag("HEALTHIER_OCR_FALLBACK", True):
+        print("\n🧮 Fallback energi lemak...")
+        data_nutrisi, fallback_flags = terapkan_fallback_energi_lemak(data_nutrisi, deteksi_nutrisi)
+    else:
+        fallback_flags = []
 
     # --- Validasi klinis ---
-    print("\n🏥 Validasi klinis...")
-    data_valid, flags = validasi_klinis(data_nutrisi)
+    if _env_flag("HEALTHIER_OCR_VALIDATION", True):
+        print("\n🏥 Validasi klinis...")
+        data_valid, flags = validasi_klinis(data_nutrisi)
+    else:
+        data_valid, flags = dict(data_nutrisi), []
     flags = fallback_flags + flags
     for quality_warning in preprocessor.last_quality.get("warnings", []):
         flags.append(f"quality_{quality_warning}")
@@ -2196,6 +2443,20 @@ def jalankan_ocr(path_gambar: str, ground_truth: str = None, debug_dir: str = No
         "quality": preprocessor.last_quality,
         "roi": preprocessor.last_roi,
         "semantic_filter": semantic_meta,
+        "ablation": {
+            "exif_orient": _env_flag("HEALTHIER_OCR_EXIF_ORIENT", True),
+            "deskew": _env_flag("HEALTHIER_OCR_DESKEW", True),
+            "deglare": _env_flag("HEALTHIER_OCR_DEGLARE", True),
+            "clahe": _env_flag("HEALTHIER_OCR_CLAHE", True),
+            "roi": _env_flag("HEALTHIER_OCR_ROI", True),
+            "semantic_filter": _env_flag("HEALTHIER_OCR_SEMANTIC_FILTER", True),
+            "fuzzy_matching": _env_flag("HEALTHIER_OCR_FUZZY", True),
+            "energy_fat_fallback": _env_flag("HEALTHIER_OCR_FALLBACK", True),
+            "clinical_validation": _env_flag("HEALTHIER_OCR_VALIDATION", True),
+            "table_structure": _env_flag("NUTRILABEL_USE_TABLE_STRUCTURE", True),
+            "table_grid": _env_flag("HEALTHIER_OCR_TABLE_GRID", True),
+            "ocr_version": OCR_VERSION or "default",
+        },
         "column_layout": deteksi_layout_kolom(deteksi_nutrisi or deteksi_list),
         "evaluasi": evaluasi,
         # --- NEW: Bounding box data untuk frontend ---

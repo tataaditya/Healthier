@@ -1,0 +1,4 @@
+method,epochs,precision,recall,box_map50,seg_map50,seg_map50_95,note
+YOLOv8m-seg,5,0.6196,0.5395,0.5627,0.5467,,notebook short fine-tuning; not comparable to 80-epoch main model
+YOLO11m-seg,5,0.5962,0.5348,0.5458,0.5293,,notebook short fine-tuning; not comparable to 80-epoch main model
+YOLO26m-seg,5,0.6190,0.5242,0.5489,0.5345,,notebook short fine-tuning; not comparable to 80-epoch main model

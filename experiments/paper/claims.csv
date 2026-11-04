@@ -1,0 +1,21 @@
+section,claim,value_in_draft,evidence_source,status,action
+Abstract,Jumlah citra training segmentasi,19087,"Rekonsiliasi: 19087 = total corpus; 15558 train + 3529 val (official splits)",RELABEL,Tulis total 19087; train 15558; val 3529
+Table 1,Total seluruh citra,19533,"19087 segmentasi + 446 OCR",OK_JIKA_DIJELASKAN,Pisahkan segmentasi vs OCR
+Results,Jumlah validation images,3529,"Consistent dengan 19087 - 15558; 18.5% bukan 20%",RELABEL,Ganti klaim 80:20 -> 81.5:18.5 atau split baru 85:15
+Methods,Jumlah epoch,50,args.yaml epochs=100; results.csv 80,REPLACE,Tulis 100 max / early stop 80
+Methods,Hardware training,RTX 3050 6GB / 8GB RAM,args.yaml save_dir Kaggle; results.csv 8.85h,REPLACE,Tulis Kaggle Tesla T4 15.6GB; RTX 3050 untuk deployment
+Methods,Weighted loss,weighted loss,notebook: oversampling duplikasi file,REPLACE,Ganti ke oversampling atau implementasi weighted loss
+Methods/Abstract,Versi OCR,PP-OCRv5,backend/app.py default PP-OCRv4,VERIFY,Jalankan ulang dengan versi yang diklaim
+Table 1,Jumlah citra OCR,446,,UNVERIFIED,Tentukan train/val/test
+Results,Jumlah citra OCR evaluasi,30,,UNVERIFIED,Jelaskan subset test
+Results,Field-Level Accuracy,0.838,experiments/results/ocr_full/summary.json,TO_RERUN,Gunakan eval_ocr.py
+Results,95% CI FLA,[78.6; 87.9],,CONFLICT,n=30 gambar -> CI cluster bootstrap jauh lebih lebar
+Results,FP16 TFLite,best_float16.tflite,notebook export failed; artifact is best_float32.tflite,REPLACE,Ganti ke FP32 atau ekspor ulang + evaluasi
+Results,Mask mAP50,67.06,results.csv epoch 80: 67.136,REPLACE/VERIFY,Recompute with eval_seg.py on last.pt
+Results,Mask mAP50-95,52.84,results.csv epoch 80: 52.876,REPLACE/VERIFY,Recompute with eval_seg.py on last.pt
+Results,Precision/Recall 72.07/60.46,72.07/60.46,"results.csv epoch80 instance: mask P72.778/R60.724; notebook pixel-level target 72.07/60.46",SEPARATE,Pisahkan pixel-level vs instance-level
+Clinical,Sodium limit hipertensi,2000,frontend/js/clinical-rules.js (1500 hipertensi; 2300 umum),CONFLICT,Samakan paper dan kode
+Clinical,TDEE contoh,2069,frontend/js/app.js (BMR x 1.2 = 2008.5),CONFLICT,Tulis activity factor dan hitung ulang
+Usability,"No design flaws",,Table 2 evaluator,OVERCLAIM,Laporkan severity/agreement atau softkan klaim
+Results,Per-class mAP Fruits/Others,81.44 / 53.37,,TO_RERUN,Ambil dari per_class.csv
+Baseline,Perbandingan arsitektur,,notebook: 5-epoch medium models,UNDERREPORTED,Laporkan sebagai screening appendix atau latih baseline setara

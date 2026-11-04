@@ -17,6 +17,7 @@ Dataset/
 dataset/
 runs/
 *.cache
+Makanan Ringan/
 
 # ── Artefak runtime / hasil evaluasi ─────────────────────────────────────────
 *_hasil.json
@@ -26,6 +27,13 @@ debug_baso_final/
 data/debug/
 evaluation_results/
 evaluate_results/
+
+# ── Eksperimen revisi (data besar & hasil lokal) ─────────────────────────────
+experiments/dataset/
+experiments/runs/
+experiments/results/
+experiments/ocr_data/
+experiments/artifacts/
 
 # ── Environment & secrets ────────────────────────────────────────────────────
 .env

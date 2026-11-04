@@ -11,12 +11,15 @@ uvicorn[standard]>=0.30.0
 python-multipart>=0.0.9
 
 # --- OCR label gizi ---
+# Pin versi yang benar-benar dipakai di paper. PP-OCRv5 membutuhkan PaddleOCR 3.x;
+# PP-OCRv4 dapat memakai 2.8.x. Jalankan eval_ocr.py dengan --ocr-version yang sama.
 paddleocr>=2.8.0
 
 # --- Computer vision & segmentasi ---
 numpy>=1.24.0
 opencv-python>=4.8.0
 Pillow>=10.0.0
+PyYAML>=6.0
 torch>=2.2.0
 ultralytics>=8.2.0
 

@@ -53,6 +53,7 @@ Healthier/
 │   └── js/                  # config, domain engines, UI
 ├── models/isipiringku_v2/   # artefak training & bobot YOLO
 ├── scripts/                 # evaluasi, benchmark, diagnostik
+├── experiments/             # pipeline revisi: split, train, eval, ablation
 ├── data/samples/            # contoh gambar & hasil OCR
 ├── docs/                    # arsitektur, evaluasi, panduan
 ├── requirements.txt
@@ -124,6 +125,60 @@ Detail performa, kurva, dan perbandingan iterasi model ada di
 [docs/evaluation.md](docs/evaluation.md).
 
 ---
+
+## 🔬 Eksperimen Revisi (Reproducible)
+
+Folder [`experiments/`](experiments/README.md) menyiapkan pipeline revisi jurnal:
+konversi mask → YOLO-seg, split anti-leakage, training, evaluasi per-kelas +
+confusion matrix, evaluasi OCR per-field dengan cluster bootstrap, ablation
+preprocessing OCR, dan generator tabel paper.
+
+Notebook Kaggle siap pakai:
+[`experiments/notebooks/revision_kaggle.ipynb`](experiments/notebooks/revision_kaggle.ipynb)
+(membangun dataset, split, screening, training, evaluasi instance/pixel, dan
+uji 10–20 foto Indonesia).
+
+Hasil revisi terbaru:
+- [`experiments/paper/final_numbers.md`](experiments/paper/final_numbers.md) — angka final.
+- [`experiments/paper/writing_guide.md`](experiments/paper/writing_guide.md) — panduan menulis manuscript.
+- [`experiments/paper/tables/`](experiments/paper/tables/) — tabel siap tempel.
+
+```powershell
+# Lihat panduan lengkap + jadwal 4 hari
+Get-Content experiments/README.md
+
+# Sumber & format dataset publik
+Get-Content experiments/data_sources.md
+
+# Audit notebook asli vs manuscript (wajib dibaca)
+Get-Content experiments/paper/notebook-audit.md
+```
+
+> **Status revisi:** run segmentasi baru sudah selesai (YOLO11s-seg, max 100
+> epoch, early stop 67, best epoch 48, Tesla T4). Dataset final memakai
+> **18.714 citra unik** (11.684 train / 2.017 val / 5.013 external test) setelah
+> 373 duplikat dibuang. Semua angka final ada di
+> [`experiments/paper/final_numbers.md`](experiments/paper/final_numbers.md);
+> tabel siap tempel ada di [`experiments/paper/tables/`](experiments/paper/tables/).
+>
+> **Belum selesai:** evaluasi OCR (tidak ada `experiments/results/ocr_*`),
+> metrik per-kelas internal, latensi inferensi, dan baseline full-budget.
+> Jangan memakai angka OCR 83,8% dari draft sebelum dijalankan ulang.
+
+Perintah utama:
+
+```powershell
+# Jalur Kaggle (utama): cukup buka notebook
+#   experiments/notebooks/revision_kaggle.ipynb
+
+# Jalur lokal / OCR / tabel
+python experiments/scripts/eval_ocr.py --help
+python experiments/scripts/ablate_ocr.py --help
+python experiments/scripts/make_tables.py --help
+python experiments/scripts/local/prepare_yolo_seg.py --help
+python experiments/scripts/local/train_seg.py --help
+python experiments/scripts/local/eval_seg.py --help
+```
 
 ## 🧪 Evaluasi & Benchmark
 

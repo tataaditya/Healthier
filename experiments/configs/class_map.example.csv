@@ -1,0 +1,6 @@
+source,class_name,group,notes
+uec,rice,makanan_pokok,contoh
+uec,chicken,lauk_pauk,contoh
+uec,broccoli,sayur,contoh
+fruit,apple,buah,contoh
+*,cake,lainnya,contoh wildcard untuk semua source
