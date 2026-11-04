@@ -1,16 +1,31 @@
 """Evaluate a cloud/local Vision-Language Model (VLM) on the same OCR pilot set.
 
 This is an **analysis harness** (future-work comparison), not part of the core
-edge pipeline. It sends each label photo to a vision model through the Ollama
-API and scores the extracted per-serving fields against the same ground truth
-used by ``eval_ocr.py`` (exact value or within 5%).
+edge pipeline. It sends each label photo to a vision model and scores the
+extracted per-serving fields against the same ground truth used by
+``eval_ocr.py`` (exact value or within 5%).
 
-Example:
+Two provider backends are supported:
+    --provider ollama   Ollama API (local or cloud, e.g. ``gemma4:cloud``)
+    --provider openai   OpenAI-compatible endpoint (e.g. Helipod
+                        ``https://ai.helipod.io/v1``); API key read from
+                        ``--api-key`` or ``.env`` (``API_KEY``).
+
+Example (Ollama):
     python experiments/scripts/eval_vlm.py ^
         --data experiments/ocr_data/makanan_ringan ^
-        --model minimax-m3:cloud ^
-        --out experiments/results/ocr_vlm/minimax_m3 ^
-        --label "Makanan Ringan pilot (VLM minimax-m3:cloud)" ^
+        --model gemma4:cloud ^
+        --out experiments/results/ocr_vlm/gemma4_cloud ^
+        --label "Makanan Ringan pilot (VLM gemma4:cloud)" ^
+        --bootstrap 2000
+
+Example (OpenAI-compatible / Helipod):
+    python experiments/scripts/eval_vlm.py ^
+        --provider openai --base-url https://ai.helipod.io/v1 ^
+        --model deepseek-v4.1-flash ^
+        --data experiments/ocr_data/makanan_ringan ^
+        --out experiments/results/ocr_vlm/helipod_deepseek_v4_1_flash ^
+        --label "VLM cloud deepseek-v4.1-flash" ^
         --bootstrap 2000
 """
 
@@ -138,6 +153,85 @@ def ollama_chat(host: str, model: str, prompt: str, image_b64: str,
     raise RuntimeError(f"Ollama gagal setelah {retries} percobaan: {last_exc}")
 
 
+_THINK_RE = re.compile(r"<think\b[^>]*>.*?(?:</think>|$)", re.S)
+
+
+def strip_think(text: str) -> str:
+    """Buang blok reasoning <think>...</think> agar JSON mudah ditemukan."""
+    return _THINK_RE.sub("", text or "").strip()
+
+
+def load_api_key(explicit: str | None = None) -> str | None:
+    if explicit:
+        return explicit
+    for name in ("HELIPOD_API_KEY", "OPENAI_API_KEY", "API_KEY"):
+        value = os.getenv(name)
+        if value:
+            return value
+    env_file = ROOT_DIR / ".env"
+    if env_file.is_file():
+        match = re.search(
+            r"(?:API_KEY|HELIPOD_API_KEY)\s*=\s*(\S+)",
+            env_file.read_text(encoding="utf-8"),
+        )
+        if match:
+            return match.group(1)
+    return None
+
+
+def openai_chat(base_url: str, api_key: str, model: str, prompt: str, image_b64: str,
+                max_tokens: int, temperature: float, timeout: int, retries: int) -> str:
+    """Panggil endpoint OpenAI-compatible (mis. Helipod) dengan gambar base64."""
+    payload = {
+        "model": model,
+        "messages": [{
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}},
+            ],
+        }],
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
+    data = json.dumps(payload).encode()
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        # Cloudflare di depan gateway menolak User-Agent default urllib (error 1010).
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+    }
+    last_exc: Exception | None = None
+    for attempt in range(1, retries + 1):
+        req = urllib.request.Request(
+            f"{base_url.rstrip('/')}/chat/completions",
+            data=data, headers=headers, method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                body = json.load(resp)
+            message = (body.get("choices") or [{}])[0].get("message", {}) or {}
+            return str(message.get("content") or "")
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+            last_exc = exc
+            if attempt < retries:
+                time.sleep(3 * attempt)
+    raise RuntimeError(f"OpenAI-compatible gagal setelah {retries} percobaan: {last_exc}")
+
+
+def chat_content(args, api_key: str | None, image_b64: str) -> str:
+    if args.provider == "openai":
+        content = openai_chat(args.base_url, api_key or "", args.model, PROMPT, image_b64,
+                              args.max_tokens, args.temperature, args.timeout, retries=1)
+    else:
+        response = ollama_chat(args.host, args.model, PROMPT, image_b64,
+                               args.temperature, args.timeout, retries=1)
+        content = (response.get("message") or {}).get("content", "")
+    return strip_think(content)
+
+
 def pred_from_vlm(parsed: dict) -> dict:
     """Ubah JSON VLM menjadi bentuk prediksi yang dipahami hitung_field_accuracy."""
     pred: dict = {}
@@ -153,7 +247,12 @@ def main() -> None:
     parser.add_argument("--data", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--model", required=True)
+    parser.add_argument("--provider", choices=["ollama", "openai"], default="ollama",
+                        help="ollama = API lokal; openai = endpoint OpenAI-compatible")
     parser.add_argument("--host", default=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
+    parser.add_argument("--base-url", default="https://ai.helipod.io/v1")
+    parser.add_argument("--api-key", default=None, help="override; default dibaca dari .env")
+    parser.add_argument("--max-tokens", type=int, default=1024)
     parser.add_argument("--max-side", type=int, default=1600)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--timeout", type=int, default=900)
@@ -169,6 +268,9 @@ def main() -> None:
 
     if not args.data.is_dir():
         raise SystemExit(f"Folder data tidak ditemukan: {args.data}")
+    api_key = load_api_key(args.api_key) if args.provider == "openai" else None
+    if args.provider == "openai" and not api_key:
+        raise SystemExit("Provider openai butuh API key (--api-key atau .env API_KEY).")
     from backend.app import hitung_field_accuracy  # noqa: E402
 
     images = sorted(
@@ -221,11 +323,7 @@ def main() -> None:
                 for attempt in range(1, args.retries + 1):
                     try:
                         t0 = time.time()
-                        response = ollama_chat(
-                            args.host, args.model, PROMPT, b64,
-                            args.temperature, args.timeout, retries=1,
-                        )
-                        content = (response.get("message") or {}).get("content", "")
+                        content = chat_content(args, api_key, b64)
                         raw = {
                             "content": content,
                             "elapsed_s": round(time.time() - t0, 2),
@@ -313,7 +411,9 @@ def main() -> None:
     summary = {
         "kind": "vlm_analysis",
         "label": args.label,
+        "provider": args.provider,
         "model": args.model,
+        "endpoint": args.base_url if args.provider == "openai" else args.host,
         "data": str(args.data),
         "max_side": args.max_side,
         "n_images": len(per_image_rows),
