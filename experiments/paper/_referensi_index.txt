@@ -1,0 +1,810 @@
+===== 07%20factsheet%20PTM_English.pdf =====
+META title='' author='HP'
+--- first text ---
+4,12%
+1,3%
+Prevalence, Impact, and Efforts In Controlling
+Hypertension & Diabetes in Indonesia
+ANALYSIS OF SITUATION AND ISSUES
+Non-communicable diseases (NCDs) are caused by a
+combination of various factors, including genetic,
+physiological, environmental, and behavioral factors. In
+2016, NCDs were responsible for 72% of global deaths,
+nearly four times the deaths caused by infectious, maternal,
+perinatal, and nutritional diseases. Hypertension and
+diabetes are of particular concern due to their high
+prevalence and their role as major risk factors for heart and
+vascular diseases. The increasing r ate of new cases and the
+prevalence of hypertension and diabetes pose significant
+ In the productive age group (18 -59 years) and the
+elderly group (60 years and above), there is a gap in the
+number of respondents diagnosed with hypertension or
+diabetes compared to the number of respondents
+undergoing treatment or revisiting healthcare facilities
+(Figure 1 and 2). The proportion of respondents who
+regularly take medication and revisit healthcare facilities is
+lower than those diagnosed with hypertension/diabetes.
+5,9%
+health challenges at the global, regional, and national levels.
+In 2019, In 2019, the age -standardized prevalence of
+hypertension among individuals aged 30-79 worldwide and
+2,53%
+aged 18-59 years
+2,34%
+in the Southeast Asia region were respectively 33.1% and
+32,4%. In Indonesia, based on the 2018 Basic Health
+Research (Riskesdas) results, the prevalence of hypertension
+was 34.1%. Meanwhile, the prevalence of diabetes worldwide
+and in the Southeast Asia region were 10.6% and 8.8% in
+2021, respectively. According to the Riskesdas survey in 2018,
+the prevalence of diabetes in Indonesia was 10.9%. The
+International Diabetes Federation (IDF) projects that the
+number 
+
+===== 1-s2.0-S2352340924007856-main.pdf =====
+META title='FruitSeg30_Segmentation dataset & mask annotations: A novel dataset for diverse fruit segmentation and classification' author='F.M. Javed Mehedi Shamrat'
+--- first text ---
+Data in Brief 56 (2024) 110821
+Contents lists available at ScienceDirect
+Data in Brief
+journal homepage: www.elsevier.com/locate/dib
+Data Article
+FruitSeg30_Segmentation dataset & mask
+annotations: A novel dataset for diverse fruit
+segmentation and classiﬁcation
+F.M. Javed Mehedi Shamrat a , Rashiduzzaman Shakil b ,
+Mohd Yamani Idna Idris a , Bonna Akter b , Xujuan Zhou c , ∗
+a Department of Computer System and Technology, Universiti Malaya, Kuala Lumpur 50603, Malaysia
+b Department of Computer Science and Engineering, Daffodil International University, Daffodil Smart City (DSC),
+Birulia, Savar, Dhaka 1216, Bangladesh
+c School of Business, University of Southern Queensland, Springﬁeld, Australia
+a r t i c l e i n f o
+Article history:
+Received 18 June 2024
+Revised 16 July 2024
+Accepted 5 August 2024
+Available online 10 August 2024
+Dataset link: FruitSeg30_Segmentation
+Dataset & Mask Annotations (Original data)
+Keywords:
+Fruit segmentation
+Deep learning
+Image classiﬁcation
+Dataset diversity
+Data annotation
+Computer vision
+Fruit image
+Agriculture automation
+a b s t r a c t
+Fruits are mature ovaries of ﬂowering plants that are inte-
+gral to human diets, providing essential nutrients such as
+vitamins, minerals, ﬁber and antioxidants that are crucial
+for health and disease prevention. Accurate classiﬁcation and
+segmentation of fruits are crucial in the agricultural sec-
+tor for enhancing the eﬃciency of sorting and quality con-
+trol processes, which signiﬁcantly beneﬁt automated systems
+by reducing labor costs and improving product consistency.
+This paper introduces the “FruitSeg30_Segmentation Dataset
+& Mask Annotations”, a novel dataset designed to advance
+the capability of deep learning models in fruit segmenta-
+tion and classiﬁcation. Comprising 1969 high-quality images
+a
+
+===== 126019114 (1).pdf =====
+META title='Regional Food Recognition with Nutritional Analysis: Attention Mechanism Implementation for Indonesian Cuisine' author='Ahmad Fauzan ; Hedy Pamungkas ; Hedy Pamungkas ; Ahmad Fauzan; Hedy Pamungkas; Hedy Pamungkas ; Ahmad Fauzan; Hedy Pamungkas'
+--- first text ---
+Regional Food Recognition with Nutritional Analysis:
+Attention Mechanism Implementation for Indonesian
+Cuisine
+Ahmad Fauzan* and Hedy Pamungkas
+Cakrawala University, Jakarta, Indonesia
+*ahmad.fauzan@cakrawala.ac.id
+Abstract. Indonesia faces two major challenges: the preservation of its food
+heritage—at risk of digital extinction with 5,350 traditional recipes —and
+growing public health issues such as diabetes, which increased from 6.9% to
+10.9% between 2013 and 2018. Tools that support culturally relevant food
+tracking are therefore urgently needed. This study has two main aims: (1) to
+evaluate whether a Convolutional Block Attention Module (CBAM) can improve
+food classification accuracy for Indonesian dishes, and (2) to assess whether a
+multi-task architecture can accurately predict nutritional categories using visual
+features alone. We trained and compared four EfficientNet- B0–based models
+(Vanilla, CBAM Single, Multi-Task, CBAM Multi- Task) using 815 images
+across 10 Indonesian food classes. Performance was evaluated through
+classification accuracy and nutritional prediction F1-score. Contrary to
+expectations, the CBAM Single-Task model (83.0% accuracy) did not
+outperform the baseline (85.0%). The best food classification result was achieved
+by the Multi-Task baseline (88.0%). For nutrition prediction, the CBAM Multi-
+Task model achieved the highest performance (91.1% F1-score). All models
+remained computationally efficient, with 3.6 –4.0M parameters. The findings
+reveal a trade-off: multi-task learning provided strong regularization for
+improving food recognition, while CBAM was more effective when applied
+specifically to nutritional analysis. The high F1-score demonstrates the feasibility
+of visual-only nutrition prediction without relying on external databases. T
+
+===== 126019114.pdf =====
+META title='Regional Food Recognition with Nutritional Analysis: Attention Mechanism Implementation for Indonesian Cuisine' author='Ahmad Fauzan ; Hedy Pamungkas ; Hedy Pamungkas ; Ahmad Fauzan; Hedy Pamungkas; Hedy Pamungkas ; Ahmad Fauzan; Hedy Pamungkas'
+--- first text ---
+Regional Food Recognition with Nutritional Analysis:
+Attention Mechanism Implementation for Indonesian
+Cuisine
+Ahmad Fauzan* and Hedy Pamungkas
+Cakrawala University, Jakarta, Indonesia
+*ahmad.fauzan@cakrawala.ac.id
+Abstract. Indonesia faces two major challenges: the preservation of its food
+heritage—at risk of digital extinction with 5,350 traditional recipes —and
+growing public health issues such as diabetes, which increased from 6.9% to
+10.9% between 2013 and 2018. Tools that support culturally relevant food
+tracking are therefore urgently needed. This study has two main aims: (1) to
+evaluate whether a Convolutional Block Attention Module (CBAM) can improve
+food classification accuracy for Indonesian dishes, and (2) to assess whether a
+multi-task architecture can accurately predict nutritional categories using visual
+features alone. We trained and compared four EfficientNet- B0–based models
+(Vanilla, CBAM Single, Multi-Task, CBAM Multi- Task) using 815 images
+across 10 Indonesian food classes. Performance was evaluated through
+classification accuracy and nutritional prediction F1-score. Contrary to
+expectations, the CBAM Single-Task model (83.0% accuracy) did not
+outperform the baseline (85.0%). The best food classification result was achieved
+by the Multi-Task baseline (88.0%). For nutrition prediction, the CBAM Multi-
+Task model achieved the highest performance (91.1% F1-score). All models
+remained computationally efficient, with 3.6 –4.0M parameters. The findings
+reveal a trade-off: multi-task learning provided strong regularization for
+improving food recognition, while CBAM was more effective when applied
+specifically to nutritional analysis. The high F1-score demonstrates the feasibility
+of visual-only nutrition prediction without relying on external databases. T
+
+===== 2108.02947v2.pdf =====
+META title='A review on vision-based analysis for automatic dietary assessment' author='Wei Wang, Weiqing Min, Tianhao Li, et al.'
+--- first text ---
+A review on vision-based analysis for automatic dietary assessment
+Wei Wanga,c,d, Weiqing Minb,e,∗, Tianhao Lib,e, Xiaoxiao Donga,c,d, Haisheng Lia,c,d,∗ and
+Shuqiang Jiangb,e
+aSchool of Computer and Engineering, Beijing Technology and Business University, Beijing, 100048, China
+bThe Key Laboratory of Intelligent Information Processing, Institute of Computing Technology, Chinese Academy of
+Sciences, Beijing, 100190, China
+cBeijing Key Laboratory of Big Data Technology for Food Safety, Beijing, 100048, China
+dNational Engineering Laboratory For Agri-product Quality Traceability, Beijing, 100048, China
+eUniversity of Chinese Academy of Sciences, Beijing, 100049, China
+ARTICLE INFO
+Keywords:
+Dietary assessment
+Computer vision
+Deep learning
+Food recognition
+Food segmentation
+Volume estimation
+ABSTRACT
+Background:Maintaining a healthy diet is vital to avoid health-related issues, e.g., undernutri-
+tion, obesity and many non-communicable diseases. An indispensable part of the health diet is
+dietary assessment. Traditional manual recording methods are not only burdensome but time-
+consuming, and contain substantial biases and errors. Recent advances in Artiﬁcial Intelligence
+(AI),especiallycomputervisiontechnologies,havemadeitpossibletodevelopautomaticdietary
+assessment solutions, which are more convenient, less time-consuming and even more accurate
+to monitor daily food intake.
+Scope and approach: This review presents Vision-Based Dietary Assessment (VBDA) ar-
+chitectures, including multi-stage architecture and end-to-end one. The multi-stage dietary
+assessment generally consists of three stages: food image analysis, volume estimation and
+nutrient derivation. The prosperity of deep learning makes VBDA gradually move to an end-
+to-end implementation, which applies food images 
+
+===== 2403.04512v1.pdf =====
+META title='' author=''
+--- first text ---
+arXiv:2403.04512v1  [econ.TH]  7 Mar 2024
+.
+A TOPOLOGICAL CHARACTERIZATION OF THE EXISTENCE OF
+w-STABLE SETS
+A P REPRINT
+Athanasios Andrikopoulos∗
+Dept. of Computer Engineering and Informatics
+University of Patras
+Patras, 26504, Greece
+aandriko@ceid.upatras.gr
+Nikolaos Sampanis
+Dept. of Computer Engineering and Informatics
+University of Patras
+Patras, 26504, Greece
+nsampanis@upatras.gr
+ABSTRACT
+The theory of optimal choice sets is a solution theory that ha s a long and well-established tradition
+in social choice and game theories. Some of important genera l solution concepts of choice problems
+when the set of best alternatives does not exist (this proble m occurs when the preferences yielded by
+an economic process are cyclic) is the Stable Set (V on Neuman n-Morgenstern set) and its variants
+(Generalized Stable set, Extended Stable set, m-Stable set and w-Stable set). The theory of w-stable
+sets solution is more realistic because: (1) It solves the ex istence problem of solution; (2) It expands
+the notions of maximal alternative set and (3) The concept of stability is deﬁned in such a way as
+to prevent a chosen alternative from being dominated by anot her alternative and sets this stability
+within the solution. In this paper, we present a topological characterization of the existence of w-
+Stable sets solution of arbitrary binary relations over non -ﬁnite sets of alternatives.
+Keywords Compactness, Upper tc-semicontinuity · V on Neumann-Morgenstern Stable Set· Generalized Stable Set ·
+m-Stable Set · w-Stable Set · Social Choice Theory
+1 Introduction
+The classical rationality conditions in choice theory form alize the thesis that to choose rationally is to choose in suc h
+a way that no other choice would have been better, or preferab le. That is, each individual makes ch
+
+===== 2405.08912v1.pdf =====
+META title='' author=''
+--- first text ---
+High dimensional test for functional
+covariates
+Huaqing Jin and Fei Jiang ∗
+Department of Epidemiology and Biostatistics,
+University of California, San Francisco
+May 16, 2024
+Abstract
+As medical devices become more complex, they routinely collect extensive and
+complicated data. While classical regressions typically examine the relationship be-
+tween an outcome and a vector of predictors, it becomes imperative to identify the
+relationship with predictors possessing functional structures. In this article, we intro-
+duce a novel inference procedure for examining the relationship between outcomes and
+large-scale functional predictors. We target testing the linear hypothesis on the func-
+tional parameters under the generalized functional linear regression framework, where
+the number of the functional parameters grows with the sample size. We develop the
+estimation procedure for the high dimensional generalized functional linear model
+incorporating B-spline functional approximation and amenable regularization. Fur-
+thermore, we construct a procedure that is able to test the local alternative hypothesis
+on the linear combinations of the functional parameters. We establish the statistical
+guarantees in terms of non-asymptotic convergence of the parameter estimation and
+the oracle property and asymptotic normality of the estimators. Moreover, we derive
+the asymptotic distribution of the test statistic. We carry out intensive simulations
+and illustrate with a new dataset from an Alzheimer’s disease magnetoencephalogra-
+phy study.
+Keywords: Alzheimer’s disease, B-spline, Generalized functional linear model, Magnetoen-
+cephalography, Neuroimaging data.
+∗Email: fei.jiang@ucsf.edu
+1
+arXiv:2405.08912v1  [stat.ME]  14 May 2024
+
+===== 2410.17725v1.pdf =====
+META title='' author=''
+--- first text ---
+YOLO V11: A N OVERVIEW OF THE KEY ARCHITECTURAL
+ENHANCEMENTS
+Rahima Khanam* and Muhammad Hussain
+Department of Computer Science, Huddersfield University, Queensgate, Huddersfield HD1 3DH, UK;
+*Correspondence: rahima.khanam@hud.ac.uk;
+October 24, 2024
+ABSTRACT
+This study presents an architectural analysis of YOLOv11, the latest iteration in the YOLO (You Only
+Look Once) series of object detection models. We examine the models architectural innovations,
+including the introduction of the C3k2 (Cross Stage Partial with kernel size 2) block, SPPF (Spatial
+Pyramid Pooling - Fast), and C2PSA (Convolutional block with Parallel Spatial Attention) com-
+ponents, which contribute in improving the models performance in several ways such as enhanced
+feature extraction. The paper explores YOLOv11’s expanded capabilities across various computer
+vision tasks, including object detection, instance segmentation, pose estimation, and oriented object
+detection (OBB). We review the model’s performance improvements in terms of mean Average
+Precision (mAP) and computational efficiency compared to its predecessors, with a focus on the
+trade-off between parameter count and accuracy. Additionally, the study discusses YOLOv11’s
+versatility across different model sizes, from nano to extra-large, catering to diverse application needs
+from edge devices to high-performance computing environments. Our research provides insights into
+YOLOv11’s position within the broader landscape of object detection and its potential impact on
+real-time computer vision applications.
+Keywords Automation; Computer Vision; YOLO; YOLOV11; Object Detection; Real-Time Image processing; YOLO
+version comparison
+1 Introduction
+Computer vision, a rapidly advancing field, enables machines to interpret and understand visual data [ 
+
+===== 2503.06027v2.pdf =====
+META title='Empowering Edge Intelligence: A Comprehensive Survey on On-Device AI Models' author=''
+--- first text ---
+Empowering Edge Intelligence: A Comprehensive Survey on
+On-Device AI Models
+XUBIN WANG, Hong Kong Baptist University, Beijing Normal Hong Kong Baptist University and Beijing
+Normal University, China
+ZHIQING TANG, Beijing Normal University, China
+JIANXIONG GUO, Beijing Normal University and Beijing Normal Hong Kong Baptist University, China
+TIANHUI MENG, Beijing Normal Hong Kong Baptist University, China
+CHENHAO WANG,Beijing Normal University and Beijing Normal Hong Kong Baptist University, China
+TIAN WANG,Beijing Normal University, China
+WEIJIA JIA, Beijing Normal University and Beijing Normal Hong Kong Baptist University (Corresponding
+author), China
+The rapid advancement of artificial intelligence (AI) technologies has led to an increasing deployment of AI models on edge
+and terminal devices, driven by the proliferation of the Internet of Things (IoT) and the need for real-time data processing.
+This survey comprehensively explores the current state, technical challenges, and future trends of on-device AI models. We
+define on-device AI models as those designed to perform local data processing and inference, emphasizing their characteristics
+such as real-time performance, resource constraints, and enhanced data privacy. The survey is structured around key themes,
+including the fundamental concepts of AI models, application scenarios across various domains, and the technical challenges
+faced in edge environments. We also discuss optimization and implementation strategies, such as data preprocessing, model
+compression, and hardware acceleration, which are essential for effective deployment. Furthermore, we examine the impact
+of emerging technologies, including edge computing and foundation models, on the evolution of on-device AI models. By
+providing a structured overview
+
+===== 2507.05595v1.pdf =====
+META title='PaddleOCR 3.0 Technical Report' author='Cheng Cui; Ting Sun; Manhui Lin; Tingquan Gao; Yubo Zhang; Jiaxuan Liu; Xueqing Wang; Zelun Zhang; Changda Zhou; Hongen Liu; Yue Zhang; Wenyu Lv; Kui Huang; Yichao Zhang; Jing Zhang; Jun Zhang; Yi Liu; Dianhai Yu; Yanjun Ma'
+--- first text ---
+PaddleOCR 3.0 Technical Report
+Cheng Cui, Ting Sun, Manhui Lin, Tingquan Gao, Yubo Zhang, Jiaxuan Liu,
+Xueqing Wang, Zelun Zhang, Changda Zhou, Hongen Liu, Yue Zhang, Wenyu Lv,
+Kui Huang, Yichao Zhang, Jing Zhang, Jun Zhang, Yi Liu, Dianhai Yu, Yanjun Ma
+PaddlePaddle Team, Baidu Inc.
+paddleocr@baidu.com
+Source Code: https://github.com/PaddlePaddle/PaddleOCR
+Document: https://paddlepaddle.github.io/PaddleOCR
+Models & Online Demo: https://huggingface.co/PaddlePaddle
+Abstract
+This technical report introduces PaddleOCR 3.0, an Apache-licensed open-source
+toolkit for OCR and document parsing. To address the growing demand for docu-
+ment understanding in the era of large language models, PaddleOCR 3.0 presents
+three major solutions: (1) PP-OCRv5 for multilingual text recognition, (2) PP-
+StructureV3 for hierarchical document parsing, and (3) PP-ChatOCRv4 for key
+information extraction. Compared to mainstream vision-language models (VLMs),
+these models with fewer than 100 million parameters achieve competitive accuracy
+and efficiency, rivaling billion-parameter VLMs. In addition to offering a high-
+quality OCR model library, PaddleOCR 3.0 provides efficient tools for training,
+inference, and deployment, supports heterogeneous hardware acceleration, and
+enables developers to easily build intelligent document applications.
+0.804 0.804
+0.781
+0.768
+0.744
+0.732
+0.692
+0.635
+0.07
+72 80 78
+3
+7
+80
+0.5
+0.01
+0.1
+1
+10
+100
+0.5
+0.55
+0.6
+0.65
+0.7
+0.75
+0.8
+0.85
+PP-OCRv5
+Qwen2.5-VL-72B
+Gemini-0605InternVL3-78BKimi-VL-A3BRolmOCR-7B
+GPT4o
+GOT-OCR-0.5B
+Params(B)
+1-EditDist
+1-EditDist Params (B)
+Params≈1/1000of
+Qwen2.5-VL-72B
+PP
+-OCRv5
+(a) PP-OCRv5
+0.855 0.852
+0.786
+0.834
+0.767
+0.713
+0.732
+0.664
+0.411
+0.794 0.788
+0.739
+0.69
+0.601 0.589
+0.561
+0.444
+0.4
+0.45
+0.5
+0.55
+0.6
+0.65
+0.7
+0.75
+0.8
+0.85
+0.9
+P
+
+===== 2510.03570v1.pdf =====
+META title='Evaluating OCR performance on food packaging labels in South Africa' author='Mayimunah Nagayi; Alice Khan; Tamryn Frank; Rina Swart; Clement Nyirenda'
+--- first text ---
+Evaluating OCR performance on food packaging
+labels in South Africa
+Mayimunah Nagayi1[0009−0009−9241−3059], Alice Khan2[0000−0003−1011−3693],
+Tamryn Frank2[0000−0002−5180−9171], Rina Swart3[0000−0002−7786−3117], and
+Clement Nyirenda1,4[0000−0002−4181−0478]
+1 Department of Computer Science, University of the Western Cape, Robert
+Sobukwe Rd, Bellville, Cape Town, 7535, South Africa,4163113@myuwc.ac.za
+2 School of Public Health, University of the Western Cape, Robert Sobukwe Rd,
+Bellville, Cape Town, 7535, South Africa,askhan@uwc.ac.za,tfrank@uwc.ac.za
+3 Department of Dietetics and Nutrition, University of the Western Cape, Robert
+Sobukwe Rd, Bellville, Cape Town, 7535, South Africa,rswart@uwc.ac.za
+4 eResearch Office, University of the Western Cape, Robert Sobukwe Rd, Bellville,
+Cape Town, 7535, South Africa,cnyirenda@uwc.ac.za
+Abstract.Thisstudyevaluatesfouropen-sourceOpticalCharacterRecog-
+nition (OCR) systems which are Tesseract, EasyOCR, PaddleOCR, and
+TrOCR on real world food packaging images. The aim is to assess their
+ability to extract ingredient lists and nutrition facts panels. Accurate
+OCR for packaging is important for compliance and nutrition monitoring
+but is challenging due to multilingual text, dense layouts, varied fonts,
+glare, and curved surfaces. A dataset of 231 products (1,628 images) was
+processed by all four models to assess speed and coverage, and a ground
+truth subset of 113 images (60 products) was created for accuracy eval-
+uation. Metrics include Character Error Rate (CER), Word Error Rate
+(WER), BLEU, ROUGE-L, F1, coverage, and execution time. On the
+ground truth subset, Tesseract achieved the lowest CER (0.912) and the
+highest BLEU (0.245). EasyOCR provided a good balance between ac-
+curacy and multilingual support. PaddleOCR achieved near c
+
+===== 2511.03907v1.pdf =====
+META title='SnappyMeal: Design and Longitudinal Evaluation of a Multimodal AI Food Logging Application' author='Liam Bakar; Zachary Englhardt; Vidya Srinivas; Girish Narayanswamy; Dilini Nissanka; Shwetak Patel; Vikram Iyer'
+--- first text ---
+SnappyMeal: Design and Longitudinal Evaluation of a Multimodal AI
+Food Logging Application
+LIAM BAKAR, ZACHARY ENGLHARDT, VIDYA SRINIVAS, GIRISH NARAYANSWAMY, DILINI
+NISSANKA, SHWETAK PATEL, and VIKRAM IYER,University of Washington, USA
+Food logging, both self-directed and prescribed, plays a critical role in uncovering correlations between diet, medical, fitness,
+and health outcomes. Through conversations with nutritional experts and individuals who practice dietary tracking, we
+find current logging methods, such as handwritten and app-based journaling, are inflexible and result in low adherence
+and potentially inaccurate nutritional summaries. These findings, corroborated by prior literature, emphasize the urgent
+need for improved food logging methods. In response, we propose SnappyMeal, an AI-powered dietary tracking system that
+leverages multimodal inputs to enable users to more flexibly log their food intake. SnappyMeal introduces goal-dependent
+follow-up questions to intelligently seek missing context from the user and information retrieval from user grocery receipts
+and nutritional databases to improve accuracy. We evaluate SnappyMeal through publicly available nutrition benchmarks and
+a multi-user, 3-week, in-the-wild deployment capturing over 500 logged food instances. Users strongly praised the multiple
+available input methods and reported a strong perceived accuracy. These insights suggest that multimodal AI systems can be
+leveraged to significantly improve dietary tracking flexibility and context-awareness, laying the groundwork for a new class
+of intelligent self-tracking applications.
+SnappyMeal
+Vector Database
+Context-Specific
+Follow-Ups
+User
+Multimodal
+Logging
+Nutritional
+Metrics
+Fig. 1. Traditional food logging using handwritten diaries or even mobile a
+
+===== 2601.07581v2.pdf =====
+META title='BenchSeg: A Large-Scale Dataset and Benchmark for Multi-View Food Video Segmentation' author='Ahmad AlMughrabi; Guillermo Rivo; Carlos Jiménez-Farfán; Umair Haroon; Farid Al-Areqi; Hyunjun Jung; Benjamin Busam; Ricardo Marques; Petia Radeva'
+--- first text ---
+Graphical Abstract
+BenchSeg: A Large-Scale Dataset and Benchmark for Multi-View
+Food Video Segmentation
+Ahmad AlMughrabi*, Guillermo Rivo, Carlos Jiménez-Farfán, Umair Ha-
+roon, Farid Al-Areqi, Hyunjun Jung, Benjamin Busam, Ricardo Marques,
+Petia Radeva
+MSegMan MSegMan+XMem2 GT
+Si
+Segmenter
+Memory
+Tracker
+Mθ
+P
+…
+…
+Φ
+xi, j
+(1) (2)
+(3)
+Y olo
+SegMan
+Segmentor +XMem2 +SAM2
+SegMan SegMan+XMem2
+arXiv:2601.07581v2  [cs.CV]  18 Jan 2026
+
+===== 2707-Article Text-17612-1-10-20261030.pdf =====
+META title='' author='cairo'
+--- first text ---
+Institut Riset dan Publikasi Indonesia (IRPI)
+MALCOM: Indonesian Journal of Machine Learning and Computer Science
+Journal Homepage: https://journal.irpi.or.id/index.php/malcom
+Vol. 6 Iss. 4 October 2026, pp: 2111-2121
+ISSN(P): 2797-2313 | ISSN(E): 2775-8575
+     2111
+DOI: https://doi.org/10.57152/malcom.v6i4.2707
+Development of an OCR System for Ingredient List Text Recognition on
+Food Labels Using CRAFT and CRNN
+Pengembangan Sistem OCR untuk Pengenalan Teks Daftar Bahan pada
+Label Makanan Berbasis CRAFT dan CRNN
+Rakeen Aria Alireza1*, Arrie Kurniawardhani2
+1,2Department of Informatics, Universitas Islam Indonesia, Indonesia
+E-Mail: 122523252@students.uii.ac.id, 2arrie.kurniawardhani@uii.ac.id
+Received Apr 23th 2026; Revised Jun 28th 2026; Accepted Aug 30th 2026; Available Online Oct 29th 2026
+Corresponding Author: Rakeen Aria Alireza
+Copyright © 2026 by Authors, Published by Institut Riset dan Publikasi Indonesia (IRPI)
+Abstract
+Ingredient lists on packaged food labels are important for helping consumers understand product contents, yet they are
+typically presented as text on packaging, making automatic processing by digital systems challenging. This study aims to
+develop a deep l earning-based Optical Character Recognition (OCR) system to automatically detect and recognize text
+from ingredient lists on food labels. The proposed method combines the ClusteR-specific Assorted Feature selection
+(CRAFT) model for text region detection a nd the Convolutional Recurrent Neural Network  (CRNN) model for text
+recognition. The recognition model is further fine-tuned using a specialized dataset of food ingredient texts to better capture
+label-specific characteristics. The dataset consists of 6,08 1 word-level sub-images, divided into 4,868 training samples,
+610 validation samples
+
+===== 28184-99539-1-PB.pdf =====
+META title='This space should be left blank, except for the name of the first author. (The publisher will re-type the main title, author names and addresses. Please give this information on a separate page.)' author='Houlbert'
+--- first text ---
+Factors Contributing to Rising Diabetes Cases in Indonesia: Insights from the
+2023 Indonesian Health Survey
+Mivtahurrahimah1*, Imaniar Sevtiyani2
+1Department of Epidemiology and Tropical Disease, Faculty of Public Health, Universitas Diponegoro,
+Semarang, Indonesia,
+2Department of Biostatistic and Health Population, Faculty of Public Health, Universitas Diponegoro,
+Semarang, Indonesia
+Info Artikel : Diterima 26 Juni 2025 ; Direvisi 5 Juli 2025 ; Disetujui 23 Juli 2025 ;
+Publikasi 23 Juli 2025
+ABSTRACT
+Background: The 2023 Indonesian Health Survey (SKI) revealed an increase in diabetes mellitus
+(DM) prevalence among individuals aged ≥15 years from 2.0% in 2018 to 2.2% in 2023, potentially
+linked to post -COVID-19 lifestyle changes. This study explored factors contributing to the rising
+diabetes cases in Indonesia using 2023 SKI data.
+Methods: This cross-sectional study utilized aggregate data from the 2023 SKI, collected between
+March and May 2025. The study selected 34,500 census blocks using proportional stratified
+sampling. Data collection involved interviews and physical examinations. Spearman's correlation
+and linear regression identified diabetes-related risk factors.
+Result: Positive correlations were found between DM and daily smoking, former smoking, high -fat
+food consumption, body weight monitoring, telemedicine use, and obesity. Negative correlations
+were observed for occasional smoking exposure, tobacco use, sweet food consumption, and normal
+nutritional status. Physical activity showed no significant association. Multivariate analysis revealed
+that individuals with blood pressure checks less than once a year had an 8.63 -fold higher DM risk.
+Telemedicine use, low -frequency starchy tuber intake, and BPJS PBI membership were associated
+with increased risk, w
+
+===== 31589-87992-1-PB.pdf =====
+META title='' author='IJHT'
+--- first text ---
+Efektivitas Label Gizi Traffic Light terhadap Pemahaman, Persepsi, dan Sikap Konsumen di
+Indonesia: Systematic Literature Review
+Effectiveness of Traffic Light Nutrition Labels on Consumer Understanding, Perception, and Attitude in
+Indonesia: A Systematic Literature Review
+Karina Muthia Shanti1*
+1 Jurusan Gizi, Poltekkes Kemenkes Malang, Indonesia
+Corresponding Author Email: karina_muthia@poltekkes-malang.ac.id
+Copyright: ©2025 The author(s). This article is published by Universitas Sultan Ageng Tirtayasa
+REVIEW  ABSTRAK
+Submitted: 12-03-2025
+Accepted: 27-03-2025
+Tren meningkatnya masalah gizi lebih di Indonesia merujuk pada terjadinya peningkatan penyakit
+tidak menular (PTM). Hal ini berkaitan dengan pola makan yang tidak sehat, yaitu konsumsi makanan
+tinggi gula, lemak, natrium, dan rendah serat. Bentuk upaya pre ventif yang dapat dilakukan adalah
+dengan pemberian label gizi yang dipahami oleh masyarakat, salah satunya dalam format label traffic
+light pada produk pangan kemasan. Penelitian ini bertujuan untuk mengidentifikasi pengaruh label
+gizi dalam format traffi c light pada produk pangan terhadap pemahaman, persepsi, dan sikap
+konsumen di Indonesia. Penelitian dilakukan dengan systematic literature review. Penelurusan
+dengan  kata kunci "traffic light label" AND "Indonesia" dengan operator Boolean pada database Google
+Scholar dan Scopus dengan kriteria inklusi berdasarkan pedoman PICOT. Hasil penelitian
+menunjukkan terdapat lima studi terpilih menggunakan metode cross -sectional dan quasi -
+eksperimental. Pemahaman konsumen terkait label gizi masih rendah. Konsumen produk pangan yang
+belum pernah mendapatkan edukasi label gizi memiliki pemahaman yang rendah terkait label traffic
+light, tetapi memiliki persepsi yang baik terhadap format label tersebut. Berbeda deng
+
+===== 380-Article Text-1011-1-10-20260628.pdf =====
+META title='' author='Gigih Forda Nama'
+--- first text ---
+Jurnal Profesi Insinyur Universitas Lampung (JPI)
+Vol. 7 No. 1,  Tahun  2026,   e-ISSN: 2722-5771 https://doi.org/10.23960/jpi.v7n1.380
+  213
+Implementasi O CR Dan Logika Fuzzy Untuk Pengecekan
+Nutrisi Pada Label Makanan Kemasan
+Andrian Nur Prima Saputra1*, Ahmad Subhan Yazid2, Andri Pramuntadi3, Dita Danianti4
+1,2,3,4Program Studi Informatika, Fakultas Sains, Rekayasa, dan Teknologi, Universitas Alma Ata; Jl.
+Brawijaya No.99, Tamantirto, Daerah Istimewa Yogyakarta; Telp (0274) 434 2288
+Keywords:
+OCR; Fuzzy Mamdani;
+Makanan Kemasan; Analisis
+Nutrisi.
+Corespondent Email:
+223200244@almaata.ac.id
+Copyright ©  JPI (Jurnal
+Profesi Insinyur Universitas
+Lampung).
+Abstrak. Rendahnya literasi gizi menyebabkan sebagian masyarakat masih
+kesulitan memahami informasi nutrisi pada label makanan kemasan serta
+mengaitkannya dengan batas konsumsi harian yang dianjurkan. Penelitian ini
+bertujuan mengembangkan sistem pengecekan nutrisi  berbasis web dengan
+memanfaatkan teknologi Optical Character Recognition  (OCR) dan metode
+Fuzzy Mamdani. Sistem dibangun menggunakan bahasa pemrograman
+Python dengan framework flask untuk mengekstraksi informasi energi total,
+gula, lemak total, dan garam dari gambar label makanan, kemudian
+menganalisisnya berdasarkan batas kon sumsi harian di Indonesia. Pengujian
+sistem dilakukan menggunakan 40 sampel makanan kemasan dan metode
+Black Box Testing. Hasil pengujian menunjukkan bahwa sistem dapat
+mengenali informasi nutrisi pada sebagian besar sampel dan menghasilkan
+rekomendasi konsumsi dalam kategori aman, konsumsi secukupnya, kurangi,
+dan sangat dibatasi.
+Abstract. Low nutritional literacy causes some people to have difficulty
+understanding nutritional information on packaged food labels and relating it
+to the recommended daily intake limits. This study ai
+
+===== 6107-Article Text-24822-1-10-20241203.pdf =====
+META title='Building of Informatics, Technology and Science (BITS)' author='Mesran.M.Kom'
+--- first text ---
+Building of Informatics, Technology and Science (BITS)
+Volume 6, No 3, Desember 2024 Page: 1403−1412
+ISSN 2684-8910 (media cetak)
+ISSN 2685-3310 (media online)
+DOI 10.47065/bits.v6i3.6107
+Copyright © 2024 Author, Page 1403
+This Journal is licensed under a Creative Commons Attribution 4.0 International License
+Implementation of Tesseract OCR and Bounding Box for Text
+Extraction on Food Nutrition Labels
+The Manuel Eric Saputra*, Ajib Susanto, Bastiaans Jessica Carmelita
+Faculty of Computer Science, Informatics Engineering, Universitas Dian Nuswantoro, Semarang, Indonesia
+Email: 1,*manueleric.saputra@gmail.com, 2ajib.susanto@dsn.dinus.ac.id, 3jessicacarmelita2004@gmail.com
+Correspondence Author Email: manueleric.saputra@gmail.com
+Submitted: 21/10/2024; Accepted: 01/12/2024; Published: 03/12/2024
+Abstract−This study focuses on implementing Optical Character Recognition (OCR) using the Tesseract engine, integrated with
+bounding box detection, to extract nutritional information from food nutrition labels. The research addresses the challenge o f
+limited consumer access to and understanding of nutritional data, a factor contributing to health issues such as obesity and related
+metabolic disorders. Studies indicate that although Indonesian consumers generally have a good level of knowledge and positiv e
+attitudes toward nutritional labels, the actu al behavior of reading and understanding these labels remains limited. Additionally,
+packaged foods consumed outside the home constitute a significant portion of daily caloric intake, which can lead to health
+complications if not properly managed. With obe sity levels among adults in Indonesia rising to concerning rates, this study
+highlights the importance of providing accessible nutritional data.  In this work, MobileNetV1 is used 
+
+===== 7996-21661-1-PB.pdf =====
+META title='' author=''
+--- first text ---
+Bulletin of Electrical Engineering and Informatics
+Vol. 13, No. 5, October 2024, pp. 3355~3368
+ISSN: 2302-9285, DOI: 10.11591/eei.v13i5.7996      3355
+Journal homepage: http://beei.org
+Performance comparison of state-of-the-art deep learning
+model architectures in Indonesian food image classification
+Mohammad Arif Rasyidi1, Yunita Siti Mardhiyyah2, Zuraidah Nasution3, Christofora Hanny Wijaya4
+1Department of Informatics, Universitas Internasional Semen Indonesia, Gresik, Indonesia
+2Department of Agroindustrial Technology, Universitas Internasional Semen Indonesia, Gresik, Indonesia
+3Department of Community Nutrition, IPB University, Bogor, Indonesia
+4Department of Food Science and Technology, IPB University, Bogor, Indonesia
+Article Info  ABSTRACT
+Article history:
+Received Jan 2, 2024
+Revised Feb 11, 2024
+Accepted Feb 28, 2024
+ Food image recognition is essential for developing an elderly -friendly daily
+food recording application in Indonesia. However, existing datasets and
+models are limited and do not cover the diversity and complexity of
+Indonesian food. In this paper, we present a new dataset of 24,427 images of
+160 types of Indonesian food with higher variety and quality than previous
+datasets. We also train and compare the performance of 67 models based on
+16 state -of-the-art deep learning architectures on this dataset. We f ind that
+efficientnet_v2_l provides the best accuracy of 85.44%, followed by other
+models such as convnext_large and swin_s. We also discuss the trade -off
+between model size and performance, as well as the challenges and
+limitations of food image classification. Our dataset and models can serve as
+a basis for developing a user -friendly and accurate food recording
+application for the elderly population in Indonesia.
+Keywords:
+Convolutional
+
+===== A_Study_on_Food_Value_Estimation_From_Images_Taxonomies_Datasets_and_Techniques.pdf =====
+META title='A Study on Food Value Estimation From Images: Taxonomies, Datasets, and Techniques' author=''
+--- first text ---
+Received 18 April 2023, accepted 3 May 2023, date of publication 8 May 2023, date of current version 15 May 2023.
+Digital Object Identifier 10.1 109/ACCESS.2023.3274475
+A Study on Food Value Estimation From Images:
+Taxonomies, Datasets, and Techniques
+JAMALIA SUL TANA
+ 1, BENZIR MD. AHMED
+ 1,2, MOHAMMAD MEHEDY MASUD
+ 3,
+A. K. OBIDUL HUQ 4, MOHAMMED EUNUS ALI
+ 1, AND MAHMUDA NAZNIN 1, (Member, IEEE)
+1Department of Computer Science and Engineering, Bangladesh University of Engineering and Technology, Dhaka 1000, Bangladesh
+2Department of Computer Science and Engineering, United International University, Dhaka 1212, Bangladesh
+3College of IT, United Arab Emirates University, Al Ain, United Arab Emirates
+4Department of Food Technology and Nutritional Science, Mawlana Bhashani Science and Technology University, Tangail 1902, Bangladesh
+Corresponding author: Benzir Md. Ahmed (benzir@cse.uiu.ac.bd)
+This work was supported by the Institute for Advanced Research (IAR) at United International University under Grant
+UIU/IAR/01/2021/SE/11.
+ABSTRACT Monitoring nutritional values in food can help an individual in planning a healthy diet.
+In addition, regular dietary assessment can improve and maintain the physical and mental health of
+individuals. Recent advancement in computer vision using Deep Learning has enabled researchers to develop
+various techniques for automatic food nutrition estimation frameworks. Researchers have also contributed
+to prepare large food image datasets consisting of various food classes for this purpose. However, automatic
+estimation of nutritional values from food images still remains a challenging task. This review paper critically
+analyzes and summarizes existing methodologies and datasets used for automated estimation of nutritional
+value from food image
+
+===== fnut-12-1501946.pdf =====
+META title='Image-based food monitoring and dietary management for patients living with diabetes: a scoping review of calorie counting applications' author='\ufeffAsal\ufeff\xa0\ufeffRouhafzay\ufeff'
+--- first text ---
+Frontiers in Nutrition 01 frontiersin.org
+Image-based food monitoring
+and dietary management for
+patients living with diabetes: a
+scoping review of calorie
+counting applications
+Asal Rouhafzay 1,2, Ghazal Rouhafzay 3 and Jalila Jbilou 1,2*
+1 School of Psychology, Université de Moncton, Moncton, NB, Canada, 2 Centre de formation médicale
+du Nouveau-Brunswick, Université de Moncton, Moncton, NB, Canada, 3 Department of Computer
+Science, Université de Moncton, Moncton, NB, Canada
+Accurate dietary intake estimation is crucial for managing weight-related chronic
+diseases, such as diabetes, where precise measurement of food volume and caloric
+content is essential. Traditional calorie counting methods are often error-prone and
+may not meet the specific needs of individuals with diabetes. Recent advancements in
+computer science offer promising solutions through automated systems that estimate
+calorie intake from food images using deep learning techniques. These systems
+provide personalized dietary recommendations, helping individuals with diabetes make
+informed choices. As smartphones and wearable devices become more accessible,
+the utilization of electronic apps for dietary monitoring is increasing, highlighting
+the need for more research into safe, secure, and evidence-based IoT solutions.
+However, challenges such as standardization, validation across diverse populations,
+and data privacy concerns need to be addressed. This review focuses on the role
+of computer science in dietary intake estimation, specifically food segmentation,
+classification, and volume estimation for calorie calculation. By synthesizing existing
+literature, this review provides insights into current methods, key challenges, and
+potential future directions. The review also explores advancements in technol
+
+===== Label+Nutri-Level+pada+Kemasan+Pangan+sebagai+Instrumen+Kebijakan+Kesehatan+dalam+Mendorong+Perilaku+Konsumsi+Sehat+Masyarakat.pdf =====
+META title='' author='ASUS'
+--- first text ---
+SerQua : Service Quality
+(Jurnal Pengabdian Masyarakat)
+220
+E-ISSN 3046-8280
+Vol 3 (2), 220-225
+Label Nutri-Level pada Kemasan Pangan sebagai Instrumen
+Kebijakan Kesehatan dalam Mendorong Perilaku Konsumsi Sehat
+Masyarakat
+Fariz Kahendra 1, Paramita Boni Lestari 2, Ahmad Daffa Aushof 3,
+Apriliana Nabila4, Tania Gunawan5,
+Program Studi Administrasi Kesehatan1,2,4,5
+Program Studi Akupuntur dan Pengobatan Herbal3
+Sekolah Tinggi Ilmu Kesehatan RS Husada1,2,4,5
+aiskauendr@gmail.com1
+Info Artikel
+Diajukan : 15 Juli 2026
+Diterima : 20 Agustus 2026
+Diterbitkan : 25 Agustus 2026
+Abstract
+Non-communicable diseases remain a major public health challenge in Indonesia and are closely
+associated with the increasing consumption of processed foods high in sugar, salt, and fat. The
+implementation of the Nutri-Level Label on food packaging has been introduced as a public health policy
+to assist consumers in making healthier food choices. This community service program aimed to improve
+public knowledge and skills in understanding and utilizing the Nutri -Level Label as a basis for selecting
+healthier food products. An educational -participatory approach was employed through health education
+sessions and hands-on demonstrations on how to interpret Nutri-Level Labels displayed on food packaging.
+The program was conducted in June 2026 at the Sawah Besar Di strict Sports Hall and involved 48
+community participants. Participants' knowledge was assessed using a 10 -item pre -test and post -test
+questionnaire covering the concept, function, label categories, and practical application of the Nutri-Level
+Label. The f indings demonstrated an increase in the mean knowledge score from 61.5 before the
+intervention to 87.8 after the intervention. The proportion of participants with good knowledge incre
+
+===== sensors-25-03191.pdf =====
+META title='Tiny Machine Learning and On-Device Inference: A Survey of Applications, Challenges, and Future Directions' author='Soroush Heydari and Qusay H. Mahmoud'
+--- first text ---
+Academic Editors: Leopoldo
+Angrisani and Bashir Morshed
+Received: 28 February 2025
+Revised: 2 April 2025
+Accepted: 16 May 2025
+Published: 19 May 2025
+Citation: Heydari, S.; Mahmoud,
+Q.H. Tiny Machine Learning and
+On-Device Inference: A Survey of
+Applications, Challenges, and Future
+Directions. Sensors 2025, 25, 3191.
+https://doi.org/10.3390/s25103191
+Copyright: © 2025 by the authors.
+Licensee MDPI, Basel, Switzerland.
+This article is an open access article
+distributed under the terms and
+conditions of the Creative Commons
+Attribution (CC BY) license
+(https://creativecommons.org/
+licenses/by/4.0/).
+Systematic Review
+Tiny Machine Learning and On-Device Inference: A Survey of
+Applications, Challenges, and Future Directions
+Soroush Heydari *
+ and Qusay H. Mahmoud
+Department of Electrical, Computer and Software Engineering, Ontario Tech University,
+Oshawa, ON L1G 0C5, Canada
+* Correspondence: soroush.heydari@ontariotechu.net
+Abstract: The growth in artificial intelligence and its applications has led to increased
+data processing and inference requirements. Traditional cloud-based inference solutions
+are often used but may prove inadequate for applications requiring near-instantaneous
+response times. This review examines Tiny Machine Learning, also known as TinyML,
+as an alternative to cloud-based inference. The review focuses on applications where
+transmission delays make traditional Internet of Things (IoT) approaches impractical, thus
+necessitating a solution that uses TinyML and on-device inference. This study, which
+follows the PRISMA guidelines, covers TinyML’s use cases for real-world applications by
+analyzing experimental studies and synthesizing current research on the characteristics
+of TinyML experiments, such as machine learning techniques and the hardware used fo
