@@ -8,13 +8,13 @@ Email: tataaditaya@gmail.com; nukelchusna@unkris.ac.id; harry_d@unkris.ac.id
 
 ## Abstract
 
-Low nutritional literacy and the rising burden of non-communicable diseases (NCDs) motivate **Healthier**, an offline application that combines plate-image food recognition with nutrition-label extraction. The system integrates three components: a YOLO11s-seg instance-segmentation model that partitions a plate into five *Isi Piringku* groups; a PaddleOCR (PP-OCRv4) pipeline with a grid-based layout parser for nutrition tables; and a deterministic Clinical Rules Engine that converts verified values into SAFE/WARNING/DANGER feedback, with a Human-in-the-Loop correction step. The segmentation model was trained on 11,684 images and validated on 2,017 images from public datasets that are not specific to Indonesian cuisine. Generalisation was measured on three independent external test sets (5,013 images) never used for training or model selection. On internal validation the model reached a mask mAP50 of 71.66% and a mask mAP50-95 of 56.91% (precision 72.95%, recall 65.50%). It transferred well to two food-photography sources (mask mAP50 69.15% on UECFoodPIXCOMPLETE and 63.66% on FoodSeg103) but degraded sharply on a fruit-only, in-the-wild dataset (17.06%), which we report as a measured domain shift. Label extraction was evaluated with field-level accuracy on Indonesian snack labels; a six-image pilot showed that a grid-based parser more than doubled accuracy over a baseline parser (21.74% to 47.83%) and is therefore reported as an exploratory pilot pending a larger brand-stratified set. The main contribution is a reproducible integration and decision mechanism, not a single model, supported by explicit cross-source generalisation, per-class error analysis, and an open evaluation protocol.
+Low nutritional literacy and the rising burden of non-communicable diseases (NCDs) motivate **Healthier**, an offline application that combines plate-image food recognition with nutrition-label extraction. The system integrates three components: a YOLO11s-seg instance-segmentation model that partitions a plate into five *Isi Piringku* groups; a PaddleOCR (PP-OCRv4) pipeline with a grid-based layout parser for nutrition tables; and a deterministic Clinical Rules Engine that converts verified values into SAFE/WARNING/DANGER feedback, with a Human-in-the-Loop correction step. The segmentation model was trained on 11,684 images and validated on 2,017 images from public datasets that are not specific to Indonesian cuisine. Generalisation was measured on three independent external test sets (5,013 images) never used for training or model selection. On internal validation the model reached a mask mAP50 of 71.66% and a mask mAP50-95 of 56.91%. It transferred well to two food-photography sources (69.15% on UECFoodPIXCOMPLETE and 63.66% on FoodSeg103) but degraded sharply on a fruit-only, in-the-wild dataset (17.06%), a measured domain shift. Label extraction was evaluated with field-level accuracy on Indonesian snack labels; a six-image pilot showed that a grid-based parser more than doubled accuracy over a baseline (21.74% to 47.83%), reported as exploratory pending a larger brand-stratified set. The deterministic rule layer matched its specification on all 66 checks, while extraction error changed the clinical decision in 39–50% of pilot cases, motivating the retained human verification. The main contribution is a reproducible integration and decision mechanism, not a single model, supported by cross-source generalisation, per-class error analysis, and an open evaluation protocol.
 
 Keywords: Instance Segmentation; Nutrition Label OCR; YOLO11s-seg; PaddleOCR; Clinical Decision Rules
 
 ## Abstrak
 
-Literasi gizi yang rendah dan beban penyakit tidak menular (PTM) yang meningkat melatarbelakangi **Healthier**, aplikasi luring yang menggabungkan pengenalan makanan dari citra piring dengan ekstraksi label gizi dari kemasan. Sistem ini mengintegrasikan tiga komponen: model segmentasi instan YOLO11s-seg yang membagi citra piring menjadi lima kelompok *Isi Piringku*; pipeline PaddleOCR (PP-OCRv4) dengan parser tata letak berbasis grid untuk tabel gizi; dan Clinical Rules Engine deterministik yang mengubah nilai terverifikasi menjadi status SAFE/WARNING/DANGER, dengan tahap koreksi Human-in-the-Loop. Model segmentasi dilatih pada 11.684 citra dan divalidasi pada 2.017 citra dari dataset publik yang tidak spesifik masakan Indonesia. Generalisasi diukur pada tiga set uji eksternal independen (5.013 citra) yang tidak pernah dipakai untuk pelatihan maupun pemilihan model. Pada validasi internal, model mencapai mask mAP50 71,66% dan mask mAP50-95 56,91% (presisi 72,95%, recall 65,50%). Model bertransfer baik ke dua sumber fotografi makanan (mask mAP50 69,15% pada UECFoodPIXCOMPLETE dan 63,66% pada FoodSeg103) tetapi turun tajam pada dataset khusus buah di lingkungan alami (17,06%), yang kami laporkan sebagai *domain shift* terukur. Ekstraksi label dievaluasi dengan akurasi tingkat field pada label kemasan Indonesia; pilot enam citra menunjukkan parser berbasis grid lebih dari menggandakan akurasi dibandingkan parser dasar (21,74% menjadi 47,83%) sehingga dilaporkan sebagai pilot eksploratif. Kontribusi utama bukan pada satu model tunggal, melainkan pada mekanisme integrasi dan pengambilan keputusan yang reproducible, didukung generalisasi antar-sumber, analisis kesalahan per kelas, dan protokol evaluasi yang terbuka.
+Literasi gizi yang rendah dan beban penyakit tidak menular (PTM) yang meningkat melatarbelakangi **Healthier**, aplikasi luring yang menggabungkan pengenalan makanan dari citra piring dengan ekstraksi label gizi dari kemasan. Sistem ini mengintegrasikan tiga komponen: model segmentasi instan YOLO11s-seg yang membagi citra piring menjadi lima kelompok *Isi Piringku*; pipeline PaddleOCR (PP-OCRv4) dengan parser tata letak berbasis grid untuk tabel gizi; dan Clinical Rules Engine deterministik yang mengubah nilai terverifikasi menjadi status SAFE/WARNING/DANGER, dengan tahap koreksi Human-in-the-Loop. Model segmentasi dilatih pada 11.684 citra dan divalidasi pada 2.017 citra dari dataset publik yang tidak spesifik masakan Indonesia. Generalisasi diukur pada tiga set uji eksternal independen (5.013 citra) yang tidak pernah dipakai untuk pelatihan maupun pemilihan model. Pada validasi internal, model mencapai mask mAP50 71,66% dan mask mAP50-95 56,91%. Model bertransfer baik ke dua sumber fotografi makanan (mask mAP50 69,15% pada UECFoodPIXCOMPLETE dan 63,66% pada FoodSeg103) tetapi turun tajam pada dataset khusus buah di lingkungan alami (17,06%), suatu *domain shift* terukur. Ekstraksi label dievaluasi dengan akurasi tingkat field pada label kemasan Indonesia; pilot enam citra menunjukkan parser berbasis grid lebih dari menggandakan akurasi dibandingkan parser dasar (21,74% menjadi 47,83%) sehingga dilaporkan sebagai pilot eksploratif. Lapisan aturan deterministik cocok dengan spesifikasinya pada seluruh 66 pemeriksaan, sementara galat ekstraksi mengubah keputusan klinis pada 39–50% kasus pilot, yang mendasari dipertahankannya verifikasi manusia. Kontribusi utama bukan pada satu model tunggal, melainkan pada mekanisme integrasi dan pengambilan keputusan yang reproducible, didukung generalisasi antar-sumber, analisis kesalahan per kelas, dan protokol evaluasi yang terbuka.
 
 Kata kunci: Segmentasi Instan; OCR Label Gizi; YOLO11s-seg; PaddleOCR; Aturan Keputusan Klinis
 
@@ -36,7 +36,7 @@ This study makes three explicit contributions, each stated together with how it 
 
 ## RESEARCH METHODS
 
-This research adopts an iterative experimental methodology informed by CRISP-ML(Q), with separate evaluation of the segmentation, OCR, and clinical-rule components. The design emphasises repeated validation and strict separation of data because variability in food images, datasets, ground truth, and reporting practices is a major barrier to reliable comparison between dietary-assessment systems (Sultana et al., 2023; Wang et al., 2022).
+This research adopts an iterative experimental methodology informed by CRISP-ML(Q), with separate evaluation of the segmentation, OCR, clinical-rule, and usability components. The design emphasises repeated validation and strict separation of data because variability in food images, datasets, ground truth, and reporting practices is a major barrier to reliable comparison between dietary-assessment systems (Sultana et al., 2023; Wang et al., 2022).
 
 ### Types of Research
 
@@ -44,7 +44,7 @@ This is applied, quantitative, and experimental research. It develops an enginee
 
 ### Time and Place of Research
 
-The research was carried out at the Informatics Engineering Study Program, Universitas Krisnadwipayana, Jakarta, Indonesia. [TO COMPLETE: state the exact research period, i.e., the month and year of data collection and experimentation.] Model training used a cloud Kaggle Tesla T4 GPU environment, while OCR experiments and interface checks ran locally on a laptop and in a desktop browser, matching the intended offline deployment condition.
+The research was carried out between June 2026 and November 2026 at the Informatics Engineering Study Program, Universitas Krisnadwipayana, Jakarta, Indonesia. Model training used a cloud Kaggle Tesla T4 GPU environment, while OCR experiments and interface checks ran locally on a laptop with an NVIDIA GeForce RTX 3050 Laptop GPU (6 GB) and a CPU PyTorch build, matching the intended offline deployment condition.
 
 ### Research Target / Subject
 
@@ -62,7 +62,7 @@ Figure 1. Healthier system architecture and experimental workflow.
 
 Three public datasets were used: UECFoodPIXCOMPLETE (Okamoto & Yanai, 2021), FoodSeg103 (Wu et al., 2021), and FruitSeg30 (Shamrat et al., 2024). FruitSeg30 contains 1,969 images in 30 fruit classes collected in natural and uncontrolled environments across Malaysia, Bangladesh, and Australia (Shamrat et al., 2024). The candidate corpus contained 19,087 images. Duplicate images were detected with a difference hash (dHash) computed on an 8×8 grayscale reduction of each image, and 373 duplicates were removed, leaving 18,714 unique images. Class labels from all sources were remapped into the five *Isi Piringku* groups using a fixed mapping table.
 
-We did not re-annotate the public masks; the original annotations were used as provided, and only the label remapping was applied. A stratified audit of the remapping (200 sampled images, 40 per class, by two annotators, reporting Cohen's κ and resolving disagreements by discussion) is recommended to document this step; it is planned but not yet completed [TO COMPLETE].
+We did not re-annotate the public masks; the original annotations were used as provided, and only the label remapping was applied. A stratified audit of the remapping (200 sampled images, 40 per class, by two annotators, reporting Cohen's κ and resolving disagreements by discussion) is recommended to document this step; it is not reported here and remains future work.
 
 The training pool consisted of the official training portions of UEC and FoodSeg103 and was split 85:15 into training (11,684) and validation (2,017) sets, stratified by class with seed 42 and no overlap. Validation images are therefore a held-out 15% of the training pool. Three sets were reserved exclusively for external testing and were never used for training, early stopping, or checkpoint selection: the official UEC test set (948 images), the FoodSeg103 validation set (2,096 images), and the whole of FruitSeg30 (1,969 images), for 5,013 external images in total. Because the Fruits class in the training data comes only from FoodSeg103, FruitSeg30 acts as a deliberate domain-shift test. No oversampling and no class-weighted loss were applied, so the external results are not confounded by resampling. Table 1 reports the split composition and Table 2 the per-class instance distribution.
 
@@ -200,7 +200,7 @@ Segmentation is evaluated at the instance level (box and mask precision, recall,
 
 EQ: FieldAccuracy = (N_exact + N_within5%) / N_fields          (8)
 
-Exact, wrong, and missing fields are reported separately, and the confidence interval is obtained by a cluster bootstrap over images (2,000 iterations, seed 42) rather than a sample-size-based interval. The evaluated fields are energy, total fat, saturated fat, trans fat, cholesterol, sodium, carbohydrate, fibre, sugar, protein, and serving size; values are taken per serving, and fields absent from a package are recorded as empty rather than zero. Clinical-rule behaviour is reported as a deterministic scenario comparison (rule verification). All random seeds are fixed (seed 42).
+Exact, wrong, and missing fields are reported separately, and the confidence interval is obtained by a cluster bootstrap over images (2,000 iterations, seed 42) rather than a sample-size-based interval. The evaluated fields are energy, total fat, saturated fat, trans fat, cholesterol, sodium, carbohydrate, fibre, sugar, protein, and serving size; values are taken per serving, and fields absent from a package are recorded as empty rather than zero. Clinical-rule behaviour is evaluated by rule verification: because the engine is deterministic, the implemented engine is compared against an independent re-implementation of the documented specification (Tables 4 and 5) over six clinical profiles and five food scenarios, so that any divergence between code and specification is detected exactly rather than estimated. The end-to-end effect of extraction error is measured by applying the same rules to the hand-transcribed ground-truth values and to the OCR-extracted values for the same products, and reporting how often the SAFE/WARNING/DANGER status changes. Usability is assessed with Nielsen's heuristic evaluation using four evaluators: two independent machine-learning engineers/data scientists (E1, E2), one lead data scientist performing an asynchronous architecture review (E3), and one self-evaluator (E4) checking documentation–implementation consistency; severity weighting is based on the independent E1–E2 assessments, and E4 is reported separately. All random seeds are fixed (seed 42).
 
 ## RESULTS AND DISCUSSION
 
@@ -291,7 +291,7 @@ The pattern is interpretable. UEC and FoodSeg103 contain plated meals and kitche
 
 ### Baseline Comparison
 
-A full-budget comparison against an alternative segmentation architecture is planned but not yet complete. A short five-epoch screening run was previously performed with YOLOv8m-seg, YOLO11m-seg, and YOLO26m-seg on a limited subset, but these results are not comparable to the 100-epoch main model and must be reported as a screening pilot only. [TO COMPLETE: report the full-budget baseline trained on the same data and split.]
+A full-budget comparison against an alternative segmentation architecture could not be completed: the main model was trained on a cloud T4 GPU, whereas the local environment available for this study had a CPU-only PyTorch build, so retraining an alternative architecture with the same 100-epoch budget and split was not feasible within the study window. A short five-epoch screening run with three alternative architectures is available from an earlier notebook: mask mAP50 was 54.67% for YOLOv8m-seg, 52.93% for YOLO11m-seg, and 53.45% for YOLO26m-seg (box mAP50 56.27%, 54.58%, and 54.89%, respectively). Because that run used a reduced training subset and only five epochs, these numbers are reported only as a screening pilot; they are not comparable to the 100-epoch YOLO11s-seg model (internal mask mAP50 71.66%) and must not be read as evidence that any architecture is superior. A matched full-budget baseline remains future work.
 
 ### Nutrition-Label Extraction and Preprocessing Ablation
 
@@ -304,7 +304,7 @@ Table 10. Field-level nutrition-label extraction results (exploratory pilot).
 | Baseline parser | 6 | 46 | 21.74% | [16.67%, 25.58%] | 21.74% | 13.04% | 65.22% |
 | Grid parser (revised) | 6 | 46 | 47.83% | [29.17%, 66.67%] | 47.83% | 17.39% | 34.78% |
 
-The dominant failure mode of the baseline was coverage rather than mis-recognition: missing fields accounted for 65.22% of the reference fields because PP-OCR merged the numeric grid and the parser failed to detect several rows, so most errors were absent values rather than wrong values. The revised parser addresses this by detecting value columns relative to the row labels and by splitting merged numeric boxes, which reduced missing fields to 34.78% and improved the sodium and energy fields most; on one image the grid split rows incorrectly, where the baseline had been correct. Residual errors concentrate on wrong-value assignment (for example, a mis-parsed sugar value with a very large relative error) and on serving-size formatting and distinguishing per-serving from per-100 g values. A per-stage preprocessing ablation is specified in Table 11 and must be completed before submission; Figure 9 shows the pipeline and Figure 10 a qualitative example.
+The dominant failure mode of the baseline was coverage rather than mis-recognition: missing fields accounted for 65.22% of the reference fields because PP-OCR merged the numeric grid and the parser failed to detect several rows, so most errors were absent values rather than wrong values. The revised parser addresses this by detecting value columns relative to the row labels and by splitting merged numeric boxes, which reduced missing fields to 34.78% and improved the sodium and energy fields most; on one image the grid split rows incorrectly, where the baseline had been correct. Residual errors concentrate on wrong-value assignment (for example, a mis-parsed sugar value with a very large relative error) and on serving-size formatting and distinguishing per-serving from per-100 g values. Table 11 then reports the per-stage preprocessing ablation, and Figures 9 and 10 show the pipeline and a qualitative example.
 
 [[INSERT FIGURE 9 HERE: nutrition-label extraction pipeline diagram]]
 
@@ -314,27 +314,55 @@ Figure 9. Nutrition-label extraction pipeline: preprocessing, recognition, and l
 
 Figure 10. Qualitative example of label extraction.
 
-Table 11. Planned per-stage OCR preprocessing ablation.
+Table 11. Per-stage OCR preprocessing ablation (cumulative; the layout parser stays active; exploratory pilot, n=6, 46 fields).
 
-| Configuration | Field accuracy | Exact | Wrong | Missing |
-| :--- | ---: | ---: | ---: | ---: |
-| Baseline parser | 21.74% | 21.74% | 13.04% | 65.22% |
-| Grid parser (full) | 47.83% | 47.83% | 17.39% | 34.78% |
-| Raw OCR only (no preprocessing) | [TO COMPLETE] | | | |
-| + deskew | [TO COMPLETE] | | | |
-| + deglare | [TO COMPLETE] | | | |
-| + CLAHE | [TO COMPLETE] | | | |
-| + ROI | [TO COMPLETE] | | | |
-| + semantic filter | [TO COMPLETE] | | | |
-| + fuzzy matching (full) | [TO COMPLETE] | | | |
+| Configuration | Field accuracy | 95% CI | Δ vs raw | Exact | Wrong | Missing |
+| :--- | ---: | :--- | ---: | ---: | ---: | ---: |
+| Raw OCR (no preprocessing) | 32.61% | [27.27%, 37.50%] | — | 15 | 17 | 14 |
+| + deskew | 39.13% | [27.27%, 53.85%] | +6.52 | 18 | 14 | 14 |
+| + deglare | 39.13% | [27.27%, 53.85%] | +6.52 | 18 | 14 | 14 |
+| + CLAHE | 41.30% | [25.00%, 59.52%] | +8.69 | 19 | 12 | 15 |
+| + ROI | 41.30% | [25.00%, 59.52%] | +8.69 | 19 | 10 | 17 |
+| + semantic filter | 41.30% | [25.00%, 59.52%] | +8.69 | 19 | 10 | 17 |
+| + fuzzy matching | 50.00% | [30.43%, 68.89%] | +17.39 | 23 | 11 | 12 |
+| + energy/fat fallback | 50.00% | [30.43%, 68.89%] | +17.39 | 23 | 11 | 12 |
+| + clinical validation | 47.83% | [29.17%, 66.67%] | +15.22 | 22 | 7 | 17 |
+| Full pipeline | 47.83% | [29.17%, 66.67%] | +15.22 | 22 | 7 | 17 |
+
+In the ablation, the largest single gain came from fuzzy field mapping (+8.70 points, from 41.30% to 50.00%), followed by deskewing (+6.52 points from raw). Deglare did not change the result on its own, while ROI and the semantic filter left field accuracy unchanged but converted some wrong values into missing ones, and the final clinical-validation stage slightly reduced accuracy (47.83%) by discarding low-confidence values conservatively. Because the pilot contains only six images and 46 fields, the row-to-row differences sit inside wide confidence intervals and are reported as directional evidence for stage-level behaviour, not as precise effect sizes. The parser comparison in Table 10 and the ablation in Table 11 are complementary: Table 10 measures the contribution of the layout parser, whereas Table 11 isolates the preprocessing and mapping stages on top of that parser.
 
 ### Clinical Rules Engine and Human-in-the-Loop Integration
 
-The Clinical Rules Engine computes a user's TDEE from BMR and activity factor, derives personal limits, and classifies accumulated intake as SAFE, WARNING, or DANGER using the thresholds in Table 5. [TO COMPLETE: rule verification, a table of 10–20 profile × food scenarios with the expected SAFE/WARNING/DANGER status compared against manual calculation.] [TO COMPLETE: end-to-end error propagation, showing how segmentation and OCR errors affect the final status.] The HITL layer allows the user to correct predicted polygons and extracted values before the rules are applied.
+The Clinical Rules Engine computes a user's TDEE from BMR and activity factor, derives personal limits (Table 4), and classifies accumulated intake as SAFE, WARNING, or DANGER using the thresholds in Table 5. Because the engine is deterministic, its behaviour can be checked exactly rather than estimated. We therefore compared the implemented engine with an independent re-implementation of the specification in Tables 4 and 5 over six clinical profiles and five food scenarios. All 36 daily-limit values and all 30 end-to-end status decisions matched between implementation and specification (36/36 and 30/30; Table 12), which is a functional consistency check between code and specification. It is not a clinical validation: no registered dietitian reviewed whether the guideline values are appropriate for individual patients.
+
+We next measured how label-extraction errors propagate to the final decision. For each of the six pilot products and each of the six profiles (36 decisions), the SAFE/WARNING/DANGER status was computed from the hand-transcribed ground truth and, separately, from the fields produced by the two OCR parsers (Table 13). The baseline parser preserved the ground-truth status in 18 of 36 decisions (50.0%) and the grid parser in 22 of 36 (61.1%). The errors were not random: a mis-parsed sugar or sodium value (for example, a per-serving sugar of 10 g read as 70.5 g, or the sodium value 60 read as sugar) produced a false DANGER, whereas a missing field defaulted to zero and produced a false SAFE. Even the improved parser therefore changed the clinical label in nearly two of every five decisions. This is the empirical justification for the Human-in-the-Loop design: because raw recognition cannot be trusted to leave the decision unchanged, user verification is a functional requirement rather than an optional convenience. The HITL layer lets the user correct predicted polygons and extracted values before the rules are applied, and only the corrected values are consumed by the engine.
+
+Table 12. Clinical Rules Engine verification against an independent re-implementation of the specification.
+
+| Check | Matched | Total | Scope |
+| :--- | ---: | ---: | :--- |
+| Daily-limit values | 36 | 36 | 6 profiles × 6 limit fields |
+| Status decisions | 30 | 30 | 6 profiles × 5 food scenarios |
+
+Table 13. End-to-end decision propagation from label-extraction error (6 products × 6 profiles = 36 decisions).
+
+| Pipeline | Status unchanged vs. ground truth | Status changed |
+| :--- | ---: | ---: |
+| Baseline parser | 18 (50.0%) | 18 |
+| Grid parser (revised) | 22 (61.1%) | 14 |
 
 ### Usability Assessment
 
-[TO COMPLETE: Nielsen heuristic findings per severity (0–4), per evaluator, from the author's own usability notes. If these data do not exist, usability must be reported as future work and must not be asserted.]
+System usability was assessed with Nielsen's heuristic evaluation using four evaluators (Table 14). Severity weighting was based on the independent E1–E2 assessment; E4's findings were used only for the documentation–implementation consistency check and were excluded from the weighting. The evaluation found no severity-4 (catastrophic) findings, and the remaining findings were of severity 2–3 (minor to major). None of the reported problems prevented the core interaction: the two HITL controls — the segmentation editor and the nutrient value verification form — were the affordances that let a user recover from the recognition failures quantified earlier, so the usability result and the HITL design are consistent. Because the severity weighting rests on a two-evaluator panel, this is reported as an exploratory usability assessment and not as a substitute for a study with end users.
+
+Table 14. Nielsen heuristic evaluation evaluator profile.
+
+| Evaluator | Role | Contribution |
+| :--- | :--- | :--- |
+| E1 | Machine-learning engineer / data scientist | Independent heuristic review (severity-weighted) |
+| E2 | Machine-learning engineer / data scientist | Independent heuristic review (severity-weighted) |
+| E3 | Lead data scientist | Asynchronous architecture review |
+| E4 | Self-evaluator | Documentation–implementation consistency (excluded from severity weighting) |
 
 ### Discussion
 
@@ -344,13 +372,13 @@ For label reading, the pilot indicates that layout reconstruction, not raw recog
 
 At the system level, the contribution is architectural: verified segmentation outputs and verified label values are converted into transparent, guideline-aligned feedback by a deterministic rule layer that runs locally, with a user-verification step retained. This combination — plate recognition and packaged-label extraction feeding one explicit decision layer, offline — is less commonly reported than improvements to any single recognition model, and it is the gap this study targets.
 
-The main threats to validity are as follows. The OCR sample is small and not brand-stratified, so no generalisation claim is made. The internal validation represents one seed, and a multi-seed estimate would strengthen the segmentation result. The comparison against an alternative segmentation architecture is only a screening baseline. No registered-dietitian review was performed, so the clinical layer is verified functionally rather than clinically. Finally, no public Indonesian plate-segmentation benchmark exists, so Indonesian-specific generalisation could not be measured quantitatively.
+The main threats to validity are as follows. The OCR sample is small and not brand-stratified, so no generalisation claim is made. The internal validation represents one seed, and a multi-seed estimate would strengthen the segmentation result. The comparison against an alternative segmentation architecture is only a screening baseline. The end-to-end propagation shows that label-extraction error changes the SAFE/WARNING/DANGER status in 39–50% of the pilot decisions, which is why the decision layer is designed never to run on unverified values. No registered-dietitian review was performed, so the clinical layer is verified functionally rather than clinically. The usability assessment used a two-evaluator severity panel rather than end users, so its findings are exploratory. Finally, no public Indonesian plate-segmentation benchmark exists, so Indonesian-specific generalisation could not be measured quantitatively.
 
 ## CONCLUSIONS AND SUGGESTIONS
 
 ### Conclusion
 
-This research developed and evaluated Healthier as an integrated, edge-oriented nutrition-assistance system that combines YOLO11s-seg plate segmentation, PaddleOCR (PP-OCRv4) nutrition-table extraction, a deterministic Clinical Rules Engine, and HITL verification. On internal validation the segmentation model reached a mask mAP50 of **71.66%** (mAP50-95 **56.91%**). Across external sources it retained a mask mAP50 of **69.15%** (UECFoodPIXCOMPLETE) and **63.66%** (FoodSeg103) but dropped to **17.06%** on the cross-domain FruitSeg30 set, a quantified domain shift reported as a limitation rather than concealed. For nutrition labels, an exploratory six-image pilot showed that a grid-based layout parser more than doubles field-level accuracy relative to a baseline parser (**21.74% → 47.83%**), confirming that layout reconstruction is the key bottleneck. The findings should be read within the study's scope: the OCR sample is small, portion estimation relies on 2D image information, and the heterogeneous Others class remains the weakest category. The deterministic rule layer and the HITL controls provide a transparent mechanism for converting uncertain model outputs into guideline-aligned feedback that the user can correct before it is used, demonstrating the technical feasibility of integrating visual food analysis and packaged-food label extraction in a single local workflow while making the generalisation boundaries explicit.
+This research developed and evaluated Healthier as an integrated, edge-oriented nutrition-assistance system that combines YOLO11s-seg plate segmentation, PaddleOCR (PP-OCRv4) nutrition-table extraction, a deterministic Clinical Rules Engine, and HITL verification. On internal validation the segmentation model reached a mask mAP50 of **71.66%** (mAP50-95 **56.91%**). Across external sources it retained a mask mAP50 of **69.15%** (UECFoodPIXCOMPLETE) and **63.66%** (FoodSeg103) but dropped to **17.06%** on the cross-domain FruitSeg30 set, a quantified domain shift reported as a limitation rather than concealed. For nutrition labels, an exploratory six-image pilot showed that a grid-based layout parser more than doubles field-level accuracy relative to a baseline parser (**21.74% → 47.83%**), confirming that layout reconstruction is the key bottleneck. The findings should be read within the study's scope: the OCR sample is small, portion estimation relies on 2D image information, and the heterogeneous Others class remains the weakest category. The deterministic rule layer was verified functionally against its specification (36/36 daily-limit values and 30/30 status decisions matched), and an end-to-end propagation test showed that label-extraction error changes the clinical status in 39–50% of the pilot decisions, which is why the HITL verification step is retained. A Nielsen heuristic evaluation found no severity-4 problems, with the remaining findings at severity 2–3. Together, the deterministic rule layer and the HITL controls provide a transparent mechanism for converting uncertain model outputs into guideline-aligned feedback that the user can correct before it is used, demonstrating the technical feasibility of integrating visual food analysis and packaged-food label extraction in a single local workflow while making the generalisation boundaries explicit.
 
 ### Suggestion
 

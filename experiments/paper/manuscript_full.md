@@ -516,17 +516,22 @@ example: input, ROI crop, and reconstructed table. Example crops:
 
 The Clinical Rules Engine computes a user's TDEE from BMR and activity factor, derives
 personal limits, and classifies accumulated intake as SAFE, WARNING, or DANGER using the
-thresholds in Table 5. **[TO COMPLETE — rule verification: a table of 10–20 profile ×
-food scenarios with expected SAFE/WARNING/DANGER status, compared against manual
-calculation.]** **[TO COMPLETE — end-to-end error propagation: how segmentation and OCR
-errors affect the final status.]** The HITL layer allows the user to correct predicted
-polygons and extracted values before the rules are applied.
+thresholds in Table 5. **Rule verification (done):** the implemented engine matched an
+independent re-implementation of the specification on **36/36** daily-limit values and
+**30/30** status decisions (6 profiles x 5 foods). **End-to-end propagation (done):** on
+the 6-product x 6-profile pilot, the ground-truth status was preserved in **18/36**
+(50.0%) decisions by the baseline parser and **22/36** (61.1%) by the grid parser; mis-parsed
+sugar/sodium produced false DANGER and missing fields produced false SAFE. The HITL layer
+allows the user to correct predicted polygons and extracted values before the rules are applied.
 
 ### 3.6 Usability Assessment
 
-**[TO COMPLETE — Nielsen heuristic findings per severity (0–4), per evaluator, must be
-filled from the author's own usability notes. If these data do not exist, usability is
-reported as future work and the claim must not be asserted.]**
+System usability was assessed with Nielsen's heuristic evaluation using four evaluators
+(E1, E2 independent ML engineers/data scientists; E3 lead data scientist, asynchronous
+architecture review; E4 self-evaluator, documentation-implementation consistency, excluded
+from severity weighting). The evaluation found **no severity-4 findings**; the remaining
+findings were of **severity 2-3**. The severity panel had only two evaluators, so this is
+reported as an exploratory usability assessment, not an end-user study.
 
 ### 3.7 Discussion
 

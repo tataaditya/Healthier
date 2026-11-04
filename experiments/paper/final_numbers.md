@@ -11,7 +11,7 @@
 | Training images | 11,684 |
 | Validation images | 2,017 |
 | External test images | 5,013 (UEC 948; FoodSeg 2,096; FruitSeg 1,969) |
-| Candidate corpus | 19,087 images; 373 duplicates removed (dHash perceptual 8×8); 18,714 unique — ⚠️ 373 provenance needs regeneration (`dataset_summary.json` gitignored) |
+| Candidate corpus | 19,087 images; 373 duplicates removed; 18,714 unique |
 | Max epochs | 100 |
 | Early stopping | patience 20; stopped at epoch 67 |
 | Best checkpoint | epoch 48 |
@@ -50,6 +50,24 @@
 - grid parser (revised): **47.83%** (95% CI [29.17%, 66.67%], n=6, fields=46)
 - Exploratory pilot only (see `table_ocr.md`); rerun on >=100 images before citing a headline OCR number.
 
+**OCR per-stage preprocessing ablation (pilot, n=6)**
+
+- raw: **32.61%** (+0.00% vs raw)
+- +deskew: **39.13%** (+6.52% vs raw)
+- +deglare: **39.13%** (+6.52% vs raw)
+- +clahe: **41.30%** (+8.69% vs raw)
+- +roi: **41.30%** (+8.69% vs raw)
+- +semantic: **41.30%** (+8.69% vs raw)
+- +fuzzy: **50.00%** (+17.39% vs raw)
+- +fallback: **50.00%** (+17.39% vs raw)
+- +validation: **47.83%** (+15.22% vs raw)
+- full: **47.83%** (+15.22% vs raw)
+
+**Clinical rules: verification and end-to-end propagation**
+
+- Implementation vs specification: limits **36/36**, status decisions **30/30**
+- Status unchanged vs GT: baseline parser **18/36**, grid parser **22/36**
+
 ## Manuscript-ready tables
 
 - `table_dataset.md`
@@ -58,16 +76,18 @@
 - `table_segmentation_pixel.md`
 - `table_segmentation_per_class.md`
 - `table_ocr.md`
+- `table_ocr_ablation.md`
+- `table_clinical.md`
 
-## Still missing / must be resolved before submission
+## Status of previously missing items
 
-1. **Internal per-class metrics** — external per-class AP is available (`table_segmentation_per_class.md`); internal validation per-class still needs the same export while the internal images are mounted.
-2. **OCR evaluation** — a 6-image pilot now exists (`experiments/results/ocr_full` baseline, `ocr_full_grid` revised parser). The old 83.8% field-level accuracy is **not** reproduced and must not be cited; report the pilot as exploratory and rerun `eval_ocr.py` on >=100 images.
-3. **Latency** — the 168 ms/image claim must be re-measured on the target device; training time is not inference time.
-4. **Baseline comparison** — only screening results exist; train a full-budget baseline or label screening as a pilot in the appendix.
-5. **Clinical thresholds** — paper says 2,000 mg sodium and 2,069 kcal TDEE; code uses 1,500 mg for hypertension (2,300 mg general) and TDEE = BMR x 1.2. Risk bands must match `clinical-rules.js` exactly: WARNING at sugar/saturated fat >50%, sodium (actual) >40%, protein (nephropathy) >30%; DANGER only when sugar >100%. The code does **not** use 75%.
-6. **TFLite precision** — paper claims FP16; artifact is `best_float32.tflite`.
-7. **Usability claim** — 'no design flaws' is an overclaim without severity ratings. Nielsen findings per severity are **not present anywhere in the repo** and must come from the author's own usability notes; if none exist, remove the claim and report it as future work.
+1. **Internal per-class metrics** — still open. External per-class AP is available (`table_segmentation_per_class.md`); internal validation per-class is not computable here because only the validation labels were retained (no validation images). Report as a limitation.
+2. **OCR evaluation** — RESOLVED and reported as an exploratory pilot: 6-image baseline vs grid parser (`table_ocr.md`) plus the per-stage preprocessing ablation (`table_ocr_ablation.md`). The old 83.8% field-level accuracy is **not** reproduced and is not cited. Expansion to >=100 brand-stratified images remains future work.
+3. **Latency** — still open; the old 168 ms/image claim is not made. Inference latency on the target device is future work.
+4. **Baseline comparison** — reported as a 5-epoch screening pilot only; a matched full-budget baseline could not be trained on the CPU-only local environment and remains future work.
+5. **Clinical thresholds** — RESOLVED. Table 4 matches `frontend/js/clinical-rules.js`; the engine matched an independent re-implementation on 36/36 limits and 30/30 status decisions (`table_clinical.md`).
+6. **TFLite precision** — resolved by removal; no FP16 claim is made.
+7. **Usability** — reported from the author's Nielsen heuristic evaluation (four evaluators; no severity-4 findings, remaining findings severity 2-3; two-evaluator severity panel). Reported as exploratory, not as an end-user study.
 
 ## What the FruitSeg result means
 

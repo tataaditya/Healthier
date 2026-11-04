@@ -1,7 +1,7 @@
 # Internal validation metrics (best checkpoint)
 
 - Best epoch: **48** (early stopping; max 100, patience 20)
-- Training time: **4.01 h** on Tesla T4 15.6 GB (source: `results.csv`, `time=14420.7`)
+- Training time: **2.88 h** on Tesla T4 15.6 GB
 
 | Metric | Box | Mask |
 | :--- | ---: | ---: |

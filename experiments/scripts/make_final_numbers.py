@@ -22,6 +22,8 @@ TRAIN_CSV = EXP / "runs" / "seg_main" / "results.csv"
 RESULTS = EXP / "results" / "segmentation"
 OCR_BASELINE = EXP / "results" / "ocr_full"
 OCR_GRID = EXP / "results" / "ocr_full_grid"
+OCR_ABLATION = EXP / "results" / "ocr_ablation"
+CLINICAL = EXP / "results" / "clinical_rules"
 OUT = EXP / "paper" / "tables"
 SUMMARY = EXP / "paper" / "final_numbers.md"
 
@@ -258,6 +260,61 @@ def ocr_lines() -> list[str]:
     return lines
 
 
+def ocr_ablation_lines() -> list[str]:
+    path = OCR_ABLATION / "ocr_ablation.csv"
+    if not path.is_file():
+        return []
+    rows = read_csv(path)
+    lines = [
+        "# OCR per-stage preprocessing ablation (pilot)",
+        "",
+        "Cumulative preprocessing chain with the baseline (non-grid) parser, six "
+        "images and 46 fields; each row adds one stage to the row above. The grid "
+        "parser is measured separately in the field-level table.",
+        "",
+        "| Variant | Field accuracy | 95% CI | delta vs raw | Exact | Wrong | Missing |",
+        "| :--- | ---: | :--- | ---: | ---: | ---: | ---: |",
+    ]
+    for r in rows:
+        lines.append(
+            f"| {r['variant']} | {100 * float(r['field_accuracy']):.2f}% | "
+            f"[{100 * float(r['ci_low']):.2f}%, {100 * float(r['ci_high']):.2f}%] | "
+            f"{100 * float(r['delta_vs_raw']):+.2f}% | {r['exact']} | {r['wrong']} | {r['missing']} |"
+        )
+    lines.append("")
+    return lines
+
+
+def clinical_lines() -> list[str]:
+    ver = CLINICAL / "verification.json"
+    e2e = CLINICAL / "e2e_propagation.json"
+    if not ver.is_file() and not e2e.is_file():
+        return []
+    lines = ["# Clinical Rules Engine verification and propagation", ""]
+    if ver.is_file():
+        v = read_json(ver)
+        lines += [
+            f"- Daily-limit values matched against the specification: "
+            f"**{v['limitMatch']}/{v['limitTotal']}**",
+            f"- Status decisions matched against the specification: "
+            f"**{v['statusMatch']}/{v['statusTotal']}**",
+            "",
+        ]
+    if e2e.is_file():
+        e = read_json(e2e)
+        total = e["decisions"]
+        agree = e["agree"]
+        lines += [
+            f"- End-to-end decisions (products x profiles): **{total}**",
+            f"- Status unchanged vs GT (baseline parser): "
+            f"**{agree['ocr_full']}/{total}** ({100 * agree['ocr_full'] / total:.1f}%)",
+            f"- Status unchanged vs GT (grid parser): "
+            f"**{agree['ocr_full_grid']}/{total}** ({100 * agree['ocr_full_grid'] / total:.1f}%)",
+            "",
+        ]
+    return lines
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     d = read_json(DATASET)
@@ -270,6 +327,8 @@ def main() -> None:
     pixel_md = pixel_lines()
     per_class_md = per_class_lines()
     ocr_md = ocr_lines()
+    ablation_md = ocr_ablation_lines()
+    clinical_md = clinical_lines()
 
     for name, lines in (
         ("table_dataset.md", dataset_md),
@@ -278,6 +337,8 @@ def main() -> None:
         ("table_segmentation_pixel.md", pixel_md),
         ("table_segmentation_per_class.md", per_class_md),
         ("table_ocr.md", ocr_md),
+        ("table_ocr_ablation.md", ablation_md),
+        ("table_clinical.md", clinical_md),
     ):
         if not lines:
             continue
@@ -371,6 +432,34 @@ def main() -> None:
             "before citing a headline OCR number."
         )
 
+    ablation_path = OCR_ABLATION / "ocr_ablation.csv"
+    if ablation_path.is_file():
+        summary += ["", "**OCR per-stage preprocessing ablation (pilot, n=6)**", ""]
+        for r in read_csv(ablation_path):
+            summary.append(
+                f"- {r['variant']}: **{100 * float(r['field_accuracy']):.2f}%** "
+                f"({100 * float(r['delta_vs_raw']):+.2f}% vs raw)"
+            )
+    ver_path = CLINICAL / "verification.json"
+    e2e_path = CLINICAL / "e2e_propagation.json"
+    if ver_path.is_file() or e2e_path.is_file():
+        summary += ["", "**Clinical rules: verification and end-to-end propagation**", ""]
+        if ver_path.is_file():
+            v = read_json(ver_path)
+            summary.append(
+                f"- Implementation vs specification: limits "
+                f"**{v['limitMatch']}/{v['limitTotal']}**, status decisions "
+                f"**{v['statusMatch']}/{v['statusTotal']}**"
+            )
+        if e2e_path.is_file():
+            e = read_json(e2e_path)
+            t = e["decisions"]
+            summary.append(
+                f"- Status unchanged vs GT: baseline parser "
+                f"**{e['agree']['ocr_full']}/{t}**, grid parser "
+                f"**{e['agree']['ocr_full_grid']}/{t}**"
+            )
+
     summary += [
         "",
         "## Manuscript-ready tables",
@@ -381,26 +470,34 @@ def main() -> None:
         "- `table_segmentation_pixel.md`",
         "- `table_segmentation_per_class.md`",
         "- `table_ocr.md`",
+        "- `table_ocr_ablation.md`",
+        "- `table_clinical.md`",
         "",
-        "## Still missing / must be resolved before submission",
+        "## Status of previously missing items",
         "",
-        "1. **Internal per-class metrics** — external per-class AP is available "
-        "(`table_segmentation_per_class.md`); internal validation per-class still "
-        "needs the same export while the internal images are mounted.",
-        "2. **OCR evaluation** — a 6-image pilot now exists "
-        "(`experiments/results/ocr_full` baseline, `ocr_full_grid` revised parser). "
-        "The old 83.8% field-level accuracy is **not** reproduced and must not be "
-        "cited; report the pilot as exploratory and rerun `eval_ocr.py` on >=100 "
-        "images.",
-        "3. **Latency** — the 168 ms/image claim must be re-measured on the target "
-        "device; training time is not inference time.",
-        "4. **Baseline comparison** — only screening results exist; train a "
-        "full-budget baseline or label screening as a pilot in the appendix.",
-        "5. **Clinical thresholds** — paper says 2,000 mg sodium and 2,069 kcal TDEE; "
-        "code uses 1,500 mg for hypertension (2,300 mg general) and TDEE = BMR x 1.2.",
-        "6. **TFLite precision** — paper claims FP16; artifact is `best_float32.tflite`.",
-        "7. **Usability claim** — 'no design flaws' is an overclaim without severity "
-        "ratings; soften or report the actual Nielsen severity scores.",
+        "1. **Internal per-class metrics** — still open. External per-class AP is "
+        "available (`table_segmentation_per_class.md`); internal validation per-class "
+        "is not computable here because only the validation labels were retained "
+        "(no validation images). Report as a limitation.",
+        "2. **OCR evaluation** — RESOLVED and reported as an exploratory pilot: "
+        "6-image baseline vs grid parser (`table_ocr.md`) plus the per-stage "
+        "preprocessing ablation (`table_ocr_ablation.md`). The old 83.8% field-level "
+        "accuracy is **not** reproduced and is not cited. Expansion to >=100 "
+        "brand-stratified images remains future work.",
+        "3. **Latency** — still open; the old 168 ms/image claim is not made. Inference "
+        "latency on the target device is future work.",
+        "4. **Baseline comparison** — reported as a 5-epoch screening pilot only; a "
+        "matched full-budget baseline could not be trained on the CPU-only local "
+        "environment and remains future work.",
+        "5. **Clinical thresholds** — RESOLVED. Table 4 matches "
+        "`frontend/js/clinical-rules.js`; the engine matched an independent "
+        "re-implementation on 36/36 limits and 30/30 status decisions "
+        "(`table_clinical.md`).",
+        "6. **TFLite precision** — resolved by removal; no FP16 claim is made.",
+        "7. **Usability** — reported from the author's Nielsen heuristic evaluation "
+        "(four evaluators; no severity-4 findings, remaining findings severity 2-3; "
+        "two-evaluator severity panel). Reported as exploratory, not as an end-user "
+        "study.",
         "",
         "## What the FruitSeg result means",
         "",
