@@ -36,19 +36,19 @@ This study makes three explicit contributions, each stated together with how it 
 
 ## RESEARCH METHODS
 
-This research adopts an iterative experimental methodology informed by CRISP-ML(Q), with separate evaluation of the segmentation, OCR, clinical-rule, and usability components. The design emphasises repeated validation and strict separation of data because variability in food images, datasets, ground truth, and reporting practices is a major barrier to reliable comparison between dietary-assessment systems (Sultana et al., 2023; Wang et al., 2022).
+This research adopts an iterative experimental methodology informed by CRISP-ML(Q), with separate evaluation of the segmentation, OCR, and clinical-rule components. The design emphasises repeated validation and strict separation of data because variability in food images, datasets, ground truth, and reporting practices is a major barrier to reliable comparison between dietary-assessment systems (Sultana et al., 2023; Wang et al., 2022).
 
 ### Types of Research
 
-This is applied, quantitative, and experimental research. It develops an engineering artefact (the Healthier pipeline) and evaluates it with objective metrics rather than subjective judgement. The study is descriptive for the system design and comparative for the component evaluation, because each component is compared against a baseline or an alternative configuration. The experimental design is a controlled component-wise evaluation: the data split is fixed once and reused by every experiment, and each module (segmentation, OCR, clinical rules) is evaluated independently before being integrated.
+This is applied, quantitative, and experimental research. It develops an engineering artefact (the Healthier pipeline) and evaluates it with objective metrics rather than subjective judgement. The study is descriptive for the system design and comparative for the component evaluation; the design compares each component against a baseline or an alternative configuration. The experimental design is a controlled component-wise evaluation: the data split is fixed once and reused by every experiment, and each module (segmentation, OCR, clinical rules) is evaluated independently before being integrated.
 
 ### Time and Place of Research
 
-The research was carried out between 2024 and 2026 at the Informatics Engineering Study Program, Universitas Krisnadwipayana, Jakarta, Indonesia. [TO COMPLETE: state the exact start and end months of data collection and experimentation.] Model training used a cloud Kaggle Tesla T4 GPU environment, while OCR experiments, clinical-rule verification, and usability testing ran locally on a laptop and in a desktop browser, matching the intended offline deployment condition.
+The research was carried out at the Informatics Engineering Study Program, Universitas Krisnadwipayana, Jakarta, Indonesia. [TO COMPLETE: state the exact research period, i.e., the month and year of data collection and experimentation.] Model training used a cloud Kaggle Tesla T4 GPU environment, while OCR experiments and interface checks ran locally on a laptop and in a desktop browser, matching the intended offline deployment condition.
 
 ### Research Target / Subject
 
-The study targets two families of objects and one target user profile. The segmentation target consists of plated-food images; the evaluation subjects are three public image datasets (UECFoodPIXCOMPLETE, FoodSeg103, and FruitSeg30) whose original annotations were reused. The OCR target consists of photographs of Indonesian packaged-snack nutrition labels; the evaluation subject was a pilot set of six labels with hand-transcribed ground truth. The clinical target is everyday users with diet-related NCD risk profiles (type-2 diabetes, hypertension, dyslipidaemia, and diabetic nephropathy). Sampling for the public datasets followed the official splits; sampling for labels used purposive sampling of products available in local stores.
+The study targets two families of objects and one target user profile. The segmentation target consists of plated-food images; the evaluation subjects are three public image datasets (UECFoodPIXCOMPLETE, FoodSeg103, and FruitSeg30) whose original annotations were reused. The OCR target consists of photographs of Indonesian packaged-snack nutrition labels; the evaluation subject was a pilot set of six labels with hand-transcribed ground truth. The clinical target is everyday users with diet-related NCD risk profiles (type-2 diabetes, hypertension, dyslipidaemia, and diabetic nephropathy). Sampling for the public datasets followed the official splits; label photographs were a convenience sample of packaged snacks available in local stores.
 
 ### Procedure
 
@@ -62,7 +62,7 @@ Figure 1. Healthier system architecture and experimental workflow.
 
 Three public datasets were used: UECFoodPIXCOMPLETE (Okamoto & Yanai, 2021), FoodSeg103 (Wu et al., 2021), and FruitSeg30 (Shamrat et al., 2024). FruitSeg30 contains 1,969 images in 30 fruit classes collected in natural and uncontrolled environments across Malaysia, Bangladesh, and Australia (Shamrat et al., 2024). The candidate corpus contained 19,087 images. Duplicate images were detected with a difference hash (dHash) computed on an 8×8 grayscale reduction of each image, and 373 duplicates were removed, leaving 18,714 unique images. Class labels from all sources were remapped into the five *Isi Piringku* groups using a fixed mapping table.
 
-We did not re-annotate the public masks; the original annotations were used as provided, and only the label remapping was applied. To document this step, the protocol includes a stratified audit of the remapping (200 sampled images, 40 per class, by two annotators, reporting Cohen's κ and resolving disagreements by discussion) as a reproducibility item.
+We did not re-annotate the public masks; the original annotations were used as provided, and only the label remapping was applied. A stratified audit of the remapping (200 sampled images, 40 per class, by two annotators, reporting Cohen's κ and resolving disagreements by discussion) is recommended to document this step; it is planned but not yet completed [TO COMPLETE].
 
 The training pool consisted of the official training portions of UEC and FoodSeg103 and was split 85:15 into training (11,684) and validation (2,017) sets, stratified by class with seed 42 and no overlap. Validation images are therefore a held-out 15% of the training pool. Three sets were reserved exclusively for external testing and were never used for training, early stopping, or checkpoint selection: the official UEC test set (948 images), the FoodSeg103 validation set (2,096 images), and the whole of FruitSeg30 (1,969 images), for 5,013 external images in total. Because the Fruits class in the training data comes only from FoodSeg103, FruitSeg30 acts as a deliberate domain-shift test. No oversampling and no class-weighted loss were applied, so the external results are not confounded by resampling. Table 1 reports the split composition and Table 2 the per-class instance distribution.
 
@@ -93,7 +93,7 @@ Table 2. Per-class instance distribution per split.
 
 #### Segmentation Model and Training
 
-The model is YOLO11s-seg (Khanam & Hussain, 2024). It was trained with Ultralytics 8.4.199 for at most 100 epochs with early-stopping patience 20; training stopped at epoch 67 and the best checkpoint was epoch 48. Optimisation used AdamW with an initial learning rate of 0.001, a final learning-rate factor of 0.01, weight decay 0.0005, and momentum 0.9, with batch size 16, image size 640, seed 42 (deterministic), and mixed precision enabled. Spatial and photometric augmentation was applied (HSV jitter, translation, scaling, horizontal flipping, mosaic, and random erasing). Training took 4.01 h. Table 3 lists the full configuration.
+The model is YOLO11s-seg (Khanam & Hussain, 2024). It was trained with Ultralytics 8.4.199 for at most 100 epochs with early-stopping patience 20; training stopped at epoch 67 and the best checkpoint was epoch 48. Optimisation used AdamW with an initial learning rate of 0.001, a final learning-rate factor of 0.01, weight decay 0.0005, and momentum 0.9, with batch size 16, image size 640, and seed 42 (deterministic). Spatial and photometric augmentation was applied (HSV jitter, translation, scaling, horizontal flipping, mosaic, and random erasing). Training took 4.01 h. Table 3 lists the full configuration.
 
 Table 3. Segmentation training configuration.
 
@@ -101,6 +101,7 @@ Table 3. Segmentation training configuration.
 | :--- | :--- |
 | Model | YOLO11s-seg |
 | Framework | Ultralytics 8.4.199 |
+| Torch / Python | 2.10.0+cu128 / 3.12.13 |
 | Max epochs / patience | 100 / 20 |
 | Stopped epoch / best epoch | 67 / 48 |
 | Optimiser | AdamW |
@@ -111,7 +112,6 @@ Table 3. Segmentation training configuration.
 | Batch size | 16 |
 | Image size | 640 |
 | Seed | 42 |
-| Mixed precision | Enabled |
 | Augmentation | HSV, translate, scale, flip, mosaic, erasing |
 | Training time | 4.01 h (Tesla T4) |
 
@@ -147,17 +147,26 @@ EQ: BMR_female = 10W + 6.25H − 5A − 161          (6)
 
 EQ: TDEE = BMR × AF          (7)
 
-where W is body weight (kg), H is height (cm), A is age (years), and AF is the activity factor (1.2 for sedentary, used in the worked example). Personal limits are then derived per profile (Table 4). For type-2 diabetes, the daily sugar limit follows PERKENI 2024 and is set dynamically at 5% of TDEE (0.05 × TDEE / 4 g); for non-diabetic profiles the default is 10% of TDEE (0.10 × TDEE / 4 g). Sodium limits are absolute values: 1,500 mg/day for hypertension and 2,300 mg/day otherwise. Saturated-fat limits are 10% of TDEE (0.10 × TDEE / 9 g), reduced to 7% for dyslipidaemia; cholesterol is limited to 200 mg for dyslipidaemia; and the protein limit for diabetic nephropathy is 0.8 g × body weight (PERKENI, 2024; James et al., 2014).
+where W is body weight (kg), H is height (cm), A is age (years), and AF is the activity factor (1.2, the sedentary value used by the application). Personal limits are then derived per profile (Table 4). For type-2 diabetes, the daily sugar limit follows PERKENI 2024 and is set dynamically at 5% of TDEE (0.05 × TDEE / 4 g); for non-diabetic profiles the default is 10% of TDEE (0.10 × TDEE / 4 g). Sodium limits are absolute values: 1,500 mg/day for hypertension and 2,300 mg/day otherwise. Saturated-fat limits are 10% of TDEE (0.10 × TDEE / 9 g), reduced to 7% (0.07 × TDEE / 9 g) for diabetes with dyslipidaemia; cholesterol is limited to 200 mg for diabetes with dyslipidaemia; and the protein limit for diabetic nephropathy is 0.8 g × body weight (PERKENI, 2024; James et al., 2014). All limits are implemented exactly as listed in Table 4.
 
-Table 4. Personal daily nutrient limits per clinical profile.
+Table 4. Daily nutrient limits implemented in the Clinical Rules Engine.
 
-| Profile | Sugar (g/day) | Sodium (mg/day) | Saturated fat (g/day) | Cholesterol (mg/day) | Protein (g/day) |
-| :--- | :--- | ---: | :--- | ---: | :--- |
-| General | 10% TDEE / 4 | 2,300 | 10% TDEE / 9 | 300 | 1.0 × kg |
-| Type-2 diabetes | 5% TDEE / 4 | 2,300 | 10% TDEE / 9 | 300 | 1.0 × kg |
-| Hypertension | 10% TDEE / 4 | 1,500 | 10% TDEE / 9 | 300 | 1.0 × kg |
-| Dyslipidaemia | 10% TDEE / 4 | 2,300 | 7% TDEE / 9 | 200 | 1.0 × kg |
-| Diabetic nephropathy | 5% TDEE / 4 | 1,500 | 10% TDEE / 9 | 200 | 0.8 × kg |
+| Limit | Value | Applies to |
+| :--- | :--- | :--- |
+| Snack calorie budget | 0.20 × TDEE | All users |
+| Sugar | 0.10 × TDEE / 4 g | Default |
+| Sugar | 0.05 × TDEE / 4 g | Type-2 diabetes |
+| Sodium | 2,300 mg/day | Default |
+| Sodium | 1,500 mg/day | Hypertension |
+| Sodium-density warning | 800 mg/100 g | Default |
+| Sodium-density warning | 600 mg/100 g | Hypertension |
+| Saturated fat | 0.10 × TDEE / 9 g | Default |
+| Saturated fat | 0.07 × TDEE / 9 g | Diabetes with dyslipidaemia |
+| Cholesterol | 200 mg/day | Diabetes with dyslipidaemia |
+| Protein | 0.8 g × body weight | Diabetic nephropathy |
+| Fibre target | 25–38 g/day | Default |
+| Fibre target | 20–35 g/day | Type-2 diabetes |
+| Carbohydrate target | 45–65% of energy | Type-2 diabetes |
 
 The engine classifies accumulated intake into SAFE, WARNING, and DANGER (Table 5). A WARNING is raised when sugar or saturated fat exceeds 50% of the daily limit, when actual sodium exceeds 40% of the sodium limit, when protein exceeds 30% of the nephropathy quota, or when a product's sodium density exceeds 600 mg/100 g for hypertension (800 mg/100 g otherwise). DANGER is raised only when sugar exceeds 100% of the daily limit; sodium and saturated fat saturate at WARNING. These bands are the exact thresholds implemented in the application and are reported as rule verification, not clinical validation, because no independent registered-dietitian review was performed.
 
@@ -183,7 +192,7 @@ To prove the contribution of each component, the following ablations and compari
 
 ### Data, Instruments, and Data Collection Techniques
 
-The data are secondary for segmentation (public datasets with their original annotations) and primary for label extraction (photographs taken by the author of Indonesian packaged snacks, together with hand-transcribed ground-truth values). The segmentation data separation was performed with a difference-hash script; the ground truth for label extraction was transcribed manually from the same package and then audited. The instruments were: Python 3 with Ultralytics and PaddleOCR for modelling; a desktop web application (HTML, CSS, and JavaScript) for the HITL interfaces and the clinical rule engine; and a spreadsheet for recording and reconciling the transcribed values. Images for label extraction were collected purposively from local stores, covering different brands and package layouts.
+The data are secondary for segmentation (public datasets with their original annotations) and primary for label extraction (photographs taken by the author of Indonesian packaged snacks, together with hand-transcribed ground-truth values). The segmentation data separation was performed with a difference-hash script; the ground truth for label extraction was transcribed manually from the same package. The instruments were Python 3 with Ultralytics and PaddleOCR for modelling, and a desktop web application (HTML, CSS, and JavaScript) for the HITL interfaces and the clinical rule engine. Images for label extraction were collected from local stores so that the pilot covered different brands.
 
 ### Data Analysis Technique
 
@@ -195,7 +204,7 @@ Exact, wrong, and missing fields are reported separately, and the confidence int
 
 ## RESULTS AND DISCUSSION
 
-This section reports the quantitative evaluation of the two recognition modules, their behaviour under domain shift, the ablation and baseline comparisons, and the integration of their outputs through the Clinical Rules Engine, the HITL layer, and the usability assessment.
+This section reports the quantitative evaluation of the two recognition modules and their behaviour under domain shift, together with the component ablation, baseline, and integration analyses where results are available; the analyses that remain to be completed are marked explicitly.
 
 ### Instance Segmentation on Internal Validation
 
@@ -295,7 +304,7 @@ Table 10. Field-level nutrition-label extraction results (exploratory pilot).
 | Baseline parser | 6 | 46 | 21.74% | [16.67%, 25.58%] | 21.74% | 13.04% | 65.22% |
 | Grid parser (revised) | 6 | 46 | 47.83% | [29.17%, 66.67%] | 47.83% | 17.39% | 34.78% |
 
-The dominant failure mode of the baseline was structural: PP-OCR merges tall numeric boxes across adjacent table rows and columns, so values were assigned to the wrong row (for example, sugar was read as 3 instead of 10, and 9 instead of 5, on different images). The revised parser addresses this by detecting value columns relative to the row labels and by splitting merged numeric boxes, which improved the sodium and energy fields most. Residual errors concentrate on serving-size formatting and on distinguishing per-serving from per-100 g values. A per-stage preprocessing ablation is specified in Table 11 and must be completed before submission; Figure 9 shows the pipeline and Figure 10 a qualitative example.
+The dominant failure mode of the baseline was coverage rather than mis-recognition: missing fields accounted for 65.22% of the reference fields because PP-OCR merged the numeric grid and the parser failed to detect several rows, so most errors were absent values rather than wrong values. The revised parser addresses this by detecting value columns relative to the row labels and by splitting merged numeric boxes, which reduced missing fields to 34.78% and improved the sodium and energy fields most; on one image the grid split rows incorrectly, where the baseline had been correct. Residual errors concentrate on wrong-value assignment (for example, a mis-parsed sugar value with a very large relative error) and on serving-size formatting and distinguishing per-serving from per-100 g values. A per-stage preprocessing ablation is specified in Table 11 and must be completed before submission; Figure 9 shows the pipeline and Figure 10 a qualitative example.
 
 [[INSERT FIGURE 9 HERE: nutrition-label extraction pipeline diagram]]
 
