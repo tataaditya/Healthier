@@ -1,0 +1,13 @@
+{
+  "_comment": "Kandidat koreksi GT pilot Makanan Ringan (n=6), hasil audit visual. Nilai null = buang field dari GT. Status: MENUNGGU KONFIRMASI pemilik kemasan.",
+  "20241108_132308.jpg": {
+    "gula": 10
+  },
+  "20241108_134337.jpg": {
+    "lemak_total": 2,
+    "karbohidrat": 17,
+    "natrium": 60,
+    "gula": 5,
+    "lemak_jenuh": null
+  }
+}

@@ -80,6 +80,23 @@ di label, field itu dikeluarkan → total field jadi 46 (dari 47).
    angka pilot memakai GT apa adanya, dan sebagian "error" VLM sebenarnya
    kesalahan GT.
 
+## Reproduksi
+
+Tabel sensitivitas di atas dihasilkan `experiments/scripts/audit_gt.py` (offline,
+tanpa panggil model lagi) memakai patch kandidat
+`experiments/paper/gt_patch_makanan_ringan.json`:
+
+```powershell
+python experiments/scripts/audit_gt.py `
+  --data experiments/ocr_data/makanan_ringan `
+  --patch experiments/paper/gt_patch_makanan_ringan.json
+```
+
+Skrip membaca `predictions.jsonl` dari `experiments/results/ocr_full*` dan
+`experiments/results/ocr_vlm/*`. Untuk menerapkan koreksi secara resmi, ubah
+`*_gt.json` lalu jalankan ulang `eval_ocr.py`; VLM cukup di-skor ulang offline
+(karena prediksi tersimpan).
+
 ## Catatan
 
 - `takaran_saji_g` tidak ikut diskor (metrik hanya menilai `per_sajian`).
