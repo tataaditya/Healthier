@@ -102,8 +102,8 @@ gambar; GT sudah diperbaiki dan semua pipeline di-skor ulang:
   `Natrium 60 mg`, **tanpa** baris lemak jenuh; GT lama 2.5 / 17.9 / 40 / 0.5.
 - `20241108_132308`: label asli `Gula 10 g`; GT lama 9.
 
-Detail + bukti crop: `experiments/paper/gt_audit.md`; patch:
-`experiments/paper/gt_patch_makanan_ringan.json`; skrip re-score offline:
+Detail + bukti crop: `experiments/paper/audit/gt_audit.md`; patch:
+`experiments/paper/audit/gt_patch_makanan_ringan.json`; skrip re-score offline:
 `experiments/scripts/audit_gt.py`.
 
 Sebelum koreksi, mayoritas "wrong" VLM sebenarnya kesalahan GT. Setelah koreksi,

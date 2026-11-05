@@ -140,7 +140,7 @@ uji 10–20 foto Indonesia).
 
 Hasil revisi terbaru:
 - [`experiments/paper/final_numbers.md`](experiments/paper/final_numbers.md) — angka final.
-- [`experiments/paper/writing_guide.md`](experiments/paper/writing_guide.md) — panduan menulis manuscript.
+- [`experiments/paper/audit/writing_guide.md`](experiments/paper/audit/writing_guide.md) — panduan menulis manuscript.
 - [`experiments/paper/tables/`](experiments/paper/tables/) — tabel siap tempel.
 
 ```powershell
@@ -151,7 +151,7 @@ Get-Content experiments/README.md
 Get-Content experiments/data_sources.md
 
 # Audit notebook asli vs manuscript (wajib dibaca)
-Get-Content experiments/paper/notebook-audit.md
+Get-Content experiments/paper/audit/notebook-audit.md
 ```
 
 > **Status revisi:** run segmentasi baru sudah selesai (YOLO11s-seg, max 100

@@ -1,7 +1,7 @@
 # Healthier — Introduction & Research Methods (fact-checked draft)
 
 > **Companion files.** Abstract, Results & Discussion, and Conclusions are in
-> `experiments/paper/manuscript_results_conclusions.md`; references are in
+> `experiments/paper/audit/manuscript_results_conclusions.md`; references are in
 > `experiments/paper/references.bib`.
 >
 > **Purpose.** Publish-style Introduction and Research Methods for the Healthier

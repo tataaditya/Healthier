@@ -39,7 +39,7 @@ Kaggle Dataset, lalu mount di `/kaggle/input/...`.
 
 **Malam (8–12 jam)**
 - [ ] Siapkan OCR test: 100+ citra, `*_gt.json`.
-- [ ] Isi `experiments/paper/claims.csv` untuk audit angka lama.
+- [ ] Isi `experiments/paper/audit/claims.csv` untuk audit angka lama.
 - [ ] Jalankan `eval_ocr.py` pada 30 citra lama sebagai sanity check.
 - [ ] Jalankan `ablate_ocr.py` pada 30 citra lama (preliminary).
 

@@ -1,6 +1,6 @@
 # Healthier — Abstract, Results & Discussion, Conclusions (fact-checked draft)
 
-> Companion to `experiments/paper/manuscript_intro_methods.md` (Introduction & Research
+> Companion to `experiments/paper/audit/manuscript_intro_methods.md` (Introduction & Research
 > Methods) and `experiments/paper/references.bib`. Every number traces to
 > `experiments/paper/final_numbers.md` or `experiments/results/`.
 >

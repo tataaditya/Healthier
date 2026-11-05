@@ -88,7 +88,7 @@ direproduksi. Angka resmi ada di `final_numbers.md` dan `table_ocr.md`.
 # 1) Audit / sensitivitas offline (pakai predictions.jsonl yang ada)
 python experiments/scripts/audit_gt.py `
   --data experiments/ocr_data/makanan_ringan `
-  --patch experiments/paper/gt_patch_makanan_ringan.json
+  --patch experiments/paper/audit/gt_patch_makanan_ringan.json
 
 # 2) OCR ulang (baseline vs grid) dengan GT baru
 $env:NUTRILABEL_OCR_DEVICE = "gpu:0"

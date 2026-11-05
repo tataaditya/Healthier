@@ -351,7 +351,7 @@ Ganti isi dengan angka baru:
     Arah yang disarankan: **hybrid** (VLM untuk struktur/kolom, OCR
     deterministik untuk digit) + lapisan verifikasi. Catat sebagai future work,
     JANGAN ubah klaim C1/C2 menjadi VLM. Detail:
-    `experiments/paper/vlm_analysis.md`.
+    `experiments/paper/audit/vlm_analysis.md`.
 
 ---
 

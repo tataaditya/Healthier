@@ -59,15 +59,15 @@ dengan artefak** (notebook vs manuscript), lihat §3.
 | Kebutuhan | File |
 | :--- | :--- |
 | **Satu sumber kebenaran angka** | `experiments/paper/final_numbers.md` |
-| Panduan menulis per bagian manuscript | `experiments/paper/writing_guide.md` |
-| Audit notebook lama vs manuscript | `experiments/paper/notebook-audit.md` |
-| Desain eksperimen (kontribusi, split, metrik) | `experiments/paper/experimental-design.md` |
-| Rekonsiliasi klaim draft OLD vs NEW | `experiments/paper/claims.csv` |
-| Template jawaban reviewer | `experiments/paper/response_to_reviewers.md` |
-| Rencana 4 hari (hard deadline) | `experiments/paper/4-day-plan.md` |
-| Audit ground truth pilot OCR | `experiments/paper/gt_audit.md` |
-| Patch GT (tracked) | `experiments/paper/gt_patch_makanan_ringan.json` |
-| Analisis VLM multi-model | `experiments/paper/vlm_analysis.md` |
+| Panduan menulis per bagian manuscript | `experiments/paper/audit/writing_guide.md` |
+| Audit notebook lama vs manuscript | `experiments/paper/audit/notebook-audit.md` |
+| Desain eksperimen (kontribusi, split, metrik) | `experiments/paper/audit/experimental-design.md` |
+| Rekonsiliasi klaim draft OLD vs NEW | `experiments/paper/audit/claims.csv` |
+| Template jawaban reviewer | `experiments/paper/audit/response_to_reviewers.md` |
+| Rencana 4 hari (hard deadline) | `experiments/paper/audit/4-day-plan.md` |
+| Audit ground truth pilot OCR | `experiments/paper/audit/gt_audit.md` |
+| Patch GT (tracked) | `experiments/paper/audit/gt_patch_makanan_ringan.json` |
+| Analisis VLM multi-model | `experiments/paper/audit/vlm_analysis.md` |
 | Tabel siap tempel | `experiments/paper/tables/*.md` |
 | Metrik per-kelas (mentah) | `experiments/results/segmentation/per_class_all.csv` |
 | Ringkasan per-kelas (JSON) | `experiments/results/segmentation/per_class_summary.json` |
@@ -125,7 +125,7 @@ python experiments/scripts/make_final_numbers.py      # regenerasi final_numbers
 
 ## 3. Masalah pada draft lama (kenapa semua ini dikerjakan)
 
-Sumber: `experiments/paper/notebook-audit.md` + `claims.csv`. Intinya **angka draft
+Sumber: `experiments/paper/audit/notebook-audit.md` + `claims.csv`. Intinya **angka draft
 lama mencampur beberapa run yang berbeda**, bukan satu run yang konsisten.
 
 ### 3.1 Rekonsiliasi 19.087 / 3.529
@@ -526,7 +526,7 @@ Karena `lemak_jenuh` dibuang dari `134337`, total field menjadi **46** (dari 47)
 Crop bukti disimpan **lokal** di `experiments/results/ocr_vlm/gt_audit/`
 (`134337_kolom_nilai.png`, `134337_lemak_total.png`, `132308_gula.png`). Folder
 `results/` di-gitignore → crop **tidak** ter-commit (citra label privat). Patch GT
-di `experiments/paper/gt_patch_makanan_ringan.json` (tracked, status "hasil audit").
+di `experiments/paper/audit/gt_patch_makanan_ringan.json` (tracked, status "hasil audit").
 
 ### 9.5 Pelajaran metodologis
 
@@ -786,7 +786,7 @@ python experiments/scripts/eval_vlm.py --rescore `
 # --- Audit / sensitivitas GT offline ---
 python experiments/scripts/audit_gt.py `
   --data experiments/ocr_data/makanan_ringan `
-  --patch experiments/paper/gt_patch_makanan_ringan.json
+  --patch experiments/paper/audit/gt_patch_makanan_ringan.json
 
 # --- OCR edge: baseline vs grid (GT terkoreksi) ---
 $env:NUTRILABEL_OCR_DEVICE = "gpu:0"

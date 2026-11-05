@@ -3,7 +3,7 @@
 Membandingkan skor field-level **tanpa memanggil model lagi**: cukup baca
 ``predictions.jsonl`` yang sudah ada dari ``eval_ocr.py`` / ``eval_vlm.py``.
 
-Dipakai oleh `experiments/paper/gt_audit.md` untuk menghitung sensitivitas
+Dipakai oleh `experiments/paper/audit/gt_audit.md` untuk menghitung sensitivitas
 "GT asli vs GT terkoreksi". Patch GT adalah JSON:
 
     {"<nama_gambar>.jpg": {"<field>": <nilai_baru>, "<field>": null}}
@@ -13,7 +13,7 @@ Dipakai oleh `experiments/paper/gt_audit.md` untuk menghitung sensitivitas
 Contoh:
     python experiments/scripts/audit_gt.py ^
         --data experiments/ocr_data/makanan_ringan ^
-        --patch experiments/paper/gt_patch_makanan_ringan.json
+        --patch experiments/paper/audit/gt_patch_makanan_ringan.json
 """
 
 from __future__ import annotations
@@ -93,7 +93,7 @@ def discover_predictions() -> list[tuple[str, Path]]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Re-score predictions under a GT patch.")
     parser.add_argument("--data", type=Path, default=ROOT_DIR / "experiments" / "ocr_data" / "makanan_ringan")
-    parser.add_argument("--patch", type=Path, default=ROOT_DIR / "experiments" / "paper" / "gt_patch_makanan_ringan.json")
+    parser.add_argument("--patch", type=Path, default=ROOT_DIR / "experiments" / "paper" / "audit" / "gt_patch_makanan_ringan.json")
     args = parser.parse_args()
 
     if not args.data.is_dir():

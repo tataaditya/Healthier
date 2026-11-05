@@ -5,11 +5,11 @@ split, training, evaluasi, ablation, dan tabel paper. Semua angka di manuscript
 harus berasal dari file di `experiments/results/`.
 
 > **Baca dulu:**
-> - [`paper/analysis_handoff.md`](paper/analysis_handoff.md) — **handoff lengkap**:
+> - [`paper/audit/analysis_handoff.md`](paper/audit/analysis_handoff.md) — **handoff lengkap**:
 >   seluruh analisis (segmentasi + OCR + GT audit + VLM), angka, arsitektur, dan
 >   langkah berikutnya dalam satu dokumen.
-> - [`paper/notebook-audit.md`](paper/notebook-audit.md) — angka notebook vs manuscript.
-> - [`paper/experimental-design.md`](paper/experimental-design.md) — desain split,
+> - [`paper/audit/notebook-audit.md`](paper/audit/notebook-audit.md) — angka notebook vs manuscript.
+> - [`paper/audit/experimental-design.md`](paper/audit/experimental-design.md) — desain split,
 >   screening vs final comparison, independent test, dan protokol anotasi.
 >
 > **Aturan utama:** jangan mencampur angka dari run yang berbeda. Setiap tabel
@@ -82,10 +82,14 @@ experiments/
 ├── results/segmentation/       # metrics, predictions, kurva (gitignored)
 ├── environment/                # pip freeze, nvidia-smi, versi Python (tracked)
 ├── artifacts/                  # arsip zip hasil Kaggle (gitignored)
-└── paper/                      # audit, desain, response letter, plan, tabel
-    ├── tables/                 # tabel siap tempel ke Word/LaTeX
+└── paper/                      # naskah final, tabel, dan catatan audit
+    ├── manuscript_jri.md       # ★ naskah final (sumber markdown)
+    ├── manuscript_jri.docx     # ★ naskah final (Word, siap submit)
+    ├── build_jri_docx.py       # generator docx dari manuscript_jri.md
     ├── final_numbers.md        # ★ satu sumber kebenaran angka
-    └── writing_guide.md        # ★ panduan menulis per bagian manuscript
+    ├── references.bib          # daftar pustaka (BibTeX)
+    ├── tables/                 # tabel siap tempel ke Word/LaTeX
+    └── audit/                  # catatan kerja: audit, desain, plan, response letter, draf lama
 ```
 
 ★ = dipakai di jalur Kaggle. Folder `scripts/local/` hanya untuk yang ingin
@@ -332,7 +336,7 @@ python experiments/scripts/eval_ocr.py `
   --bootstrap 2000 --save-raw --label "Makanan Ringan pilot (grid parser)"
 ```
 
-Hasil pilot (n=6, 46 field, GT sudah dikoreksi — lihat `paper/gt_audit.md`):
+Hasil pilot (n=6, 46 field, GT sudah dikoreksi — lihat `paper/audit/gt_audit.md`):
 
 | Parser | Field accuracy | 95% CI | Exact | Wrong | Missing |
 | :--- | ---: | :--- | ---: | ---: | ---: |
@@ -371,7 +375,7 @@ Catatan teknis:
 
 Alat bantu pertimbangan ke depan; **bukan** bagian pipeline yang dipublikasikan.
 Harness: `experiments/scripts/eval_vlm.py`. Dokumen lengkap:
-`experiments/paper/vlm_analysis.md`.
+`experiments/paper/audit/vlm_analysis.md`.
 
 Hasil pilot n=6 (46 field, GT sudah dikoreksi; metrik identik dengan `eval_ocr.py`):
 
@@ -395,7 +399,7 @@ perbandingan multi-model memakai gateway Helipod.
 
 > **Audit GT (sudah diterapkan):** 2 dari 6 GT salah transkripsi (label asli
 > `Natrium 60`, `Karbohidrat 17`, `Lemak Total 2`, `Gula 10`). Sebelumnya
-> sebagian besar "wrong" VLM adalah kesalahan GT. Detail: `paper/gt_audit.md`.
+> sebagian besar "wrong" VLM adalah kesalahan GT. Detail: `paper/audit/gt_audit.md`.
 
 ```powershell
 # gemma4 via Ollama
@@ -457,7 +461,7 @@ python experiments/scripts/make_tables.py
 
 Output utama:
 - `experiments/paper/final_numbers.md` — satu sumber kebenaran angka.
-- `experiments/paper/writing_guide.md` — panduan menulis per bagian manuscript.
+- `experiments/paper/audit/writing_guide.md` — panduan menulis per bagian manuscript.
 - `experiments/paper/tables/table_dataset.md`
 - `experiments/paper/tables/table_segmentation_internal.md`
 - `experiments/paper/tables/table_segmentation_external.md`
@@ -475,7 +479,7 @@ conclusion.
 
 ## 7b. Audit notebook asli
 
-Baca [`paper/notebook-audit.md`](paper/notebook-audit.md). Notebook asli
+Baca [`paper/audit/notebook-audit.md`](paper/audit/notebook-audit.md). Notebook asli
 memakai **4.840 train / 960 val** (lalu oversampling menjadi 12.082), bukan
 19.087/3.529 seperti di manuscript. Notebook juga membuktikan export FP16 gagal
 dan training berjalan di **Tesla T4**, bukan RTX 3050. Ini harus diperbaiki
@@ -488,7 +492,7 @@ sebelum menulis hasil baru.
 - Jalankan `notebooks/revision_kaggle.ipynb` sampai cell dataset summary.
 - Review distribusi kelas; lanjutkan training utama (overnight).
 - Siapkan/annotasi OCR test 100+ citra.
-- Audit angka lama vs artefak (`experiments/paper/claims.csv`).
+- Audit angka lama vs artefak (`experiments/paper/audit/claims.csv`).
 
 ### Hari 2 — evaluasi & baseline
 - Jalankan cell evaluasi external test di notebook.
