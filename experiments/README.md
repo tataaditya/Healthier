@@ -66,6 +66,7 @@ experiments/
 │   ├── make_tables.py          # generator tabel gaya lama
 │   ├── make_final_numbers.py   # ★ sumber angka final + tabel paper
 │   ├── per_class_metrics.py    # ★ AP per kelas dari predictions.json + label
+│   ├── make_paper_figures.py   # ★ generate figures/figure 1..10.png
 │   └── local/                  # alternatif jalur lokal (tidak wajib untuk Kaggle)
 │       ├── check_environment.py
 │       ├── make_class_map.py

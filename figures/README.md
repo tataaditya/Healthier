@@ -1,42 +1,44 @@
-# Figure slots — Healthier / JRI 2026
+# Figures — Healthier / JRI 2026
 
-Folder ini berisi **slot gambar** untuk naskah `experiments/paper/manuscript_jri.md`
-(`manuscript_jri.docx`). Setiap file adalah placeholder.
+Gambar untuk naskah `experiments/paper/manuscript_jri.md` (`manuscript_jri.docx`).
+**Semua file sudah terisi** dan digenerate otomatis oleh
+`experiments/scripts/make_paper_figures.py` dari hasil eksperimen yang tersimpan
+(di `experiments/results/` dan `experiments/runs/`).
 
-**Cara pakai:** timpa file placeholder dengan gambar final Anda, **nama file tetap sama**.
-Boleh tetap `.png`, atau ganti ke `.jpg` selama namanya sama (mis. `figure 1.jpg`).
-
-| File | Caption (sesuai naskah) | Saran ukuran |
+| File | Caption (sesuai naskah) | Asal / status |
 | :--- | :--- | :--- |
-| `figure 1.png` | Healthier system architecture and experimental workflow. | skema lebar, ~1600×900 px |
-| `figure 2.png` | Human-in-the-Loop interfaces: segmentation editor and nutrient value verification form. | 2 screenshot berdampingan, ~1600×900 px |
-| `figure 3.png` | Training and validation loss curves for the YOLO11s-seg model. | grafik garis, ~1400×1000 px |
-| `figure 4.png` | Normalised confusion matrix on the internal validation split. | heatmap 5×5, ~1200×1200 px |
-| `figure 5.png` | Qualitative comparison of ground truth (left) and prediction (right) on the internal validation split. | grid citra berpasangan, ~1600×1000 px |
-| `figure 6.png` | Normalised confusion matrices on the three external test sources. | 3 panel berdampingan, ~1800×800 px |
-| `figure 7.png` | Mask precision-recall and F1 curves for each external source. | multi-panel, ~1600×1200 px |
-| `figure 8.png` | Per-class external mask AP50 by source and class. | bar chart, ~1600×900 px |
-| `figure 9.png` | Nutrition-label extraction pipeline: preprocessing, recognition, and layout reconstruction. | diagram pipeline lebar, ~1800×800 px |
-| `figure 10.png` | Qualitative example of label extraction. | input + ROI + tabel, ~1600×900 px |
+| `figure 1.png` | Healthier system architecture and experimental workflow. | Diagram (digambar) |
+| `figure 2.png` | Human-in-the-Loop interfaces: segmentation editor and nutrient value verification form. | **Skema (digambar)** — ganti dengan screenshot asli bila ada |
+| `figure 3.png` | Training and validation loss curves for the YOLO11s-seg model. | Dari `runs/seg_main/results.csv` |
+| `figure 4.png` | Normalised confusion matrix on the internal validation split. | Salinan `runs/seg_main/confusion_matrix_normalized.png` |
+| `figure 5.png` | Qualitative comparison of ground truth (left) and prediction (right) on the internal validation split. | Gabungan `runs/seg_main/val_batch0_{labels,pred}.jpg` |
+| `figure 6.png` | Normalised confusion matrices on the three external test sources. | Gabungan `results/segmentation/*_instance/confusion_matrix_normalized.png` |
+| `figure 7.png` | Mask precision-recall and F1 curves for each external source. | Gabungan `*_instance/MaskPR_curve.png` + `MaskF1_curve.png` |
+| `figure 8.png` | Per-class external mask AP50 by source and class. | Dari `results/segmentation/per_class_all.csv` |
+| `figure 9.png` | Nutrition-label extraction pipeline: preprocessing, recognition, and layout reconstruction. | Diagram (digambar) |
+| `figure 10.png` | Qualitative example of label extraction. | Foto `20241108_132045` + tabel hasil grid parser vs ground truth |
 
-## Cara menyisipkan ke docx
+## Regenerasi semua gambar
 
-Setelah gambar final Anda taruh di folder ini (nama file tetap), jalankan:
+```powershell
+python experiments/scripts/make_paper_figures.py
+```
+
+Skrip menulis ulang `figures/figure 1..10.png` pada 300 DPI. Gambar 1, 2, dan 9
+adalah diagram yang digambar dari kode; sisanya disalin/digabung dari hasil eksperimen.
+
+## Menyisipkan ke docx
 
 ```powershell
 python experiments/paper/build_jri_docx.py --embed-figures
 ```
 
-Perintah itu mengganti penanda `[[INSERT FIGURE N HERE ...]]` di naskah dengan gambar
-yang cocok (`figure N.png/.jpg/.jpeg`). Penanda yang belum ada gambarnya tetap berupa teks.
-Tanpa flag `--embed-figures`, docx dibangun seperti biasa (tanpa gambar).
+Perintah itu mengganti penanda `[[INSERT FIGURE N HERE ...]]` di naskah dengan
+`figure N.png/.jpg/.jpeg`. Tanpa flag itu, docx dibangun tanpa gambar.
 
 ## Catatan
-- Resolusi minimal **300 DPI** (atau sisi terpanjang ≥ 1600 px) agar tidak pecah saat dicetak.
-- Format aman untuk Word: **PNG**. Untuk foto bisa JPG kualitas tinggi.
-- Di naskah, posisi tiap gambar ditandai `[[INSERT FIGURE N HERE ...]]`; caption resmi sudah
-  tertulis di bawah penanda tersebut dan **tidak perlu** Anda tulis ulang di dalam gambar.
-- Setelah gambar final dimasukkan, jangan lupa hapus kalimat placeholder di naskah bila ada,
-  dan commit foldernya ke git agar tersimpan.
-
-Placeholder ini digenerate otomatis; file gambar asli Anda akan menimpanya.
+- Resolusi 300 DPI; format PNG.
+- Figure 2 masih berupa **skema**, bukan screenshot asli. Jika Anda punya tangkapan
+  layar editor segmentasi dan form verifikasi, timpa `figure 2.png` dengan screenshot asli.
+- Caption resmi sudah ada di naskah (di bawah penanda `[[INSERT FIGURE N HERE ...]]`),
+  jadi tidak perlu ditulis ulang di dalam gambar.
