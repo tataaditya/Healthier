@@ -38,6 +38,9 @@ Perintah itu mengganti penanda `[[INSERT FIGURE N HERE ...]]` di naskah dengan
 
 ## Catatan
 - Resolusi 300 DPI; format PNG.
+- Figure 1, 2, dan 9 (diagram yang **digambar**) dibuat **hitam-putih / abu-abu**
+  seperti diagram blok referensi. Figure 3-8 dan 10 berasal dari hasil eksperimen
+  (kurva, confusion matrix, tabel) sehingga tampil apa adanya.
 - Figure 2 masih berupa **skema**, bukan screenshot asli. Jika Anda punya tangkapan
   layar editor segmentasi dan form verifikasi, timpa `figure 2.png` dengan screenshot asli.
 - Caption resmi sudah ada di naskah (di bawah penanda `[[INSERT FIGURE N HERE ...]]`),

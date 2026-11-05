@@ -117,18 +117,24 @@ def figure1():
     BH, BG = 0.036, 0.011
     cont_top = grp_top - 0.030
 
+    # ---- greyscale palette (matches the reference block diagram) ----------
+    IN_F = "#f2f2f2"        # input / lightest fill
+    F1, F2, F3, F4 = "#f7f7f7", "#eeeeee", "#e4e4e4", "#d5d5d5"
+    E, E2, E3 = "#9e9e9e", "#616161", "#212121"
+    TXT = "#000000"
+
     # ---- inputs -----------------------------------------------------------
     _box(ax, LX, top_in - in_h, LW, in_h,
-         "Plate photo — Isi Piringku  (640×640×3)", LIGHT, GREEN, fs=9)
+         "Plate photo — Isi Piringku  (640×640×3)", IN_F, E3, fs=9)
     _box(ax, RX, top_in - in_h, RW, in_h,
-         "Nutrition-label photo  (640×640×3)", LIGHTB, BLUE, fs=9)
+         "Nutrition-label photo  (640×640×3)", IN_F, E3, fs=9)
     _arrow(ax, (cxL, top_in - in_h), (cxL, grp_top - 0.004))
     _arrow(ax, (cxR, top_in - in_h), (cxR, grp_top - 0.004))
 
     # ---- dashed tower enclosures -----------------------------------------
-    _dgroup(ax, LX, grp_bot, LW, grp_top - grp_bot, GREEN,
+    _dgroup(ax, LX, grp_bot, LW, grp_top - grp_bot, E3,
             "Segmentation network — YOLO11s-seg")
-    _dgroup(ax, RX, grp_bot, RW, grp_top - grp_bot, BLUE,
+    _dgroup(ax, RX, grp_bot, RW, grp_top - grp_bot, E3,
             "Label extraction — PaddleOCR PP-OCRv4")
 
     # ---- local drawing helpers -------------------------------------------
@@ -138,7 +144,7 @@ def figure1():
             boxstyle="round,pad=0.003,rounding_size=0.010",
             linewidth=1.15, edgecolor=ec, facecolor=fc, zorder=2))
         ax.text(x + bw / 2, y - BH / 2, text, ha="center", va="center",
-                fontsize=fs, color="#102027", zorder=3, linespacing=1.2)
+                fontsize=fs, color=TXT, zorder=3, linespacing=1.2)
 
     def section(x, ytop, label, color, blocks, fs=7.4):
         y = ytop - 0.019
@@ -158,12 +164,12 @@ def figure1():
         return ybot
 
     # ---- left tower: segmentation network --------------------------------
-    y = section(bxL, cont_top, "Backbone", "#7cb342", [
-        ("Stem: Conv 3×3 / 2", "#f1f8e9", "#7cb342"),
-        ("P2: Conv / 2 + C3k2", "#f1f8e9", "#7cb342"),
-        ("P3: Conv / 2 + C3k2  →  P3", "#f1f8e9", "#7cb342"),
-        ("P4: Conv / 2 + C3k2  →  P4", "#f1f8e9", "#7cb342"),
-        ("P5: C3k2 + SPPF + C2PSA  →  P5", "#f1f8e9", "#7cb342"),
+    y = section(bxL, cont_top, "Backbone", E2, [
+        ("Stem: Conv 3×3 / 2", F1, E2),
+        ("P2: Conv / 2 + C3k2", F1, E2),
+        ("P3: Conv / 2 + C3k2  →  P3", F1, E2),
+        ("P4: Conv / 2 + C3k2  →  P4", F1, E2),
+        ("P5: C3k2 + SPPF + C2PSA  →  P5", F1, E2),
     ])
     # "× 3" repeated-stage marker across the P3-P5 stages
     i0, i1 = 2, 4
@@ -172,47 +178,47 @@ def figure1():
     ax.add_patch(FancyBboxPatch(
         (bxL - 0.006, mb), bw + 0.012, mt - mb,
         boxstyle="round,pad=0.001,rounding_size=0.008",
-        linewidth=0.9, edgecolor="#8bc34a", facecolor="none",
+        linewidth=0.9, edgecolor=E, facecolor="none",
         linestyle=(0, (1, 1.8)), zorder=1.5))
     ax.text(bxL + bw + 0.002, mt - 0.003, "× 3", ha="right", va="top",
-            fontsize=6.8, color="#558b2f", fontweight="bold", zorder=4)
+            fontsize=6.8, color=E2, fontweight="bold", zorder=4)
 
     y -= 0.022
-    y = section(bxL, y, "Neck — PAN-FPN", "#43a047", [
-        ("Top-down: Upsample + Concat + C3k2", "#e8f5e9", "#43a047"),
-        ("Bottom-up: Conv + Concat + C3k2", "#e8f5e9", "#43a047"),
+    y = section(bxL, y, "Neck — PAN-FPN", E2, [
+        ("Top-down: Upsample + Concat + C3k2", F2, E2),
+        ("Bottom-up: Conv + Concat + C3k2", F2, E2),
     ])
     y -= 0.022
-    y = section(bxL, y, "Segment head", "#00897b", [
-        ("Detect: box (DFL) + class", "#e0f2f1", "#00897b"),
-        ("Mask: Proto + coefficients", "#e0f2f1", "#00897b"),
+    y = section(bxL, y, "Segment head", E2, [
+        ("Detect: box (DFL) + class", F3, E2),
+        ("Mask: Proto + coefficients", F3, E2),
     ])
     y -= 0.022
-    left_bot = section(bxL, y, "Post-processing", "#2e7d32", [
-        ("Proportion per group (Eq. 1)", "#c8e6c9", "#2e7d32"),
+    left_bot = section(bxL, y, "Post-processing", E3, [
+        ("Proportion per group (Eq. 1)", F4, E3),
     ])
 
     # ---- right tower: label extraction -----------------------------------
-    y = section(bxR, cont_top, "Preprocessing", "#42a5f5", [
-        ("EXIF auto-orient", "#e3f2fd", "#64b5f6"),
-        ("Deskew — Hough transform", "#e3f2fd", "#64b5f6"),
-        ("Deglare — Telea inpainting", "#e3f2fd", "#64b5f6"),
-        ("CLAHE contrast + ROI crop", "#e3f2fd", "#64b5f6"),
+    y = section(bxR, cont_top, "Preprocessing", E2, [
+        ("EXIF auto-orient", F1, E2),
+        ("Deskew — Hough transform", F1, E2),
+        ("Deglare — Telea inpainting", F1, E2),
+        ("CLAHE contrast + ROI crop", F1, E2),
     ])
     y -= 0.022
-    y = section(bxR, y, "Recognition — PP-OCRv4", "#039be5", [
-        ("Text detection — DB (DBNet)", "#e1f5fe", "#039be5"),
-        ("Text recognition — CRNN + CTC", "#e1f5fe", "#039be5"),
+    y = section(bxR, y, "Recognition — PP-OCRv4", E2, [
+        ("Text detection — DB (DBNet)", F2, E2),
+        ("Text recognition — CRNN + CTC", F2, E2),
     ])
     y -= 0.022
-    y = section(bxR, y, "Layout reconstruction", "#00acc1", [
-        ("Semantic filter (drop ads/ingredients)", "#e0f7fa", "#00acc1"),
-        ("Fuzzy field mapping (sim ≥ 0.75)", "#e0f7fa", "#00acc1"),
-        ("Grid parser — rows + value columns", "#e0f7fa", "#00acc1"),
+    y = section(bxR, y, "Layout reconstruction", E2, [
+        ("Semantic filter (drop ads/ingredients)", F3, E2),
+        ("Fuzzy field mapping (sim ≥ 0.75)", F3, E2),
+        ("Grid parser — rows + value columns", F3, E2),
     ])
     y -= 0.022
-    right_bot = section(bxR, y, "Output", "#1565c0", [
-        ("Per-serving nutrient fields", "#b3e5fc", "#1565c0"),
+    right_bot = section(bxR, y, "Output", E3, [
+        ("Per-serving nutrient fields", F4, E3),
     ])
 
     # ---- decision layer ---------------------------------------------------
@@ -222,11 +228,11 @@ def figure1():
     rx, rw = 0.595, 0.200
     fx, fw = 0.850, 0.130
     _box(ax, hx, band_y, hw, band_h,
-         "Human-in-the-Loop\nverify masks & values", "#f3e5f5", PURPLE, fs=8.2)
+         "Human-in-the-Loop\nverify masks & values", "#ededed", E3, fs=8.2)
     _box(ax, rx, band_y, rw, band_h,
-         "Clinical Rules Engine\nBMR/TDEE + limits", "#e8eaf6", "#3949ab", fs=8.2)
+         "Clinical Rules Engine\nBMR/TDEE + limits", "#e0e0e0", E3, fs=8.2)
     _box(ax, fx, band_y, fw, band_h,
-         "Feedback\nSAFE / WARNING /\nDANGER", "#ffebee", "#c62828", fs=8.2)
+         "Feedback\nSAFE / WARNING /\nDANGER", "#cfcfcf", E3, fs=8.2)
 
     _arrow(ax, (cxL, left_bot), (hx + 0.060, band_top))
     _arrow(ax, (cxR, right_bot), (hx + 0.185, band_top))
@@ -239,13 +245,13 @@ def figure1():
             "Segmentation: 11,684 train / 2,017 internal-val images · YOLO11s-seg · "
             "100 epochs (best 48) · AdamW lr0 = 1×10⁻³ · batch 16 · 640×640 · "
             "internal mask mAP50 71.66%, mAP50-95 56.91%.",
-            ha="center", va="center", fontsize=6.9, color=GREY)
+            ha="center", va="center", fontsize=6.9, color="#424242")
     ax.text(0.5, 0.020,
             "External generalisation (5,013 images): mask mAP50 69.15% (UEC) · "
             "63.66% (FoodSeg103) · 17.06% (FruitSeg30).   "
             "Label pilot (n = 6): field accuracy 21.74% → 47.83%.   "
             "Rules verified 36/36 limits, 30/30 decisions.",
-            ha="center", va="center", fontsize=6.9, color=GREY)
+            ha="center", va="center", fontsize=6.9, color="#424242")
     save(fig, 1, dpi=200)
 
 
@@ -266,17 +272,19 @@ def figure2():
     rng = np.random.default_rng(42)
     centers = [(0.30, 0.58), (0.62, 0.44), (0.48, 0.72)]
     names = ["Staple Food", "Vegetables", "Side Dishes"]
+    grey = {"Staple Food": "#bdbdbd", "Vegetables": "#9e9e9e",
+            "Side Dishes": "#757575"}
     for (cx, cy), name in zip(centers, names):
         pts = np.array([
             [cx + 0.11 * np.cos(t), cy + 0.09 * np.sin(t)]
             for t in np.linspace(0, 2 * np.pi, 9)[:-1]
         ]) + rng.normal(0, 0.012, (8, 2))
-        ax.add_patch(Polygon(pts, closed=True, facecolor=CLASS_COLORS[name],
-                             edgecolor="white", alpha=0.75, lw=1.5))
+        ax.add_patch(Polygon(pts, closed=True, facecolor=grey[name],
+                             edgecolor="#212121", alpha=0.85, lw=1.5))
         ax.text(cx, cy, name.split()[0], ha="center", va="center",
-                fontsize=8, color="white", fontweight="bold")
+                fontsize=8, color="#212121", fontweight="bold")
     ax.text(0.5, 0.075, "Edit predicted polygons, then confirm",
-            ha="center", fontsize=8.5, color=GREY)
+            ha="center", fontsize=8.5, color="#424242")
 
     ax = axes[1]
     ax.set_title("Nutrient value verification form", fontsize=11, fontweight="bold")
@@ -287,13 +295,13 @@ def figure2():
     for k, (name, val) in enumerate(fields):
         yy = y0 - k * 0.135
         ax.add_patch(Rectangle((0.06, yy), 0.55, 0.10, facecolor="#f5f5f5",
-                               edgecolor="#cfd8dc"))
+                               edgecolor="#bdbdbd"))
         ax.text(0.09, yy + 0.05, name, va="center", fontsize=8.5)
-        ax.add_patch(Rectangle((0.63, yy), 0.31, 0.10, facecolor="#fff8e1",
-                               edgecolor="#f9a825"))
+        ax.add_patch(Rectangle((0.63, yy), 0.31, 0.10, facecolor="#ececec",
+                               edgecolor="#616161"))
         ax.text(0.785, yy + 0.05, val, va="center", ha="center", fontsize=9)
     ax.text(0.5, 0.045, "Correct OCR values, then confirm",
-            ha="center", fontsize=8.5, color=GREY)
+            ha="center", fontsize=8.5, color="#424242")
 
     fig.suptitle("Human-in-the-Loop interfaces (schematic)",
                  fontsize=12, fontweight="bold", y=1.02)
@@ -428,19 +436,19 @@ def figure8():
 # --------------------------------------------------------------------------- #
 def figure9():
     stages = [
-        ("Label\nphoto", LIGHTB, BLUE),
-        ("EXIF\noorient", LIGHT, GREEN),
-        ("Deskew", LIGHT, GREEN),
-        ("Deglare", LIGHT, GREEN),
-        ("CLAHE", LIGHT, GREEN),
-        ("ROI\ncrop", LIGHT, GREEN),
-        ("PP-OCRv4\ndet + rec", "#fff3e0", ORANGE),
-        ("Semantic\nfilter", "#fff3e0", ORANGE),
-        ("Fuzzy field\nmapping", "#fff3e0", ORANGE),
-        ("Grid layout\nparser", "#fff3e0", ORANGE),
-        ("Energy/fat\nfallback", "#fff3e0", ORANGE),
-        ("Clinical\nvalidation", "#e8eaf6", "#3949ab"),
-        ("Nutrient\nfields", "#fce4ec", "#c62828"),
+        ("Label\nphoto", "#f2f2f2", "#212121"),
+        ("EXIF\norient", "#f2f2f2", "#616161"),
+        ("Deskew", "#f2f2f2", "#616161"),
+        ("Deglare", "#f2f2f2", "#616161"),
+        ("CLAHE", "#f2f2f2", "#616161"),
+        ("ROI\ncrop", "#f2f2f2", "#616161"),
+        ("PP-OCRv4\ndet + rec", "#ececec", "#424242"),
+        ("Semantic\nfilter", "#ececec", "#424242"),
+        ("Fuzzy field\nmapping", "#ececec", "#424242"),
+        ("Grid layout\nparser", "#ececec", "#424242"),
+        ("Energy/fat\nfallback", "#ececec", "#424242"),
+        ("Clinical\nvalidation", "#e0e0e0", "#212121"),
+        ("Nutrient\nfields", "#cfcfcf", "#212121"),
     ]
     fig, ax = plt.subplots(figsize=(13, 5.2))
     ax.set_xlim(0, 1)
@@ -466,7 +474,7 @@ def figure9():
     ax.text(0.5, 0.055,
             "Preprocessing keeps the recognition stage robust to phone-camera labels; "
             "the\nlayout parser and mapping stages recover the per-serving values.",
-            ha="center", va="center", fontsize=9, style="italic", color=GREY,
+            ha="center", va="center", fontsize=9, style="italic", color="#424242",
             linespacing=1.5)
     save(fig, 9)
 
