@@ -54,3 +54,4 @@ desktop.ini
 # ── Node (jika menambah tooling frontend) ────────────────────────────────────
 node_modules/
 dist/
+referensi/
