@@ -19,6 +19,18 @@ Boleh tetap `.png`, atau ganti ke `.jpg` selama namanya sama (mis. `figure 1.jpg
 | `figure 9.png` | Nutrition-label extraction pipeline: preprocessing, recognition, and layout reconstruction. | diagram pipeline lebar, ~1800×800 px |
 | `figure 10.png` | Qualitative example of label extraction. | input + ROI + tabel, ~1600×900 px |
 
+## Cara menyisipkan ke docx
+
+Setelah gambar final Anda taruh di folder ini (nama file tetap), jalankan:
+
+```powershell
+python experiments/paper/build_jri_docx.py --embed-figures
+```
+
+Perintah itu mengganti penanda `[[INSERT FIGURE N HERE ...]]` di naskah dengan gambar
+yang cocok (`figure N.png/.jpg/.jpeg`). Penanda yang belum ada gambarnya tetap berupa teks.
+Tanpa flag `--embed-figures`, docx dibangun seperti biasa (tanpa gambar).
+
 ## Catatan
 - Resolusi minimal **300 DPI** (atau sisi terpanjang ≥ 1600 px) agar tidak pecah saat dicetak.
 - Format aman untuk Word: **PNG**. Untuk foto bisa JPG kualitas tinggi.

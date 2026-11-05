@@ -7,10 +7,18 @@ abstracts, and APA hanging-indent references.
 
 Usage:
     python experiments/paper/build_jri_docx.py
+    python experiments/paper/build_jri_docx.py --embed-figures
+
+With ``--embed-figures`` every ``[[INSERT FIGURE N HERE]]`` marker is replaced by the
+matching ``figures/figure N.(png|jpg|jpeg)`` image from the repository root; markers
+without a matching file keep their text placeholder. Override the output path with the
+``HEALTHIER_DOCX_OUT`` environment variable.
 """
 from __future__ import annotations
 
+import os
 import re
+import sys
 from pathlib import Path
 
 import docx
@@ -22,7 +30,9 @@ from docx.shared import Cm, Pt, RGBColor
 HERE = Path(__file__).resolve().parent
 MD_PATH = HERE / "manuscript_jri.md"
 TEMPLATE = Path(r"C:\Users\tataa\Downloads\TEMPLATE JRI TAHUN-2026-ENGLISH.docx")
-OUT = HERE / "manuscript_jri.docx"
+OUT = Path(os.environ.get("HEALTHIER_DOCX_OUT", str(HERE / "manuscript_jri.docx")))
+FIGURES_DIR = HERE.parents[1] / "figures"
+EMBED_FIGURES = "--embed-figures" in sys.argv
 
 FONT = "Cambria"
 BODY_SIZE = Pt(10)
@@ -114,6 +124,15 @@ def add_table(doc, rows):
     return table
 
 
+def find_figure(number: int) -> Path | None:
+    """Return the image file for ``figure N`` in the repo's figures/ folder."""
+    for ext in (".png", ".PNG", ".jpg", ".JPG", ".jpeg", ".JPEG"):
+        candidate = FIGURES_DIR / f"figure {number}{ext}"
+        if candidate.is_file():
+            return candidate
+    return None
+
+
 def clear_body(document):
     body = document.element.body
     for child in list(body):
@@ -187,8 +206,14 @@ def build():
 
         # Figure placeholder
         if stripped.startswith("[["):
-            p = para(doc, WD_ALIGN_PARAGRAPH.CENTER, spacing=1.0, after=2)
-            set_font(p.add_run(stripped), italic=True)
+            match = re.match(r"\[\[INSERT FIGURE (\d+)", stripped)
+            image = find_figure(int(match.group(1))) if (EMBED_FIGURES and match) else None
+            if image is not None:
+                p = para(doc, WD_ALIGN_PARAGRAPH.CENTER, spacing=1.0, after=4)
+                p.add_run().add_picture(str(image), width=Cm(15))
+            else:
+                p = para(doc, WD_ALIGN_PARAGRAPH.CENTER, spacing=1.0, after=2)
+                set_font(p.add_run(stripped), italic=True)
             i += 1
             continue
 
