@@ -9,7 +9,8 @@ Figures are written to ``figures/figure N.png`` at 300 DPI:
 * Figure 3  - training/validation loss curves (from ``runs/seg_main/results.csv``).
 * Figure 4  - normalised confusion matrix, internal validation (copied from run).
 * Figure 5  - qualitative GT vs prediction, internal validation (composite).
-* Figure 6  - normalised confusion matrices, three external sources (composite).
+* Figure 6  - normalised confusion matrices, three external sources
+              (three separate files: 6.1 FoodSeg103, 6.2 UEC, 6.3 FruitSeg30).
 * Figure 7  - mask PR and F1 curves, three external sources (composite).
 * Figure 8  - per-class external mask AP50 (from ``per_class_all.csv``).
 * Figure 9  - nutrition-label extraction pipeline diagram (drawn).
@@ -60,6 +61,13 @@ CLASS_COLORS = {
 
 def save(fig, number: int, dpi: int = 300) -> None:
     path = OUT / f"figure {number}.png"
+    fig.savefig(path, dpi=dpi, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    print("wrote", path)
+
+
+def save_as(fig, name: str, dpi: int = 300) -> None:
+    path = OUT / name
     fig.savefig(path, dpi=dpi, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print("wrote", path)
@@ -361,21 +369,19 @@ def figure5():
 
 
 # --------------------------------------------------------------------------- #
-# Figure 6 - external confusion matrices
+# Figure 6 - external confusion matrices (three separate files 6.1 / 6.2 / 6.3)
 # --------------------------------------------------------------------------- #
 def figure6():
     sources = [("FoodSeg103 (validation)", SEG / "foodseg_val_instance"),
                ("UECFoodPIXCOMPLETE (test)", SEG / "uec_test_instance"),
                ("FruitSeg30", SEG / "fruitseg_instance")]
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-    for ax, (title, folder) in zip(axes, sources):
+    for i, (title, folder) in enumerate(sources, start=1):
+        fig, ax = plt.subplots(figsize=(6.2, 5.6))
         ax.imshow(imread(folder / "confusion_matrix_normalized.png"))
-        ax.set_title(title, fontsize=10)
+        ax.set_title(title, fontsize=11, fontweight="bold")
         ax.axis("off")
-    fig.suptitle("Normalised confusion matrices on the three external sources",
-                 fontsize=12, fontweight="bold")
-    fig.tight_layout()
-    save(fig, 6, dpi=180)
+        fig.tight_layout()
+        save_as(fig, f"figure 6.{i}.png", dpi=200)
 
 
 # --------------------------------------------------------------------------- #
