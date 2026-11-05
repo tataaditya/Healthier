@@ -7,7 +7,7 @@ Gambar untuk naskah `experiments/paper/manuscript_jri.md` (`manuscript_jri.docx`
 
 | File | Caption (sesuai naskah) | Asal / status |
 | :--- | :--- | :--- |
-| `figure 1.png` | Healthier system architecture and experimental workflow. | Diagram (digambar) |
+| `figure 1.png` | Healthier system architecture and experimental workflow. | Diagram teknis (digambar): dua menara bergaya Transformer — backbone/neck/head YOLO11s-seg dengan grup berulang `× 3`, pipeline PP-OCRv4, dan lapisan keputusan HITL → Clinical Rules Engine → SAFE/WARNING/DANGER, plus anotasi hasil eksperimen |
 | `figure 2.png` | Human-in-the-Loop interfaces: segmentation editor and nutrient value verification form. | **Skema (digambar)** — ganti dengan screenshot asli bila ada |
 | `figure 3.png` | Training and validation loss curves for the YOLO11s-seg model. | Dari `runs/seg_main/results.csv` |
 | `figure 4.png` | Normalised confusion matrix on the internal validation split. | Salinan `runs/seg_main/confusion_matrix_normalized.png` |
