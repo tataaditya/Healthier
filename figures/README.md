@@ -15,7 +15,7 @@ Gambar untuk naskah `experiments/paper/manuscript_jri.md` (`manuscript_jri.docx`
 | `figure 6.1.png` | Normalised confusion matrix — FoodSeg103 (validation). | `results/segmentation/foodseg_val_instance/confusion_matrix_normalized.png` |
 | `figure 6.2.png` | Normalised confusion matrix — UECFoodPIXCOMPLETE (test). | `results/segmentation/uec_test_instance/confusion_matrix_normalized.png` |
 | `figure 6.3.png` | Normalised confusion matrix — FruitSeg30. | `results/segmentation/fruitseg_instance/confusion_matrix_normalized.png` |
-| `figure 7.png` | Mask precision-recall and F1 curves for each external source. | Gabungan `*_instance/MaskPR_curve.png` + `MaskF1_curve.png` |
+| `figure 7.png` | Mask precision-recall and F1 curves for each external source. | Grid 3×2 **padat** dari `*_instance/MaskPR_curve.png` + `MaskF1_curve.png`; tanpa label tambahan — baris: FoodSeg103, UECFoodPIXCOMPLETE, FruitSeg30; kolom: mask PR (kiri), mask F1 (kanan) |
 | `figure 8.png` | Per-class external mask AP50 by source and class. | Dari `results/segmentation/per_class_all.csv` |
 | `figure 9.png` | Nutrition-label extraction pipeline: preprocessing, recognition, and layout reconstruction. | Diagram (digambar) |
 | `figure 10.png` | Qualitative example of label extraction. | Foto `20241108_132045` + tabel hasil grid parser vs ground truth |
@@ -48,6 +48,11 @@ sisipkan `figure 6.1/6.2/6.3` secara manual di bawah caption Figure 6.
 - Resolusi 300 DPI; format PNG.
 - Figure 6 = tiga file terpisah: 6.1 FoodSeg103 (validation), 6.2 UECFoodPIXCOMPLETE
   (test), 6.3 FruitSeg30. Penomoran figure lain (7-10) tidak berubah.
+- Figure 7 = grid 3×2 **tanpa teks tambahan** (judul/label sengaja dihilangkan agar
+  Anda ketik di caption). Urutan panel: baris FoodSeg103 → UECFoodPIXCOMPLETE →
+  FruitSeg30; kolom mask PR (kiri) lalu mask F1 (kanan). Judul di dalam tiap panel
+  ("Precision-Recall Curve" / "F1-Confidence Curve") berasal dari plot Ultralytics
+  sumber, bukan tambahan dari skrip.
 - Figure 1, 2, dan 9 (diagram yang **digambar**) dibuat **hitam-putih / abu-abu**
   seperti diagram blok referensi. Figure 3-8 dan 10 berasal dari hasil eksperimen
   (kurva, confusion matrix, tabel) sehingga tampil apa adanya.

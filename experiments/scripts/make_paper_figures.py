@@ -11,7 +11,8 @@ Figures are written to ``figures/figure N.png`` at 300 DPI:
 * Figure 5  - qualitative GT vs prediction, internal validation (composite).
 * Figure 6  - normalised confusion matrices, three external sources
               (three separate files: 6.1 FoodSeg103, 6.2 UEC, 6.3 FruitSeg30).
-* Figure 7  - mask PR and F1 curves, three external sources (composite).
+* Figure 7  - mask PR and F1 curves, three external sources
+              (tight 3x2 grid, no added text labels).
 * Figure 8  - per-class external mask AP50 (from ``per_class_all.csv``).
 * Figure 9  - nutrition-label extraction pipeline diagram (drawn).
 * Figure 10 - qualitative label-extraction example (input + ROI + fields).
@@ -385,26 +386,34 @@ def figure6():
 
 
 # --------------------------------------------------------------------------- #
-# Figure 7 - mask PR and F1 curves
+# Figure 7 - mask PR and F1 curves (tight 3x2 grid, no added text labels)
 # --------------------------------------------------------------------------- #
 def figure7():
-    sources = [("FoodSeg103 (validation)", SEG / "foodseg_val_instance"),
-               ("UECFoodPIXCOMPLETE (test)", SEG / "uec_test_instance"),
-               ("FruitSeg30", SEG / "fruitseg_instance")]
-    fig, axes = plt.subplots(3, 2, figsize=(11, 13))
-    for row, (title, folder) in enumerate(sources):
+    sources = [SEG / "foodseg_val_instance",
+               SEG / "uec_test_instance",
+               SEG / "fruitseg_instance"]
+    panels = {}
+    for row, folder in enumerate(sources):
         for col, fname in enumerate(("MaskPR_curve.png", "MaskF1_curve.png")):
-            ax = axes[row, col]
-            ax.imshow(imread(folder / fname))
-            ax.axis("off")
-            ax.set_title(("Mask PR curve" if col == 0 else "Mask F1 curve"),
-                         fontsize=9)
-        axes[row, 0].text(-0.05, 0.5, title, rotation=90, va="center",
-                          ha="right", fontsize=10, transform=axes[row, 0].transAxes)
-    fig.suptitle("Mask precision-recall and F1 curves per external source",
-                 fontsize=12, fontweight="bold")
-    fig.tight_layout()
-    save(fig, 7, dpi=150)
+            panels[(row, col)] = imread(folder / fname)
+
+    # one common bounding box removes the outer white margin from every panel
+    box = None
+    for img in panels.values():
+        arr = (img[..., :3] * 255).astype(np.uint8)
+        ys, xs = np.where((arr < 245).any(axis=2))
+        b = (ys.min(), ys.max() + 1, xs.min(), xs.max() + 1)
+        box = b if box is None else (min(box[0], b[0]), max(box[1], b[1]),
+                                     min(box[2], b[2]), max(box[3], b[3]))
+    y0, y1, x0, x1 = box
+
+    fig, axes = plt.subplots(3, 2, figsize=(10, 10))
+    for (row, col), img in panels.items():
+        axes[row, col].imshow(img[y0:y1, x0:x1], aspect="auto")
+        axes[row, col].set_axis_off()
+    fig.subplots_adjust(left=0.004, right=0.996, top=0.996, bottom=0.004,
+                        wspace=0.02, hspace=0.02)
+    save(fig, 7, dpi=200)
 
 
 # --------------------------------------------------------------------------- #
