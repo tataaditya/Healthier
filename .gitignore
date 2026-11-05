@@ -49,6 +49,7 @@ experiments/artifacts/
 .DS_Store
 Thumbs.db
 desktop.ini
+~$*
 
 # ── Node (jika menambah tooling frontend) ────────────────────────────────────
 node_modules/
