@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Healthier - Verifikasi GT OCR (mode cepat)</title>
+<style>
+  :root{--bg:#0f0f0f;--panel:#1a1a1a;--fg:#eee;--dim:#9aa;--acc:#4caf50;--warn:#ff9800;--bad:#e53935;--focus:#3b82f6}
+  *{box-sizing:border-box}
+  body{margin:0;font:13px/1.35 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg)}
+  header{position:sticky;top:0;z-index:5;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+         padding:6px 10px;background:#000;border-bottom:1px solid #333}
+  header .grow{flex:1}
+  button{background:#262626;color:var(--fg);border:1px solid #444;border-radius:6px;padding:5px 9px;cursor:pointer}
+  button:hover{background:#333}
+  button.primary{background:var(--acc);border-color:var(--acc);color:#000;font-weight:600}
+  .chip{display:inline-block;padding:2px 8px;border-radius:10px;background:#333;color:#ccc;font-size:12px}
+  .chip.v{background:var(--acc);color:#000}
+  #wrap{display:grid;grid-template-columns:minmax(340px,1fr) 460px;height:calc(100vh - 46px)}
+  #left{overflow:auto;background:#000;display:flex;flex-direction:column}
+  #img{max-width:100%;height:auto;display:block;margin:auto}
+  #right{overflow:auto;padding:8px 10px;background:var(--panel)}
+  .frow{display:flex;gap:8px;align-items:center;padding:3px 6px;border-radius:6px;border:1px solid transparent}
+  .frow.active{border-color:var(--focus);background:#0b1a2e}
+  .frow label.k{flex:0 0 120px;color:var(--dim);font-size:12px}
+  .frow input.n{flex:0 0 130px;background:#000;color:#fff;border:1px solid #555;border-radius:5px;padding:4px 6px;font-size:14px}
+  .frow input.n:focus{outline:none;border-color:var(--focus)}
+  .frow input.n.absent{background:#2a1a1a;color:#888;text-decoration:line-through}
+  .frow .ab{font-size:11px;color:var(--dim);display:flex;gap:3px;align-items:center}
+  .hint{font-size:11px;color:var(--dim)}
+  pre{white-space:pre-wrap;background:#000;border:1px solid #333;border-radius:6px;padding:6px;max-height:160px;overflow:auto;font-size:11px}
+  .ok{color:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+  <strong>Verifikasi GT (cepat)</strong>
+  <span id="progress" class="chip">0/0</span>
+  <span id="cur" class="dim"></span>
+  <span class="grow"></span>
+  <span class="hint">Enter = field berikutnya &rarr; gambar berikutnya</span>
+  <label class="hint"><input type="checkbox" id="autoVerify" checked> auto-tandai terverifikasi</label>
+  <button id="btnPrev" title="p">&#8592; (p)</button>
+  <button id="btnNext" class="primary" title="n/masuk">berikut (n) &#8594;</button>
+  <button id="btnAllAbsent" style="background:#402a10;border-color:var(--warn)" title="a">Tidak ada semua (a)</button>
+  <button id="btnClear" title="c">Kosongkan (c)</button>
+  <button id="btnFillDraft" title="f">Lengkapi kosong dari draf (f)</button>
+  <label class="hint"><input type="checkbox" id="onlyUnverified"> hanya belum</label>
+  <label class="hint"><input type="checkbox" id="onlyEmpty"> hanya field kosong</label>
+  <span class="grow"></span>
+  <button id="btnExport" class="primary">Ekspor verified.json</button>
+  <button id="btnCsv">CSV</button>
+  <button id="btnReset" style="background:#3a1010;border-color:var(--bad)">Reset</button>
+</header>
+
+<div id="wrap">
+  <div id="left">
+    <img id="img" alt="label gizi">
+    <div class="hint" style="padding:5px 10px" id="imgpath"></div>
+  </div>
+  <div id="right">
+    <div id="meta" style="margin-bottom:6px"></div>
+    <div id="rows"></div>
+    <div class="hint" id="status" style="margin-top:6px"></div>
+    <details style="margin-top:8px"><summary class="hint">OCR mentah (jangan dipercaya)</summary><pre id="raw"></pre></details>
+  </div>
+</div>
+
+<script>
+const RECORDS = /*__RECORDS__*/;
+const FIELDS = [
+  ["takaran_saji_g","takaran_saji_g","g"],
+  ["kalori","kalori","kkal"],
+  ["lemak_total","lemak_total","g"],
+  ["lemak_jenuh","lemak_jenuh","g"],
+  ["lemak_trans","lemak_trans","g"],
+  ["kolesterol","kolesterol","mg"],
+  ["natrium","natrium","mg"],
+  ["karbohidrat","karbohidrat","g"],
+  ["serat","serat","g"],
+  ["gula","gula","g"],
+  ["protein","protein","g"],
+];
+const IMG_PREFIX = "../../../../";
+const LS_KEY = "healthier_ocr_gt_v2";
+function loadStore(){try{return JSON.parse(localStorage.getItem(LS_KEY))||{}}catch(e){return{}}}
+let STORE = loadStore();
+function save(){localStorage.setItem(LS_KEY,JSON.stringify(STORE))}
+function getSt(id){ if(!STORE[id]) STORE[id]={nutrisi:{},absent:{}}; if(!STORE[id].nutrisi)STORE[id].nutrisi={}; if(!STORE[id].absent)STORE[id].absent={}; return STORE[id]; }
+
+const rowsBox = document.getElementById("rows");
+const inputRefs = {};
+FIELDS.forEach(([k,label,unit],i)=>{
+  const row=document.createElement("div"); row.className="frow"; row.dataset.i=i;
+  row.innerHTML = `<label class="k">${label} <span style="color:#666">(${unit})</span></label>
+    <input class="n" type="number" step="any" inputmode="decimal" data-k="${k}">
+    <label class="ab"><input type="checkbox" class="abx" data-k="${k}"> tak ada</label>`;
+  rowsBox.appendChild(row);
+  inputRefs[k]=row.querySelector("input.n");
+});
+
+let view=[], idx=0;
+function computeView(){const only=document.getElementById("onlyUnverified").checked;
+  const onlyEmpty=document.getElementById("onlyEmpty").checked;
+  return RECORDS.map((_,i)=>i).filter(i=>{
+    if(only && (STORE[RECORDS[i].file]||{}).verified) return false;
+    if(onlyEmpty && emptyCount(RECORDS[i])===0) return false;
+    return true;});}
+function emptyCount(r){
+  const f=resolvedFields(r);
+  return FIELDS.filter(([k])=>!f.abs[k] && (f.nut[k]===null||f.nut[k]===undefined)).length;
+}
+
+function progress(){const done=RECORDS.filter(r=>(STORE[r.file]||{}).verified).length;
+  const c=document.getElementById("progress"); c.textContent=`${done}/${RECORDS.length} terverifikasi`; c.className="chip"+(done===RECORDS.length?" v":"");}
+
+function render(){
+  view=computeView(); if(idx>view.length-1)idx=view.length-1; if(idx<0)idx=0;
+  if(!view.length){document.getElementById("img").src="";return;}
+  const r=RECORDS[view[idx]]; const d=r.draft||{}; const st=getSt(r.file);
+  document.getElementById("img").src=IMG_PREFIX+encodeURI(r.file);
+  document.getElementById("imgpath").textContent=r.file;
+  document.getElementById("cur").textContent=`#${view[idx]+1}/${view.length}`;
+  document.getElementById("meta").innerHTML=`<span class="chip">${r.folder||""}</span> <span class="chip">${r.group_id||""}</span>`
+    + (d.confidence?` <span class="chip">draf:${d.confidence}</span>`:"")
+    + ` <span class="chip" style="border-color:var(--warn)">kosong: ${emptyCount(r)}</span>`
+    + (d.note?` <span class="hint"> ${d.note.replace(/</g,"&lt;")}</span>`:"");
+  for(const [k] of FIELDS){
+    const hasSt = (st.nutrisi[k]!==undefined && st.nutrisi[k]!==null) || st.absent[k];
+    const val = hasSt ? st.nutrisi[k] : (d.nutrisi? d.nutrisi[k] : null);
+    const abs = hasSt ? !!st.absent[k] : !!(d.field_absent_on_label && d.field_absent_on_label[k]);
+    inputRefs[k].value = (val===null||val===undefined)?"":val;
+    inputRefs[k].classList.toggle("absent",abs);
+    rowsBox.querySelector(`.abx[data-k="${k}"]`).checked=abs;
+  }
+  document.getElementById("raw").textContent=(r.raw_text||[]).join("\n");
+  document.getElementById("status").textContent = st.verified? "✓ terverifikasi":"belum diverifikasi";
+  focusRow(0); progress();
+}
+
+function focusRow(i){
+  rowsBox.querySelectorAll(".frow").forEach(r=>r.classList.remove("active"));
+  if(i<0)i=0; if(i>=FIELDS.length)i=FIELDS.length-1;
+  const row=rowsBox.querySelector(`.frow[data-i="${i}"]`); row.classList.add("active");
+  inputRefs[FIELDS[i][0]].focus(); inputRefs[FIELDS[i][0]].select();
+  row.scrollIntoView({block:"nearest"});
+}
+function activeIndex(){return [...rowsBox.querySelectorAll(".frow")].findIndex(r=>r.classList.contains("active"));}
+
+function commitField(k){
+  const r=RECORDS[view[idx]]; if(!r)return; const st=getSt(r.file);
+  const inp=inputRefs[k]; const v=inp.value;
+  st.nutrisi[k]= v===""?null:Number(v);
+  st.absent[k]= rowsBox.querySelector(`.abx[data-k="${k}"]`).checked;
+  save();
+}
+function commitAll(){ for(const [k] of FIELDS) commitField(k); }
+
+function goNextImage(){
+  commitAll();
+  const r=RECORDS[view[idx]]; if(r){const st=getSt(r.file);
+    if(document.getElementById("autoVerify").checked){st.verified=true; save();}}
+  idx++; view=computeView(); if(idx>view.length-1){idx=view.length-1; render(); return;} render();
+}
+function goPrevImage(){ commitAll(); idx--; if(idx<0)idx=0; render(); }
+
+function markAllAbsent(){
+  const r=RECORDS[view[idx]]; if(!r)return;
+  const st=getSt(r.file);
+  for(const [k] of FIELDS){
+    st.nutrisi[k]=null; st.absent[k]=true;
+    inputRefs[k].value=""; inputRefs[k].classList.add("absent");
+    rowsBox.querySelector(`.abx[data-k="${k}"]`).checked=true;
+  }
+  if(document.getElementById("autoVerify").checked) st.verified=true;
+  save();
+  const only=document.getElementById("onlyUnverified").checked;
+  if(!only) idx++;
+  view=computeView();
+  if(idx>view.length-1) idx=Math.max(0,view.length-1);
+  render();
+}
+function clearAllFields(){
+  const r=RECORDS[view[idx]]; if(!r)return;
+  const st=getSt(r.file);
+  for(const [k] of FIELDS){
+    st.nutrisi[k]=null; st.absent[k]=false;
+    inputRefs[k].value=""; inputRefs[k].classList.remove("absent");
+    rowsBox.querySelector(`.abx[data-k="${k}"]`).checked=false;
+  }
+  st.verified=false; save(); render();
+}
+function fillEmptyFromDraft(){
+  let imgs=0, fields=0;
+  for(const r of RECORDS){
+    const st=getSt(r.file), d=r.draft||{};
+    let touched=false;
+    for(const [k] of FIELDS){
+      const isAbs=!!st.absent[k];
+      const val=st.nutrisi[k];
+      if(!isAbs && (val===null||val===undefined)){
+        const dv=(d.nutrisi||{})[k];
+        if(dv!==null && dv!==undefined){ st.nutrisi[k]=dv; fields++; touched=true; }
+      }
+    }
+    if(touched) imgs++;
+  }
+  save(); render();
+  alert(`Diisi dari draf: ${fields} field pada ${imgs} citra. Periksa kembali sebelum ekspor.`);
+}
+
+rowsBox.addEventListener("keydown",e=>{
+  const inp=e.target.closest("input.n"); if(!inp)return;
+  if(e.key==="Enter"){
+    e.preventDefault();
+    const k=inp.dataset.k; commitField(k);
+    const i=activeIndex();
+    if(i===FIELDS.length-1){ goNextImage(); }
+    else focusRow(i+1);
+  } else if(e.key==="ArrowDown"){e.preventDefault(); focusRow(activeIndex()+1);}
+  else if(e.key==="ArrowUp"){e.preventDefault(); focusRow(activeIndex()-1);}
+});
+rowsBox.addEventListener("change",e=>{
+  if(e.target.classList.contains("abx")){
+    const k=e.target.dataset.k; inputRefs[k].classList.toggle("absent",e.target.checked); commitField(k);
+  } else if(e.target.classList.contains("n")){ commitField(e.target.dataset.k); }
+});
+
+document.getElementById("btnNext").onclick=goNextImage;
+document.getElementById("btnPrev").onclick=goPrevImage;
+document.getElementById("btnAllAbsent").onclick=markAllAbsent;
+document.getElementById("btnClear").onclick=clearAllFields;
+document.getElementById("btnFillDraft").onclick=fillEmptyFromDraft;
+document.getElementById("onlyUnverified").onchange=()=>{idx=0;render();};
+document.getElementById("onlyEmpty").onchange=()=>{idx=0;render();};
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT")return;
+  if(e.key==="n")goNextImage(); if(e.key==="p")goPrevImage();
+  if(e.key==="a")markAllAbsent(); if(e.key==="c")clearAllFields();
+  if(e.key==="f")fillEmptyFromDraft();
+});
+
+function resolvedFields(r){
+  // Sama persis dengan yang ditampilkan render(): field yang belum pernah
+  // di-commit memakai nilai draf, bukan null. Ini mencegah kehilangan nilai
+  // saat pengguna pindah gambar tanpa menekan Enter di setiap field.
+  const st=getSt(r.file), d=r.draft||{};
+  const nut={}, abs={};
+  for(const [k] of FIELDS){
+    const has=Object.prototype.hasOwnProperty.call(st.nutrisi,k);
+    nut[k]= has ? st.nutrisi[k] : ((d.nutrisi||{})[k] ?? null);
+    abs[k]= has ? !!st.absent[k] : !!((d.field_absent_on_label||{})[k]);
+  }
+  return {nut,abs};
+}
+function exportObj(){ commitAll();
+  return RECORDS.map(r=>{const st=getSt(r.file);const f=resolvedFields(r);return {file:r.file,split:"test",verified:!!st.verified,notes:st.notes||"",
+    field_absent_on_label:f.abs, takaran_saji_g: f.nut.takaran_saji_g ?? null, nutrisi:f.nut};});
+}
+document.getElementById("btnExport").onclick=()=>{const b=new Blob([JSON.stringify(exportObj(),null,1)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="ground_truth_verified.json";a.click();};
+document.getElementById("btnCsv").onclick=()=>{const data=exportObj();
+  const NUTRI=FIELDS.map(f=>f[0]).filter(k=>k!=="takaran_saji_g");
+  const cols=["file","verified","takaran_saji_g",...NUTRI,"absent_takaran_saji_g",...NUTRI.map(k=>"absent_"+k)];
+  const esc=v=>{v=(v===null||v===undefined)?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const lines=[cols.join(",")];
+  for(const d of data) lines.push([d.file,d.verified,d.takaran_saji_g,...NUTRI.map(k=>d.nutrisi[k]),
+    d.field_absent_on_label.takaran_saji_g?1:0,...NUTRI.map(k=>d.field_absent_on_label[k]?1:0)].map(esc).join(","));
+  const b=new Blob([lines.join("\n")],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="ground_truth_verified.csv";a.click();};
+document.getElementById("btnReset").onclick=()=>{if(confirm("Hapus semua verifikasi tersimpan?")){STORE={};save();render();}};
+
+render();
+</script>
+</body>
+</html>
